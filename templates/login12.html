@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+                    <form  method="post">
+                                {% csrf_token %}
+                                 {% if success %}
+                                <script>alert('Success')</script>
+                                {% endif %}
+                                {% if incorrect %}
+                                <script>alert('IIII')</script>
+                                {% endif %}
+                    {% if incorrect_p %}
+                                <script>alert('empty')</script>
+                                {% endif %}
+                                {% if inserted %}
+                                <script>alert('data inserted')</script>
+                                {% endif %}
+
+								<div>
+									<input type="text"  id="user_email" name="user_email" placeholder="Email or Username">
+								</div>
+								<div >
+									<input type="text" id="user_password" name="user_password" placeholder="Password">
+								</div>
+								<div >
+									<input type="submit" value="Log In">
+								</div >
+							</form>
+
+</body>
+</html>

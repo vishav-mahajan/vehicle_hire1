@@ -1,18 +1,7 @@
-{% extends 'index.html' %}
-{% block title %}
-Home
-{% endblock %}
+{% extends 'master.html' %}
+
 
 {% block content %}
-
-
-
-
-
-
-
-
-
     <!--== Page Title Area Start ==-->
     <section id="page-title-area" class="section-padding overlay">
         <div class="container">
@@ -20,9 +9,9 @@ Home
                 <!-- Page Title Start -->
                 <div class="col-lg-12">
                     <div class="section-title  text-center">
-                        <h2>Login</h2>
+                        <h2>Sign up</h2>
                         <span class="title-line"><i class="fa fa-car"></i></span>
-                        <p>.</p>
+
                     </div>
                 </div>
                 <!-- Page Title End -->
@@ -65,19 +54,11 @@ Home
 							</form>
                 		</div>
                 		
-                		<div class="login-other">
-                			<span class="or">or</span>
-                			<a href="#" class="login-with-btn facebook"><i class="fa fa-facebook"></i> Signup With Facebook</a>
-                			<a href="#" class="login-with-btn google"><i class="fa fa-google"></i> Signup With Google</a>
-                		</div>
+
                 		<div class="create-ac">
-                			<p>Have an account? <a href="login.html">Sign In</a></p>
+                			<p>Have an account? <a href={% url 'front_app:login' %}>Sign In</a></p>
                 		</div>
-                		<div class="login-menu">
-                			<a href="about.html">About</a>
-                			<span>|</span>
-                			<a href="contact.html">Contact</a>
-                		</div>
+
                 	</div>
                 </div>
         	</div>

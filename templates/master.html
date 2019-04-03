@@ -76,7 +76,13 @@
                                 <li><a href="{% url 'front_app:about'%}">About</a></li>
 
 
-                                <li><a href="{% url 'front_app:login' %}">Login</a>
+                                <li><a href="#">Login</a>
+                                    <ul>
+                                    <li><a href="{% url 'front_app:login' %}">User</a></li>
+                                    <li><a href="{% url 'front_app:login' %}">Business User</a></li>
+                                    <li><a href="{% url 'front_app:login' %}">Manager</a></li>
+                                    <li><a href="{% url 'front_app:login' %}">Admin</a></li>
+                                    </ul>
 
                                 </li>
 

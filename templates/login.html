@@ -30,24 +30,30 @@
 							<form  method="post">
                                 {% csrf_token %}
 
-                                {% if inserted %}
-                                <script>alert('data inserted')</script>
-                                {% endif %}
+
 
 								<div class="username">
 									<input type="text"  id="user_email" name="user_email" placeholder="Email or Username">
 								</div>
+                                {% if pass1 %}
+                                <p>Username Doesn't Exist</p>
+                                {% endif %}
 								<div class="password">
 									<input type="password" id="user_password" name="user_password" placeholder="Password">
 								</div>
+                            {% if pass2 %}
+                                 <p>Invali Password</p>
+                                {% endif %}
 								<div class="log-btn">
 									<button type="submit"><i class="fa fa-sign-in" ></i> Log In</button>
 								</div>
+
 							</form>
                 		</div>
                 		
 
                 		<div class="create-ac">
+
                 			<p>Don't have an account? <a href={% url "front_app:signup" %}>Sign Up</a></p>
                 		</div>
 

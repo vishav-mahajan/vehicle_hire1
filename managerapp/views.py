@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 import authorize as au
-from front_app.views import login
+
 
 # Create your views here.
 def manager_index(request):
@@ -13,9 +13,9 @@ def manager_index(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return redirect("/login",{'auth':True})
+            return render(request,"login.html",{"pass":True})
         elif(message=="Wrong Level"):
-            return redirect("/error")
+            return render(request,"404.html",{"pass":True})
 
 def logout(request):
     request.session['authenticate']=False

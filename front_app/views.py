@@ -16,15 +16,17 @@ def login(request):
             get_id = userdata.site_role_id_id
             if (dp == userpassword):
                 if get_id==1:
-                    return render(request, "about.html")
+                    return redirect("/manager/")
                 if get_id==4:
-                    return render(request, "contact.html")
+                    return redirect("/contact/")
                 if get_id==3:
-                    return render(request, "help-desk.html")
+                    return redirect("/package/")
+                if get_id==2:
+                    return redirect("/master/")
             else:
-                return render(request, "404.html")
+                return render(request, "login.html",{"pass2":True})
         except:
-            return render(request,"404.html")
+            return render(request, "login.html", {"pass1": True})
     return render(request,"login.html")
 
 
@@ -45,35 +47,23 @@ def signup(request):
     return render(request, "register.html")
 
 
-
 def page_not_found(request):
     return render(request,"404.html")
 
 def about(request):
     return render(request,"about.html")
 
-
 def contact(request):
     return render(request,"contact.html")
-
 
 def faq(request):
     return render(request,"faq.html")
 
-
 def register(request):
     return render(request,"register.html")
 
-def package(request):
-    return render(request,"package.html")
-
-
-
 def help(request):
     return render(request,"help-desk.html")
-
-def gallery(request):
-    return render(request,"gallery.html")
 
 def master(request):
     return render (request,"master.html")

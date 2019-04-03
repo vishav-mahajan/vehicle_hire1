@@ -17,4 +17,5 @@ class MySiteUser(models.Model):
     user_image=models.CharField(max_length=255,null=True)
     user_isavailable=models.BooleanField(default=True)
     user_isqueue=models.BooleanField(default=False)
+    last_login=models.CharField(max_length=225,null=True )
 

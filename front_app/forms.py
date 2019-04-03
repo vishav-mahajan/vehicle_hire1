@@ -25,7 +25,8 @@ class MySiteUserForm(forms.ModelForm):
             "user_dob",
             "user_image",
             "user_isavailable",
-            "user_isqueue"
+            "user_isqueue",
+            "last_login"
         ]
 
 

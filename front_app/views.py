@@ -21,13 +21,13 @@ def login(request):
                 request.session['role_id'] = get_id
 
                 if get_id==1:
-                    return redirect("/manager/")
+                    return redirect("/manager")
                 if get_id==4:
-                    return redirect("/contact/")
+                    return redirect("/contact")
                 if get_id==3:
-                    return redirect("/package/")
+                    return redirect("/")
                 if get_id==2:
-                    return redirect("/master/")
+                    return redirect("/master")
             else:
                 return render(request, "login.html",{"pass2":True})
         except:
@@ -44,7 +44,7 @@ def signup(request):
                 f1.user_email = request.POST['user_email']
                 f1.user_mobile = request.POST['user_mobile']
                 f1.user_password = request.POST['user_password']
-                f1.site_role_id_id=request.POST['sel']
+                f1.site_role_id_id=request.POST['select']
                 f1.save()
                 return render(request, "login.html", {'valid': True})
             else:

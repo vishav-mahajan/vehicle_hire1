@@ -75,6 +75,9 @@
                                 </li>
                                 <li><a href="{% url 'front_app:about'%}">About</a></li>
 
+                                {% if request.session.authenticate %}
+                                <li><a href="/logout/">Logout</a>
+                                {% else %}
 
                                 <li><a href="#">Login</a>
                                     <ul>
@@ -85,6 +88,8 @@
                                     </ul>
 
                                 </li>
+                                {% endif %}
+
 
 
                                 <li><a href="{% url 'front_app:contact'%}">Contact</a></li>

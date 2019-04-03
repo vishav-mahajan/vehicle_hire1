@@ -1,6 +1,7 @@
 from django.shortcuts import render,HttpResponse,redirect
 from front_app .forms import MySiteUserForm
 from front_app .models import MySiteUser,User_role
+import authorize
 
 def index(request):
 
@@ -15,6 +16,10 @@ def login(request):
             dp = userdata.user_password
             get_id = userdata.site_role_id_id
             if (dp == userpassword):
+                request.session['authenticate'] = True
+                request.session['email'] = useremail
+                request.session['role_id'] = get_id
+
                 if get_id==1:
                     return redirect("/manager/")
                 if get_id==4:

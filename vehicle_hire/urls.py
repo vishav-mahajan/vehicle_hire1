@@ -16,9 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
+from managerapp import views
 
 urlpatterns = [
-    path('admin1/', admin.site.urls),
+    url(r'admin/', admin.site.urls),
+    url(r'^logout/',views.logout ),
     url(r'^', include('front_app.urls')),
-    url(r'^', include('adminapp.urls'))
+    url(r'^master/', include('adminapp.urls')),
+    url(r'^manager/', include('managerapp.urls'))
+
 ]
+ 

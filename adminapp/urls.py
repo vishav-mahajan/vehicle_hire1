@@ -7,7 +7,6 @@ app_name = 'adminapp'
 
 
 urlpatterns = [
-        url(r'a_index/^$', views.index, name="index"),
-        url(r'a_signup/^$', views.signup, name="signup"),
-        url(r'a_signin/^$', views.signin, name="signin"),
-        ]
+        url(r'^$', views.index, name="index"),
+
+]

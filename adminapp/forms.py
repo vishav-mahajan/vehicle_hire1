@@ -11,7 +11,8 @@ class MySite_AdminForm(forms.ModelForm):
             "admin_email",
             "admin_password",
             "admin_image",
-
+            "admin_login_time",
+            "admin_logout_time"
         ]
 
 

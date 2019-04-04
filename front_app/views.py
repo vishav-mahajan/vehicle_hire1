@@ -3,6 +3,7 @@ from front_app .forms import MySiteUserForm
 from front_app .models import MySiteUser,User_role
 import authorize
 
+
 def index(request):
 
     return  render(request, "index.html")

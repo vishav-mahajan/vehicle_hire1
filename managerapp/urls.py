@@ -10,4 +10,5 @@ app_name = 'managerapp'
 urlpatterns = [
         url(r'^$', views.manager_index, name="manager_index"),
 
+
 ]

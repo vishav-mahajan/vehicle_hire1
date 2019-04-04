@@ -23,7 +23,8 @@ urlpatterns = [
     url(r'^logout/',views.logout ),
     url(r'^', include('front_app.urls')),
     url(r'^master/', include('adminapp.urls')),
-    url(r'^manager/', include('managerapp.urls'))
+    url(r'^manager/', include('managerapp.urls')),
+    url(r'^add_vehicle/$', views.add_vehicle),
 
 ]
  

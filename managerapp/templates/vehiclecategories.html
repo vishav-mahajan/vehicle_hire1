@@ -1,0 +1,41 @@
+{% extends 'admin_master.html' %}
+
+
+{% block content %}
+<div id="page-wrapper">
+			<div class="main-page">
+				<div class="forms">
+					<h2 class="title1">Forms</h2>
+					<div class="form-grids row widget-shadow" data-example-id="basic-forms">
+						<div class="form-title">
+							<h4>Vehicle Category Upload</h4>
+						</div>
+						<div class="form-body">
+							<form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+    {% if valid %}
+        <script>alert("Submitted")</script>
+        <h3>Vehicle Company Added</h3>
+    {% endif %}
+{% if invalid %}
+    <script>alert("Invalid , Not Submitted")</script>
+    <h3>Enter Again</h3>
+{% endif %}
+                                <div class="form-group">
+                                    <label>Vehicle Category</label>
+                                    <input type="text" class="form-control" placeholder="Enter Category" name="vehicle_category_name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Base Price</label>
+                                <input type="number" class="form-control" pattern="[0-9]{4}" name="vehicle_category_price" min="50" max="1000" placeholder="Price" required>
+                                </div>
+
+                                <button type="submit" class="btn btn-default">Submit</button>
+                            </form>
+						</div>
+					</div>
+                </div>
+            </div>
+</div>
+
+{% endblock content %}

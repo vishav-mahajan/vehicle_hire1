@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'front_app',
     'adminapp',
-    'managerapp'
+    'managerapp',
+    'businessuserapp'
 ]
 
 MIDDLEWARE = [
@@ -87,7 +88,7 @@ WSGI_APPLICATION = 'vehicle_hire.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'user_db',
+        'NAME': 'vehicle_db',
         'HOST': '127.0.0.1',
         'PORT': '3306',
         'USER': 'adrenture',
@@ -140,5 +141,5 @@ STATICFILES_DIRS=[os.path.join(BASE_DIR, "assets")]
 MEDIA_URL='/media/'
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 
-SESSION_COOKIE_AGE=5*60
-SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+#SESSION_COOKIE_AGE=5*60
+#SESSION_EXPIRE_AT_BROWSER_CLOSE=True

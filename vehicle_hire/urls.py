@@ -16,7 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
-from managerapp import views
+from front_app import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     url(r'admin/', admin.site.urls),
@@ -24,7 +27,8 @@ urlpatterns = [
     url(r'^', include('front_app.urls')),
     url(r'^master/', include('adminapp.urls')),
     url(r'^manager/', include('managerapp.urls')),
-    url(r'^add_vehicle/$', views.add_vehicle),
+    url(r'^businessuser/', include('businessuserapp.urls'))
 
-]
+]\
+              +static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
  

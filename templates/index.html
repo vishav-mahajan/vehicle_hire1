@@ -39,13 +39,16 @@
                                 <!--== Car Choose ==-->
                                 <div class="choose-car-type book-item">
                                     <h4>CHOOSE CAR TYPE:</h4>
+                                    {% if ccd %}
+
+
                                     <select class="custom-select">
                                       <option selected>Select</option>
-                                      <option value="1">SUV</option>
-                                      <option value="2">Sedan</option>
-                                      <option value="3">BMW</option>
-                                        <option value="3">Luxury</option>
+                                        {% for i in ccd %}
+                                      <option value="{{ i.vehicle_id }}">{{ i.vehicle_category_name }}</option>
+                                     {% endfor %}
                                     </select>
+                                    {% endif %}
                                 </div>
                                 <!--== Car Choose ==-->
 
@@ -236,6 +239,7 @@
                 <!-- Section Title End -->
             </div>
 
+
             <div class="row">
                 <!-- Choose Area Content Start -->
                 <div class="col-lg-12">
@@ -251,312 +255,64 @@
                                 <!-- Popular Cars Content Wrapper Start -->
                                 <div class="popular-cars-wrap">
                                     <!-- Filtering Menu -->
+
+
                                     <div class="popucar-menu text-center">
                                         <a href="#" data-filter="*" class="active">all</a>
-                                        <a href="#" data-filter=".con">Hatchback</a>
-                                        <a href="#" data-filter=".sedan">Sedan</a>
-                                        <a href="#" data-filter=".suv">SUV</a>
-                                        <a href="#" data-filter=".lux">Luxury</a>
+                                        {% if ccd %}
+                                        {% for i in ccd %}
+                                        <a href="#" data-filter=".{{ i.vehicle_category_name }}">{{ i.vehicle_category_name }}</a>
+                                        {% endfor %}
+                                        {% endif %}
 
                                     </div>
 
+
                                     <!-- Filtering Menu -->
+                                {% if ud %}
 
                                     <!-- PopularCars Tab Content Start -->
                                     <div class="row popular-car-gird">
+                                    {% for i in ud %}
                                         <!-- Single Popular Car Start -->
-                                        <div class="col-lg-4 col-md-6 con">
+                                        <div class="col-lg-4 col-md-6  {{ i.vehicle_id.vehicle_category_name }}">
+
                                             <div class="single-popular-car">
                                                 <div class="p-car-thumbnails">
-                                                    <a class="car-hover" href="/assets/images/cars/car-1.jpg">
-                                                      <img src="/assets/images/cars/car-1.jpg" alt="JSOFT">
+                                                    <a class="car-hover" href="/media/{{ i.vehicle_image }}">
+                                                      <img src="media/{{ i.vehicle_image }}" width="1280px" height="800px" style="object-fit:fill" alt="JSOFT">
                                                    </a>
                                                 </div>
 
                                                 <div class="p-car-content">
                                                     <h3>
-                                                        <a href={% url 'front_app:baleno' %}>Maruti Baleno</a>
-                                                        <span class="price"><i class="fa fa-tag"></i> Rs 55/hour</span>
+                                                        <a href={% url 'front_app:baleno' %}>{{ i.vehicle_name }}</a>
+                                                        <span class="price"><i class="fa fa-tag"></i> Rs {{ i.vehicle_price }}/hour</span>
                                                     </h3>
 
-                                                    <h5>HATCHBACK</h5>
+                                                    <h5>{{ i.vehicle_id.vehicle_category_name }}</h5>
+
 
                                                     <div class="p-car-feature">
                                                         <a href="#">2018</a>
                                                         <a href="#">Manual</a>
                                                         <a href="#">AIR CONDITION</a>
                                                     </div>
+                                                    <p>  </p>
+                                                    <div class="mt-4" >
+                                                    <button><a href="/about">Book Now</a></button>
                                                 </div>
+                                                </div>
+
                                             </div>
+
                                         </div>
                                         <!-- Single Popular Car End -->
+                                        {% endfor %}
 
-                                        <!-- Single Popular Car Start -->
-                                        <div class="col-lg-4 col-md-6 con">
-                                            <div class="single-popular-car">
-                                                <div class="p-car-thumbnails">
-                                                    <a class="car-hover" href="/assets/images/cars/car-2.jpg">
-                                                      <img src="/assets/images/cars/car-2.jpg" alt="JSOFT">
-                                                   </a>
-                                                </div>
+                                        {% endif %}
 
-                                                <div class="p-car-content">
-                                                    <h3>
-                                                        <a href="#">Hyunda i20</a>
-                                                        <span class="price"><i class="fa fa-tag"></i> Rs 60/hour</span>
-                                                    </h3>
 
-                                                    <h5>HATCHBACK</h5>
-
-                                                    <div class="p-car-feature">
-                                                        <a href="#">2019</a>
-                                                        <a href="#">Manual</a>
-                                                        <a href="#">AIR CONDITION</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Single Popular Car End -->
-
-                                        <!-- Single Popular Car Start -->
-                                        <div class="col-lg-4 col-md-6 con">
-                                            <div class="single-popular-car">
-                                                <div class="p-car-thumbnails">
-                                                    <a class="car-hover" href="/assets/images/cars/car-3.jpg">
-                                                      <img src="/assets/images/cars/car-3.jpg" alt="JSOFT">
-                                                   </a>
-                                                </div>
-
-                                                <div class="p-car-content">
-                                                    <h3>
-                                                        <a href="#">Nissan Micrar</a>
-                                                        <span class="price"><i class="fa fa-tag"></i> Rs 50/hour</span>
-                                                    </h3>
-
-                                                    <h5>HATCHBACK</h5>
-
-                                                    <div class="p-car-feature">
-                                                        <a href="#">2019</a>
-                                                        <a href="#">Manual</a>
-                                                        <a href="#">AIR CONDITION</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Single Popular Car End -->
-
-                                        <!-- Single Popular Car Start -->
-                                        <div class="col-lg-4 col-md-6 con">
-                                            <div class="single-popular-car">
-                                                <div class="p-car-thumbnails">
-                                                    <a class="car-hover" href="/assets/images/cars/car-4.jpg">
-                                                      <img src="/assets/images/cars/car-4.jpg" alt="JSOFT">
-                                                   </a>
-                                                </div>
-
-                                                <div class="p-car-content">
-                                                    <h3>
-                                                        <a href="#">Volkswagen Polo</a>
-                                                        <span class="price"><i class="fa fa-tag"></i> Rs65/hour</span>
-                                                    </h3>
-
-                                                    <h5>HATCHBACK</h5>
-
-                                                    <div class="p-car-feature">
-                                                        <a href="#">2019</a>
-                                                        <a href="#">Automatic</a>
-                                                        <a href="#">AIR CONDITION</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Single Popular Car End -->
-
-                                        <!-- Single Popular Car Start -->
-                                        <div class="col-lg-4 col-md-6 sedan">
-                                            <div class="single-popular-car">
-                                                <div class="p-car-thumbnails">
-                                                    <a class="car-hover" href="/assets/images/cars/car-5.jpg">
-                                                      <img src="/assets/images/cars/car-5.jpg" alt="JSOFT">
-                                                   </a>
-                                                </div>
-
-                                                <div class="p-car-content">
-                                                    <h3>
-                                                        <a href="#">Hyundai Verna</a>
-                                                        <span class="price"><i class="fa fa-tag"></i> Rs80/hour</span>
-                                                    </h3>
-
-                                                    <h5>Sedan</h5>
-
-                                                    <div class="p-car-feature">
-                                                        <a href="#">2018</a>
-                                                        <a href="#">Automatic</a>
-                                                        <a href="#">AIR CONDITION</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Single Popular Car End -->
-
-                                        <!-- Single Popular Car Start -->
-                                        <div class="col-lg-4 col-md-6 sedan">
-                                            <div class="single-popular-car">
-                                                <div class="p-car-thumbnails">
-                                                    <a class="car-hover" href="/assets/images/cars/car-6.jpg">
-                                                      <img src="/assets/images/cars/car-6.jpg" alt="JSOFT">
-                                                   </a>
-                                                </div>
-
-                                                <div class="p-car-content">
-                                                    <h3>
-                                                        <a href="#">Honda City</a>
-                                                        <span class="price"><i class="fa fa-tag"></i> RS90/hour</span>
-                                                    </h3>
-
-                                                    <h5>Sedan</h5>
-
-                                                    <div class="p-car-feature">
-                                                        <a href="#">2019</a>
-                                                        <a href="#">Manual</a>
-                                                        <a href="#">AIR CONDITION</a>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <!-- Single Popular Car Start -->
-                                        <div class="col-lg-4 col-md-6 suv">
-                                            <div class="single-popular-car">
-                                                <div class="p-car-thumbnails">
-                                                    <a class="car-hover" href="/assets/images/cars/car-7.jpg">
-                                                      <img src="/assets/images/cars/car-7.jpg" alt="JSOFT">
-                                                   </a>
-                                                </div>
-
-                                                <div class="p-car-content">
-                                                    <h3>
-                                                        <a href="#">Toyota Fortuner</a>
-                                                        <span class="price"><i class="fa fa-tag"></i> Rs 110/hour</span>
-                                                    </h3>
-
-                                                    <h5>Suv</h5>
-
-                                                    <div class="p-car-feature">
-                                                        <a href="#">2017</a>
-                                                        <a href="#">manual</a>
-                                                        <a href="#">AIR CONDITION</a>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <!-- Single Popular Car End -->
-                                        <div class="col-lg-4 col-md-6 suv">
-                                            <div class="single-popular-car">
-                                                <div class="p-car-thumbnails">
-                                                    <a class="car-hover" href="/assets/images/cars/car-8.jpg">
-                                                      <img src="/assets/images/cars/car-8.jpg" alt="JSOFT">
-                                                   </a>
-                                                </div>
-
-                                                <div class="p-car-content">
-                                                    <h3>
-                                                        <a href="#">Ford Endaveour</a>
-                                                        <span class="price"><i class="fa fa-tag"></i> Rs 125/hour</span>
-                                                    </h3>
-
-                                                    <h5>Suv</h5>
-
-                                                    <div class="p-car-feature">
-                                                        <a href="#">2017</a>
-                                                        <a href="#">manual</a>
-                                                        <a href="#">AIR CONDITION</a>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <!-- Single Popular Car Start -->
-                                        <div class="col-lg-4 col-md-6 suv">
-                                            <div class="single-popular-car">
-                                                <div class="p-car-thumbnails">
-                                                    <a class="car-hover" href="/assets/images/cars/car-9.jpg">
-                                                      <img src="/assets/images/cars/car-9.jpg" alt="JSOFT">
-                                                   </a>
-                                                </div>
-
-                                                <div class="p-car-content">
-                                                    <h3>
-                                                        <a href="#">Hundai Tucson</a>
-                                                        <span class="price"><i class="fa fa-tag"></i> Rs100/hour</span>
-                                                    </h3>
-
-                                                    <h5>Suv</h5>
-
-                                                    <div class="p-car-feature">
-                                                        <a href="#">2017</a>
-                                                        <a href="#">manual</a>
-                                                        <a href="#">AIR CONDITION</a>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                         <!-- Single Popular Car start -->
-                                        <div class="col-lg-4 col-md-6 lux">
-                                            <div class="single-popular-car">
-                                                <div class="p-car-thumbnails">
-                                                    <a class="car-hover" href="/assets/images/cars/car-10.jpg">
-                                                      <img src="/assets/images/cars/car-10.jpg" alt="JSOFT">
-                                                   </a>
-                                                </div>
-
-                                                <div class="p-car-content">
-                                                    <h3>
-                                                        <a href="#">Mercedes ClA</a>
-                                                        <span class="price"><i class="fa fa-tag"></i> Rs 200/hour</span>
-                                                    </h3>
-
-                                                    <h5>Luxury</h5>
-
-                                                    <div class="p-car-feature">
-                                                        <a href="#">2018</a>
-                                                        <a href="#">Manual</a>
-                                                        <a href="#">AIR CONDITION</a>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <!-- Single Popular Car end -->
-                                        <!-- Single Popular Car start -->
-                                        <div class="col-lg-4 col-md-6 lux">
-                                            <div class="single-popular-car">
-                                                <div class="p-car-thumbnails">
-                                                    <a class="car-hover" href="/assets/images/cars/car-11.jpg">
-                                                      <img src="/assets/images/cars/car-11.jpg" alt="JSOFT">
-                                                   </a>
-                                                </div>
-
-                                                <div class="p-car-content">
-                                                    <h3>
-                                                        <a href="#">BMW 5-series</a>
-                                                        <span class="price"><i class="fa fa-tag"></i> Rs 250/hour</span>
-                                                    </h3>
-
-                                                    <h5>Luxury</h5>
-
-                                                    <div class="p-car-feature">
-                                                        <a href="#">2018</a>
-                                                        <a href="#">Automatic</a>
-                                                        <a href="#">AIR CONDITION</a>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <!-- Single Popular Car end -->
 
                                     </div>
                                     <!-- PopularCars Tab Content End -->

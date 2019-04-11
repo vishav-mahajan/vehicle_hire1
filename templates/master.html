@@ -77,7 +77,26 @@
                                 <li><a href="{% url 'front_app:contact'%}">Contact</a></li>
                                 <li><a href="{% url 'front_app:team'%}">Team</a></li>
                                 {% if request.session.authenticate %}
-                                    <li><a href="/logout/">Logout</a></li>
+                                    <li class="mr-3" ><a href="#" >{{ su.user_fname }} {{ su.user_lname }}</a>
+                                    <ul>
+                                    <li><a href="#">Dashboard</a></li>
+                                    <li><a href="#">Account</a></li>
+                                    <li><a href="/logout">Logout</a></li>
+                                    </ul>
+
+                                </li>
+                                    <!--div class="btn-group">
+                                    <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        name
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <ul>
+                                        <li><a href="#">Dashboard</a></li>
+                                    <li><a href="#">Account</a></li>
+                                            <li><a href="/logout">Logout</a></li></ul>
+                                     </div>
+                                    </div-->
+                                    <img width="60" height="60" style="object-fit: fill; border-radius: 100%" src="/media/{{ su.user_image }}">
                                 {% else %}
 
                                 <li><a href="#">Login</a>
@@ -89,6 +108,8 @@
 
                                 </li>
                                 {% endif %}
+
+
                             </ul>
                         </nav>
                     </div>
@@ -201,6 +222,11 @@
 
     <!--=== Mian Js ===-->
     <script src="/assets/js/main.js"></script>
+
+    {% block jquery %}
+    {% endblock %}
+
+
 
 </body>
 

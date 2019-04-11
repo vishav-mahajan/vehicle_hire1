@@ -1,9 +1,31 @@
 {% extends "admin_master.html" %}
 {% block content %}
-    <h1>Welcome manager</h1>
-    {{ k1 }}
+    <div id="page-wrapper">
+			<div class="main-page">
+				<h2 class="title1">Dashboard</h2>
+                <div class="panel1 variations-panel">
+					<div class="panel-body mtn">
+						<div class="col-adjust-10">
+							<div class="row">
 
+                            <div class="col-md-3 agileits-bnt">
 
-
-    <h1><a href="/add_vehicle/">add V</a></h1>
+                                {% if request.session.role_id == 4 %}
+                                <a href="/businessuser/vehicle_company"><div type="submit" class="bg-primary pv20 text-white fw600 text-center" >Add Company</div></a>
+                                <a href="/businessuser/vehicle_category"><div class="bg-primary pv20 text-white fw600 text-center">Add Category</div></a>
+                                <a href="/businessuser/vehicle_details"><div class="bg-primary pv20 text-white fw600 text-center">Vehicle Details</div></a>
+                                <a href="/businessuser/showdata"><div class="bg-primary pv20 text-white fw600 text-center">Show Vehicles</div></a>
+                                {% else %}
+                                <a href="/manager/vehicle_company"><div type="submit" class="bg-primary pv20 text-white fw600 text-center" >Add Company</div></a>
+                                <a href="/manager/vehicle_category"><div class="bg-primary pv20 text-white fw600 text-center">Add Category</div></a>
+                                <a href="/manager/vehicle_details"><div class="bg-primary pv20 text-white fw600 text-center">Vehicle Details</div></a>
+                                <a href="/manager/showdata"><div class="bg-primary pv20 text-white fw600 text-center">Show Vehicles</div></a>
+                                {% endif %}
+								</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
 {% endblock %}

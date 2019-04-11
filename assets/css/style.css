@@ -2255,7 +2255,7 @@ body,
 }
 
 .car-thumb-4 {
-	background-image: url(/assets/img/car/car-4.jpg);
+	background-image: url(/assets/img/car/car-04.jpg);
 }
 
 .car-list-thumb {
@@ -2660,7 +2660,7 @@ body,
 }
 
 .ser-thumb-bg-4 {
-	background-image: url(/assets/img/car/car-5.jpg);
+	background-image: url(/assets/img/car/car-05.jpg);
 }
 
 .single-service-item {
@@ -2939,6 +2939,10 @@ body,
 	-webkit-transition: all 0.4s ease 0s;
 	transition: all 0.4s ease 0s;
 	width: 100%;
+}
+.login-form input[type="radio"]{
+	width: auto;
+	vertical-align: middle;
 }
 
 .login-form input:focus {

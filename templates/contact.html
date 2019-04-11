@@ -8,7 +8,10 @@
                     <div class="section-title  text-center">
                         <h2>Contact Us</h2>
                         <span class="title-line"><i class="fa fa-car"></i></span>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                        <p>Feel free to Contact us anytime ! Your query is our priority </p>
+                        {% if valid %}
+                        <h2>Form Submitted, We will contact you ASAP</h2>
+                        {% endif %}
                     </div>
                 </div>
                 <!-- Page Title End -->
@@ -21,17 +24,18 @@
             <div class="row">
                 <div class="col-lg-10 m-auto">
                     <div class="contact-form">
-                        <form action="index.html">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
                             <div class="row">
                                 <div class="col-lg-6 col-md-6">
                                     <div class="name-input">
-                                        <input type="text" placeholder="Full Name">
+                                        <input type="text" placeholder="Full Name" name="user_name">
                                     </div>
                                 </div>
 
                                 <div class="col-lg-6 col-md-6">
                                     <div class="email-input">
-                                        <input type="email" placeholder="Email Address">
+                                        <input type="email" placeholder="Email Address" name="user_email">
                                     </div>
                                 </div>
                             </div>
@@ -39,19 +43,19 @@
                             <div class="row">
                                 <div class="col-lg-6 col-md-6">
                                     <div class="website-input">
-                                        <input type="url" placeholder="Website">
+                                        <input type="text" placeholder="Mobile" name="user_mobile">
                                     </div>
                                 </div>
 
                                 <div class="col-lg-6 col-md-6">
                                     <div class="subject-input">
-                                        <input type="text" placeholder="Subject">
+                                        <input type="text" placeholder="Subject" name="user_subject">
                                     </div>
                                 </div>
                             </div>
 
                             <div class="message-input">
-                                <textarea name="review" cols="30" rows="10" placeholder="Message"></textarea>
+                                <textarea name="user_message" cols="30" rows="10" placeholder="Message" ></textarea>
                             </div>
 
                             <div class="input-submit">

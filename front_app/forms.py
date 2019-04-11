@@ -1,6 +1,17 @@
 from django import forms
-from front_app.models import MySiteUser,User_role
+from front_app.models import MySiteUser,User_role,contact_us,login_details
 
+
+class ContactForm(forms.ModelForm):
+    class Meta():
+        model=contact_us
+        exclude=[
+            "user_name",
+            "user_email",
+            "user_mobile",
+            "user_subject",
+            "user_message",
+        ]
 class User_roleForm(forms.ModelForm):
     class Meta():
         model=User_role
@@ -16,7 +27,8 @@ class MySiteUserForm(forms.ModelForm):
 
         exclude=[
             "site_role_id",
-            "user_name",
+            "user_fname",
+            "user_lname",
             "user_email",
             "user_password",
             "user_mobile",
@@ -26,7 +38,17 @@ class MySiteUserForm(forms.ModelForm):
             "user_image",
             "user_isavailable",
             "user_isqueue",
-            "last_login"
+            "registered_on"
+        ]
+
+class LoginDetailsForm(forms.ModelForm):
+    class Meta():
+        model=login_details
+        exclude=[
+            "login_id",
+            "user_email",
+            "login_time",
+            "logout_time"
         ]
 
 

@@ -1,0 +1,47 @@
+{% extends "admin_master.html" %}
+{% block content %}
+<div id="page-wrapper">
+			<div class="main-page">
+				<div class="tables">
+                    <div class="table-responsive bs-example widget-shadow">
+						<h4>Vehicle Details :</h4>
+						<table class="table table-bordered">
+                            <thead>
+                            <tr>
+
+
+                                <th>Vehicle Type</th>
+                                <th>Vehicle Company</th>
+                                <th>Vehicle Name</th>
+                                <th>Vehicle Price</th>
+                                <th>Vehicle Active</th>
+                                <th>Vehicle Availability</th>
+                                <th>Operation</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if dd %}
+
+                                {% for i in dd %}
+
+                            <tr>
+
+
+                                <td>{{i.vehicle_id.vehicle_category_name }}</td>
+                                <td>{{ i.company_id.company_name }}</td>
+                                <td>{{ i.vehicle_name }}</td>
+                                <td>{{ i.vehicle_price }}</td>
+                                <td>{{ i.vehicle_isactive }}</td>
+                                <td>{{ i.vehicle_isavailable }}</td>
+                                <td><a href="#">Edit</a>/<a href="#">Delete</a></td>
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+					</div>
+
+               </div>
+            </div>
+</div>
+{% endblock %}

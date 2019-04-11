@@ -30,13 +30,13 @@
 							<form  method="post">
                                 {% csrf_token %}
 								<div class="username">
-									<input type="text"  id="user_email" name="user_email" placeholder="Email or Username">
+									<input type="text"  id="user_email" name="user_email" required placeholder="Email or Username">
 								</div>
                                 {% if pass1 %}
                                 <p>Username Doesn't Exist</p>
                                 {% endif %}
 								<div class="password">
-									<input type="password" id="user_password" name="user_password" placeholder="Password">
+									<input type="password" id="user_password" name="user_password" required placeholder="Password">
 								</div>
                             {% if pass2 %}
                                  <p>Invali Password</p>

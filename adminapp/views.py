@@ -6,11 +6,13 @@ import authorize as au
 # Create your views here.
 
 def index(request):
-    auth=False
-    auth = au.authorizeuser(request.session['authenticate'], request.session['role_id'], 2)
+    try:
+        auth = au.authorizeuser(request.session['authenticate'], request.session['role_id'], 2)
+    except:
+        return redirect("/login")
     if auth == True:
 
-        return render(request, "manager.html")
+        return render(request, "managerindex.html")
     else:
         auth, message = auth
         if (message == "Not Logged In"):

@@ -31,3 +31,5 @@ class VehiclesDetails(models.Model):
 
 
 
+
+

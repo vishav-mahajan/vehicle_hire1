@@ -109,8 +109,9 @@ def vehicle_details(request):
 
 def showdata(request):
     email = request.session['email']
+    ccd=VehicleCategories.objects.all()
     userdata=VehiclesDetails.objects.filter(u_email=email)
-    return render(request,"view_cars.html",{'ud':userdata})
+    return render(request,"view_cars.html",{'ud':userdata,'ccd':ccd})
 
 def delete_data(request):
     carid=request.GET['id']
@@ -126,6 +127,10 @@ def delete_data(request):
         pass
 
 def updatedata(request):
+    year = int(dt.datetime.now().strftime(" %Y "))
+    companydata = VehicleCompany.objects.all()
+    companycategorydata = VehicleCategories.objects.all()
+    userdata = VehiclesDetails.objects.all()
     get_id = request.GET['id']
     userdata=VehiclesDetails.objects.get(vehicle_ref_id=get_id)
     if request.method=="POST":
@@ -134,19 +139,20 @@ def updatedata(request):
             myfile = request.FILES['vehicle_image']
             fs = FileSystemStorage()
             filename = fs.save(myfile.name, myfile)
-            user_image = fs.url(filename)
+            fs.url(filename)
             user_image = myfile.name
 
         name=request.POST["vehicle_name"]
-
+        model=request.POST['vehicle_model']
+        price=request.POST['vehicle_price']
         desc = request.POST["vehicle_description"]
-        #img = request.POST["vehicle_image"]
+        image = user_image
 
-        update=VehiclesDetails(vehicle_ref_id=get_id,vehicle_name=name,vehicle_description=desc,vehicle_image=user_image)
-        update.save(update_fields=["vehicle_name","vehicle_description","vehicle_image"])
+        update=VehiclesDetails(vehicle_ref_id=get_id,vehicle_name=name,vehicle_description=desc,vehicle_image=image,vehicle_price=price,vehicle_model=model)
+        update.save(update_fields=["vehicle_name","vehicle_description","vehicle_image","vehicle_price","vehicle_model"])
         if request.session['role_id']==4:
             return redirect("businessuserapp:showdata")
         else:
             return redirect("managerapp:showdata")
-    return render(request,"update_cars.html",{'vd':userdata})
+    return render(request,"update_cars.html",{'vd':userdata,'yr':year,'ccd':companycategorydata,'cd':companydata})
 

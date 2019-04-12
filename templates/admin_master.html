@@ -129,11 +129,16 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
             {% if request.session.role_id == 4 %}
 
                 <!-- BUSINESS USER hEADER-->
-            <h4><a class="navbar-brand" href="/businessuser">Business_User</a></h4>
+            <h3><a class="navbar-brand" href="/businessuser"><span class="fa fa-user"></span>Business User</a></h3>
           </div>
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="sidebar-menu">
               <li class="header">MAIN NAVIGATION</li>
+                <li class="treeview">
+                <a href="/">
+                <i class="fa fa-home"></i> <span>Home Page</span>
+                </a>
+              </li>
               <li class="treeview">
                 <a href="/businessuser">
                 <i class="fa fa-dashboard"></i> <span>Dashboard</span>
@@ -142,27 +147,27 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 
                <li class="treeview">
                 <a href="/businessuser/vehicle_company">
-                <i class="fa fa-laptop"></i>
+                <i class="fa fa-car"></i>
                 <span>Add Company</span>
                 </a>
               </li>
                 <li class="treeview">
                 <a href="/businessuser/vehicle_category">
-                <i class="fa fa-laptop"></i>
+                <i class="fa fa-truck"></i>
                 <span>Add Category</span>
                 </a>
               </li>
                 </li>
                 <li class="treeview">
                 <a href="/businessuser/vehicle_details">
-                <i class="fa fa-laptop"></i>
+                <i class="fa fa-upload"></i>
                 <span>Add Vehicle Details</span>
                 </a>
 
                 </li>
                 <li class="treeview">
                 <a href="/businessuser/showdata">
-                <i class="fa fa-laptop"></i>
+                <i class="fa fa-desktop"></i>
                 <span>Show Vehicles</span>
                 </a>
               </li>
@@ -174,11 +179,16 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 
 
                 <!-- MAnager HEADER-->
-                <h1><a class="navbar-brand" href="/manager"><span class="fa fa-area-chart"></span> Manager</a></h1>
+                <h3><a class="navbar-brand" href="/manager"><span class="fa fa-user-plus"></span> Manager</a></h3>
           </div>
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="sidebar-menu">
               <li class="header">MAIN NAVIGATION</li>
+                <li class="treeview">
+                <a href="/">
+                <i class="fa fa-home"></i> <span>Home Page</span>
+                </a>
+              </li>
               <li class="treeview">
                 <a href="/manager">
                 <i class="fa fa-dashboard"></i> <span>Dashboard</span>
@@ -187,27 +197,27 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 
               <li class="treeview">
                 <a href="/manager/vehicle_company">
-                <i class="fa fa-laptop"></i>
+                <i class="fa fa-truck"></i>
                 <span>Add Company</span>
                 </a>
               </li>
                 <li class="treeview">
                 <a href="/manager/vehicle_category">
-                <i class="fa fa-laptop"></i>
+                <i class="fa fa-car"></i>
                 <span>Add Category</span>
                 </a>
               </li>
                 </li>
                 <li class="treeview">
                 <a href="/manager/vehicle_details">
-                <i class="fa fa-laptop"></i>
+                <i class="fa fa-upload"></i>
                 <span>Add Vehicle Details</span>
                 </a>
 
                 </li>
                 <li class="treeview">
                 <a href="/manager/showdata">
-                <i class="fa fa-laptop"></i>
+                <i class="fa fa-desktop"></i>
                 <span>Show Vehicles</span>
                 </a>
               </li>
@@ -479,8 +489,8 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 								<div class="profile_img">
 									<span class="prfil-img"><img src="/media/{{ su.user_image }}" height="50" width="50" style="object-fit: fill" alt=""> </span>
 									<div class="user-name">
-										<p>{{ su.user_fname}} {{ su.user_lname }}</p>
-										<span>{{ su.site_role_id.role_name }}</span>
+										<h5 class="text-uppercase">{{ su.user_fname}} {{ su.user_lname }}</h5>
+										<span class="text-uppercase">{{ su.site_role_id.role_name }}</span>
 									</div>
 									<i class="fa fa-angle-down lnr"></i>
 									<i class="fa fa-angle-up lnr"></i>
@@ -522,6 +532,6 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 	<!-- Bootstrap Core JavaScript -->
    <script src="/assets/assets_admin/js/bootstrap.js"> </script>
 	<!-- //Bootstrap Core JavaScript -->
-	
+
 </body>
 </html>

@@ -3,9 +3,10 @@ from front_app .forms import MySiteUserForm,ContactForm,LoginDetailsForm
 from front_app .models import MySiteUser,User_role,contact_us,login_details
 from managerapp.models import VehiclesDetails,VehicleCategories,VehicleCompany
 from django.core.files.storage import FileSystemStorage
-from emailSend import email_send
-import authorize
+from emailSend import email_send,otp_send
+import authorize, otp_generation
 import datetime as dt
+from datetime import timedelta
 
 def index(request):
     email = request.session['email']
@@ -38,9 +39,9 @@ def login(request):
 
 
                 if get_id==1:
-                    return redirect("/manager")
+                    return redirect("/")
                 if get_id==4:
-                    return redirect("/businessuser")
+                    return redirect("/")
                 if get_id==3:
                     return redirect("/")
                 if get_id==2:
@@ -82,7 +83,7 @@ def signup(request):
             f1.user_image=user_image
             f1.user_gender=request.POST['user_gender']
             f1.user_dob=request.POST['user_dob']
-            #email_send(f1.user_email, f1.user_password)
+            email_send(f1.user_email, f1.user_password)
             f1.save()
 
             return redirect("/login")
@@ -137,4 +138,35 @@ def car_detail(request):
     siteuserdata = MySiteUser.objects.get(user_email=email)
     return render (request,"car-details.html",{'su':siteuserdata})
 
+def updatepassword(request):
+    if request.session['authenticate'] == True:
+        email = request.session['email']
+        userdata = MySiteUser.objects.get(user_email=email)
+        if request.method=="POST":
+            timedb = userdata.otp_time_generation
+            get_time = dt.datetime.strptime(timedb, '%H:%M:%S').time()
+            curr_time = dt.datetime.now().strftime("%H:%M:%S")
+            get_otp = userdata.otp
+            pw = userdata.user_password
+            current_password=request.POST["password"]
+            curr_otp=request.POST['curr_otp']
+            interval= curr_time - get_time
+            check="04:00:00"
+            check=dt.datetime.now().strptime(check,"%H:%M:%S").time()
+            if pw==current_password and get_otp==curr_otp and interval <= check:
+                new_password=request.POST['new_password']
+                update=MySiteUser(user_email=email,user_password=new_password)
+                update.save(update_fields=["user_password"])
+                return redirect("/logout")
+            else:
 
+                return render(request, "passwordupdate.html",{'valid':True} )
+        else:
+            otp, time = otp_generation.otpgenerate()
+            update = MySiteUser(user_email=email, otp_time_generation=time, otp=otp)
+            update.save(update_fields=["otp", "otp_time_generation"])
+            otp_send(email, otp, "Change Password", "Change Password")
+
+    else:
+        return redirect("/login")
+    return render(request,"passwordupdate.html")

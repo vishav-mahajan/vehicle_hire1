@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--=== Favicon ===-->
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/assets/logo.png" type="image/x-icon" />
 
     <title>AdRENTure Car-Hire</title>
 
@@ -71,16 +71,26 @@
                     <div class="col-lg-8 d-none d-xl-block">
                         <nav class="mainmenu alignright">
                             <ul>
-                                <li class="active"><a href={% url 'front_app:index' %}>Home</a>
+                                <li ><a href={% url 'front_app:index' %}>Home</a>
                                 </li>
                                 <li><a href="{% url 'front_app:about'%}">About</a></li>
                                 <li><a href="{% url 'front_app:contact'%}">Contact</a></li>
-                                <li><a href="{% url 'front_app:team'%}">Team</a></li>
+                                <li><a class="mr-4" href="{% url 'front_app:team'%}">Team</a></li>
                                 {% if request.session.authenticate %}
-                                    <li class="mr-3" ><a href="#" >{{ su.user_fname }} {{ su.user_lname }}</a>
-                                    <ul>
-                                    <li><a href="#">Dashboard</a></li>
-                                    <li><a href="#">Account</a></li>
+                                    <li><img  width="60" height="60" style="object-fit: fill; border-radius: 100%; border: groove; border-color: #e0a800"src="/media/{{ su.user_image }}">
+                                    <ul class="aligncenter">
+                                    <li><a title="{{ request.session.email }}({{ su.site_role_id.role_name }})" class="btn btn-outline-warning btn-lg " href="#" ><h6> {{ su.user_fname }} {{ su.user_lname }} </h6></a>
+                                        </li>
+                                        {% if request.session.role_id == 4 %}
+                                    <li><a href="/businessuser">Dashboard</a></li>
+                                            {% elif request.session.role_id == 3 %}
+                                    <li><a href="/">Dashboard</a></li>
+                                            {% elif request.session.role_id == 1 %}
+                                    <li><a href="/manager">Dashboard</a></li>
+                                            {% elif request.session.role_id == 2 %}
+                                    <li><a href="/master">Dashboard</a></li>
+                                            {% endif %}
+                                    <li><a href="#">My Bookings</a></li>
                                     <li><a href="/logout">Logout</a></li>
                                     </ul>
 
@@ -96,10 +106,11 @@
                                             <li><a href="/logout">Logout</a></li></ul>
                                      </div>
                                     </div-->
-                                    <img width="60" height="60" style="object-fit: fill; border-radius: 100%" src="/media/{{ su.user_image }}">
+
                                 {% else %}
 
-                                <li><a href="#">Login</a>
+                                    <li>
+                                        <a>Login</a>
                                     <ul>
                                     <li><a href="{% url 'front_app:login' %}">User</a></li>
                                     <li><a href="{% url 'front_app:login' %}">Business User</a></li>

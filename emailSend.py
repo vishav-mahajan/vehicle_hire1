@@ -24,3 +24,27 @@ def email_send(email,password):
     server.sendmail(msg["From"],msg['To'],text)
     server.quit()
     print('mail sent')
+
+def otp_send(email, otp, subject, message):
+        msg = MIMEMultipart()
+        msg["From"] = 'vishavmahajan96@gmail.com'
+        msg['To'] = email
+        msg['Subject'] = subject
+        #filename = "Rahul.txt"
+        #with open(filename,'r') as f:
+         #   message = MIMEText(f.read(),_subtype = 'txt')
+            #msg.add_header('Content-disposition','attatchment', filename = filename)
+            #msg.attach(message)
+        body ="Your One Time " + message + "Credentials are :- \n"\
+        +"Username: "+ email +"\n"+ "OTP: " + str(otp)
+
+        msg.attach(MIMEText(body,'plain'))
+        server = smtplib.SMTP('smtp.gmail.com',587)
+        server.starttls()
+        server.login('vishavmahajan96@gmail.com','vishav@123')
+        text = msg.as_string()
+        server.sendmail(msg["From"],msg['To'],text)
+        server.quit()
+
+
+

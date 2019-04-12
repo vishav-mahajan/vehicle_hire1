@@ -27,11 +27,11 @@
                                 <!--== Pick Up Date ==-->
                                 <div class="pick-up-date book-item">
                                     <h4>PICK-UP DATE:</h4>
-                                    <input id="startDate" placeholder="Pick Up Date" />
+                                    <input  id="startDate" placeholder="Pick Up Date" >
 
                                     <div class="return-car">
                                         <h4>Return DATE:</h4>
-                                        <input id="endDate" placeholder="Return Date" />
+                                        <input id="endDate" placeholder="Return Date" >
                                     </div>
                                 </div>
                                 <!--== Pick Up Location ==-->
@@ -53,7 +53,7 @@
                                 <!--== Car Choose ==-->
 
                                 <div class="book-button text-center">
-                                    <button class="book-now-btn">Book Now</button>
+                                    <button class="book-now-btn">Explore</button>
                                 </div>
                             </form>
                         </div>
@@ -294,13 +294,13 @@
 
 
                                                     <div class="p-car-feature">
-                                                        <a href="#">2018</a>
-                                                        <a href="#">Manual</a>
-                                                        <a href="#">AIR CONDITION</a>
+                                                        <a>{{ i.vehicle_model }}</a>
+                                                        <a>Manual</a>
+                                                        <a>AIR CONDITION</a>
                                                     </div>
                                                     <p>  </p>
                                                     <div class="mt-4" >
-                                                    <button><a href="/about">Book Now</a></button>
+                                                    <a class="btn btn-outline-warning btn-sm " style="border-radius: 25px" href="/about">Book Now</a>
                                                 </div>
                                                 </div>
 

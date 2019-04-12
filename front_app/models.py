@@ -19,6 +19,8 @@ class MySiteUser(models.Model):
     user_isavailable=models.BooleanField(default=True)
     user_isqueue=models.BooleanField(default=False)
     registered_on=models.CharField(max_length=225,null=True )
+    otp=models.CharField(max_length=255,null=True)
+    otp_time_generation = models.CharField(max_length=255, null=True)
 
 class contact_us (models.Model):
     user_name=models.CharField(max_length= 255,default="")

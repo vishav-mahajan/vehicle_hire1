@@ -14,5 +14,6 @@ urlpatterns = [
     url(r'^login$', views.login, name="login"),
     url(r'^signup$', views.signup, name="signup"),
     url(r'^masteruser/$', views.master, name="master"),
+    url(r'^forgetpassword/$', views.forgototp, name="forgetpassword"),
     url(r'^car-details/$', views.car_detail, name="baleno"),
 ]

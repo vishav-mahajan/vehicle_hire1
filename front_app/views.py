@@ -47,10 +47,10 @@ def login(request):
                 if get_id==2:
                     return redirect("/master")
             else:
-                return render(request, "login.html",{"pass2":True})
+                return render(request, "login.html",{"pass2":True,'login':True},)
         except:
-            return render(request, "login.html", {"pass1": True})
-    return render(request,"login.html")
+            return render(request, "login.html", {"pass1": True,'login':True})
+    return render(request,"login.html",{'login':True})
 
 def logout(request):
     data=login_details.objects.latest("login_id")
@@ -79,13 +79,12 @@ def signup(request):
             f1.user_mobile = request.POST['user_mobile']
             f1.user_password = request.POST['user_password']
             f1.site_role_id_id=request.POST['select']
-            f1.registered_on=dt.datetime.now().date()
+            f1.registered_on = dt.datetime.now().date()
             f1.user_image=user_image
             f1.user_gender=request.POST['user_gender']
             f1.user_dob=request.POST['user_dob']
             email_send(f1.user_email, f1.user_password)
             f1.save()
-
             return redirect("/login")
         else:
             return render(request, "register.html", {'invalid': True})
@@ -142,31 +141,99 @@ def updatepassword(request):
     if request.session['authenticate'] == True:
         email = request.session['email']
         userdata = MySiteUser.objects.get(user_email=email)
+        pw = userdata.user_password
+        timedb = userdata.otp_time_generation
+
         if request.method=="POST":
-            timedb = userdata.otp_time_generation
             get_time = dt.datetime.strptime(timedb, '%H:%M:%S').time()
+            get_time = get_time.second + get_time.minute * 60 + get_time.hour * 3600
             curr_time = dt.datetime.now().strftime("%H:%M:%S")
+            curr_time = dt.datetime.now().strptime(curr_time, "%H:%M:%S").time()
+            curr_time = curr_time.second + curr_time.minute * 60 + curr_time.hour * 3600
+            interval = curr_time - get_time
             get_otp = userdata.otp
             pw = userdata.user_password
             current_password=request.POST["password"]
             curr_otp=request.POST['curr_otp']
-            interval= curr_time - get_time
-            check="04:00:00"
-            check=dt.datetime.now().strptime(check,"%H:%M:%S").time()
-            if pw==current_password and get_otp==curr_otp and interval <= check:
+
+            if pw==current_password and get_otp==curr_otp and interval <= 14400:
                 new_password=request.POST['new_password']
-                update=MySiteUser(user_email=email,user_password=new_password)
-                update.save(update_fields=["user_password"])
+                otp=""
+                otpgrn=""
+                update=MySiteUser(user_email=email,user_password=new_password,otp=otp,otp_time_generation=otpgrn)
+                update.save(update_fields=["user_password","otp","otp_time_generation"])
                 return redirect("/logout")
             else:
-
                 return render(request, "passwordupdate.html",{'valid':True} )
         else:
-            otp, time = otp_generation.otpgenerate()
-            update = MySiteUser(user_email=email, otp_time_generation=time, otp=otp)
-            update.save(update_fields=["otp", "otp_time_generation"])
-            otp_send(email, otp, "Change Password", "Change Password")
-
+            if timedb == "":
+                otp, time = otp_generation.otpgenerate()
+                update = MySiteUser(user_email=email, otp_time_generation=time, otp=otp)
+                update.save(update_fields=["otp", "otp_time_generation"])
+                otp_send(email, otp, "Change Password", "Change Password")
+            else:
+                get_time = dt.datetime.strptime(timedb, '%H:%M:%S').time()
+                get_time = get_time.second + get_time.minute * 60 + get_time.hour * 3600
+                curr_time = dt.datetime.now().strftime("%H:%M:%S")
+                curr_time = dt.datetime.now().strptime(curr_time,"%H:%M:%S").time()
+                curr_time = curr_time.second + curr_time.minute * 60 + curr_time.hour * 3600
+                interval = curr_time - get_time
+                if interval > 14400:
+                    otp, time = otp_generation.otpgenerate()
+                    update = MySiteUser(user_email=email, otp_time_generation=time, otp=otp)
+                    update.save(update_fields=["otp", "otp_time_generation"])
+                    otp_send(email, otp, "Change Password", "Change Password")
     else:
         return redirect("/login")
-    return render(request,"passwordupdate.html")
+    return render(request,"passwordupdate.html",{"up":True})
+
+
+def forgototp(request):
+    if request.method=="POST":
+        email = request.POST['user_email']
+        userdata = MySiteUser.objects.get(user_email=email)
+        if email==userdata.user_email:
+            timedb = userdata.otp_time_generation
+            if timedb == "":
+                otp, time = otp_generation.otpgenerate()
+                update = MySiteUser(user_email=email, otp_time_generation=time, otp=otp)
+                update.save(update_fields=["otp", "otp_time_generation"])
+                otp_send(email, otp, "Change Password", "Change Password")
+            else:
+                get_time = dt.datetime.strptime(timedb, '%H:%M:%S').time()
+                get_time = get_time.second + get_time.minute * 60 + get_time.hour * 3600
+                curr_time = dt.datetime.now().strftime("%H:%M:%S")
+                curr_time = dt.datetime.now().strptime(curr_time,"%H:%M:%S").time()
+                curr_time = curr_time.second + curr_time.minute * 60 + curr_time.hour * 3600
+                interval = curr_time - get_time
+                if interval > 14400:
+                    otp, time = otp_generation.otpgenerate()
+                    update = MySiteUser(user_email=email, otp_time_generation=time, otp=otp)
+                    update.save(update_fields=["otp", "otp_time_generation"])
+                    otp_send(email, otp, "Change Password", "Change Password")
+        return render(request, "login.html", {'ud': userdata})
+
+    return render(request, "login.html", {'fp': True})
+
+
+
+
+def fpassword(request):
+        get_id=request.GET["id"]
+        userdata = MySiteUser.objects.get(user_email=get_id)
+        if request.method=="POST":
+            get_otp = userdata.otp
+            curr_otp=request.POST['curr_otp']
+
+            if get_otp==curr_otp:
+                new_password=request.POST['new_password']
+                otp=""
+                otpgrn=""
+                update=MySiteUser(user_email=get_id,user_password=new_password,otp=otp,otp_time_generation=otpgrn)
+                update.save(update_fields=["user_password","otp","otp_time_generation"])
+                return redirect("/logout")
+            else:
+                return render(request, "passwordupdate.html",{'valid':True} )
+        else:
+            pass
+        return render(request,"passwordupdate.html")

@@ -38,7 +38,9 @@ class MySiteUserForm(forms.ModelForm):
             "user_image",
             "user_isavailable",
             "user_isqueue",
-            "registered_on"
+            "registered_on",
+            "otp",
+            "otp_time_generation"
         ]
 
 class LoginDetailsForm(forms.ModelForm):

@@ -1,6 +1,8 @@
 {% extends 'master.html' %}
 
 {% block content %}
+
+
     <!--== Page Title Area Start ==-->
     <section id="page-title-area" class="section-padding overlay">
         <div class="container">
@@ -26,16 +28,19 @@
                 <div class="col-lg-4 col-md-8 m-auto">
                 	<div class="login-page-content">
                 		<div class="login-form">
+
                 			<h3>Welcome Back!</h3>
 							<form  method="post">
                                 {% csrf_token %}
+
+                            {% if login %}
 								<div class="username">
 									<input type="text"  id="user_email" name="user_email" required placeholder="Email or Username">
 								</div>
-                                {% if pass1 %}
+                            {% if pass1 %}
                                 <p>Username Doesn't Exist</p>
                                 {% endif %}
-								<div class="password">
+                            <div class="password">
 									<input type="password" id="user_password" name="user_password" required placeholder="Password">
 								</div>
                             {% if pass2 %}
@@ -47,15 +52,67 @@
                             {% if pass %}
                                  <h6>Please Login to Access</h6>
                                 {% endif %}
+                            {% endif %}
 
+
+
+
+                            {% if fp %}
+								<div class="username">
+									<input type="text"  id="user_email" name="user_email" required placeholder="Email or Username">
+								</div>
+                                {% if not_sent %}
+                                <p>Username Doesn't Exist</p>
+                                {% endif %}
+
+                                <div class="log-btn">
+                                <button type="submit" id="otp_gen"><i class="fa fa-sign-in" ></i> Generate Otp</button>
+								</div>
+                                <div class="password">
+									<input type="password" id="otp_gen" name="otp_gen" style="display: none"  value=""   placeholder="Enter OTP to regenerate Password">
+								</div>
+
+                            {% endif %}
+
+
+                                {% if otp_gen %}
+                                <div class="username">
+									<input type="text"   id="user_email" name="user_email" value="{{ em }}" readonly="True" placeholder="Email or Username">
+								</div>
+                                    <div class="password">
+									<input type="password" id="otp_gen" name="otp_gen"  required placeholder="Enter OTP to regenerate Password">
+								</div>
+                                    {% if valid %}
+                                <p>OTP Doesn't Match</p>
+                                {% endif %}
+                                     <div class="log-btn">
+                                <button type="submit"><i class="fa fa-sign-in" ></i> Generate Password</button>
+								</div>
+
+                            {% endif %}
 							</form>
                 		</div>
-                		
 
+
+                    {% if login %}
                 		<div class="create-ac">
-
-                			<p>Don't have an account? <a href={% url "front_app:signup" %}>Sign Up</a></p>
+                            <p><a href="{% url "front_app:forgetpassword" %}">Forget Password</a></p>
+                        <p>Don't have an account? <a href={% url "front_app:signup" %}>Sign Up</a></p>
                 		</div>
+                    {% endif %}
+
+                     {% if fp %}
+                         <div class="create-ac">
+                			<p>Don't have an account? <a href={% url "front_app:signup" %}>Sign Up</a></p>
+                         </div>
+                     {% endif %}
+                    {% if otp_gen %}
+                         <div class="create-ac">
+                			<p>Don't have an account? <a href={% url "front_app:signup" %}>Sign Up</a></p>
+                         </div>
+                     {% endif %}
+
+
 
                 	</div>
                 </div>
@@ -65,3 +122,13 @@
     <!--== Login Page Content End ==-->
 
 {% endblock content %}
+
+{% block jquery %}
+<script>
+ $($("#redirectauto").click()) ;
+
+ <!--$("#otp_gen").click(function(){
+     $("#user_otp").show();
+ });-->
+      </script>
+{% endblock %}

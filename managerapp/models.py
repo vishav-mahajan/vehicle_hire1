@@ -5,14 +5,14 @@ from django.db import models
 
 
 class VehicleCategories(models.Model):
-    vehicle_category_name=models.CharField(max_length=225,default="")
+    vehicle_category_name=models.CharField(max_length=225,default="",unique=True)
     vehicle_category_price=models.IntegerField(default=0)
     type_isactive=models.BooleanField(default=True)
     vehicle_id=models.AutoField(primary_key=True)
 
 
 class VehicleCompany(models.Model):
-    company_name = models.CharField(max_length=225, default="",null=False)
+    company_name = models.CharField(max_length=225, default="",null=False,unique=True)
     company_id = models.AutoField(primary_key=True)
     company_isactive = models.BooleanField(default=True)
 class VehiclesDetails(models.Model):

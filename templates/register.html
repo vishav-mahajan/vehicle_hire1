@@ -2,6 +2,7 @@
 
 
 {% block content %}
+
     <!--== Page Title Area Start ==-->
     <section id="page-title-area" class="section-padding overlay" xmlns="http://www.w3.org/1999/html">
         <div class="container">
@@ -41,11 +42,11 @@
 								<div class="name">
 									<div class="row">
 										<div class="col-md-6">
-											<input type="text" placeholder="First Name" name="user_fname" required>
+											<input type="text" placeholder="First Name" name="user_fname"  pattern="[A-Za-z]{1,}" title="Enter Alphabets Only" id="user_fname" required >
 
 										</div>
                                         <div class="col-md-6">
-											<input type="text" placeholder="Last Name" name="user_lname">
+											<input type="text" placeholder="Last Name" name="user_lname" pattern="[A-Za-z]{1,}" title="Enter Alphabets Only">
 										</div>
 
 									</div>
@@ -61,7 +62,8 @@
 									<input type="date" placeholder="Enter D.O.B." name="user_dob" required>
 								</div>
 								<div class="password">
-									<input type="password" id ="user_password" placeholder="Password" name="user_password" required>
+									<input type="password" id ="user_password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                                           title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" name="user_password" required>
                                     <span toggle="#user_password" class="fa fa-fw fa-eye field-icon toggle-password text-right" style="float:left">Show_Password</span>
 								</div>
                             <div class="password">
@@ -99,7 +101,7 @@
 
                             </div>
 								<div class="log-btn">
-									<button type="submit" id = "abc" name="submit"><i class="fa fa-check-square"></i> Sign Up</button>
+									<button type="submit" onclick="letteronly(user_fname)" id = "abc" name="submit"><i class="fa fa-check-square"></i> Sign Up</button>
 								</div>
 							</form>
                 		</div>
@@ -137,6 +139,9 @@ function validatePassword(){
 password.onchange = validatePassword;
 confirm_password.onkeyup = validatePassword;
 
+
+
+
 $(".toggle-password").click(function() {
 
   $(this).toggleClass("fa-eye fa-eye-slash");
@@ -147,6 +152,8 @@ $(".toggle-password").click(function() {
     input.attr("type", "password");
   }
 });
+
+
 
     </script>
 

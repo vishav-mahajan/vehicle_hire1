@@ -14,16 +14,19 @@
 							<form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
     {% if valid %}
-        <script>alert("Submitted")</script>
-        <h3>Vehicle Company Added</h3>
+        <script>alert("Vehicle Company Added")</script>
     {% endif %}
 {% if invalid %}
     <script>alert("Invalid , Not Submitted")</script>
     <h3>Enter Again</h3>
 {% endif %}
+                            {% if exist %}
+        <script>alert("Company Already Exist")</script>
+
+    {% endif %}
                                 <div class="form-group">
 
-                                    <input type="text" class="form-control" placeholder="Enter Company" required name="company_name">
+                                    <input type="text" class="form-control" placeholder="Enter Company" required name="company_name" pattern="[A-Za-z].{1,}" title="Enter Alphabets Only">
                                 </div>
                                 <button type="submit" class="btn btn-default">Submit</button>
                             </form>

@@ -28,7 +28,9 @@ urlpatterns = [
     url(r'^master/', include('adminapp.urls')),
     url(r'^manager/', include('managerapp.urls')),
     url(r'^businessuser/', include('businessuserapp.urls')),
-    url(r'^changepassword/',views.updatepassword)
+    url(r'^changepassword/',views.updatepassword),
+url(r'^profileupdate/',views.profile)
+    #url(r'^fpassword/',views.fpassword)
 
 ]\
               +static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

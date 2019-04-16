@@ -25,7 +25,7 @@ def email_send(email,password):
     server.quit()
     print('mail sent')
 
-def otp_send(email, otp, subject, message):
+def otp_send(email,otp, subject, message,type):
         msg = MIMEMultipart()
         msg["From"] = 'vishavmahajan96@gmail.com'
         msg['To'] = email
@@ -35,8 +35,8 @@ def otp_send(email, otp, subject, message):
          #   message = MIMEText(f.read(),_subtype = 'txt')
             #msg.add_header('Content-disposition','attatchment', filename = filename)
             #msg.attach(message)
-        body ="Your One Time " + message + "Credentials are :- \n"\
-        +"Username: "+ email +"\n"+ "OTP: " + str(otp)
+        body ="Your " + message + " Credentials are :- \n"\
+        +"Username: "+ email +"\n"+ type+": " + str(otp)
 
         msg.attach(MIMEText(body,'plain'))
         server = smtplib.SMTP('smtp.gmail.com',587)

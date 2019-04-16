@@ -57,38 +57,7 @@ def login(request):
         except:
             return render(request, "login.html", {"pass1": True,'login':True})
     return render(request,"login.html",{'login':True})
-    """except:
-        if (request.method == "POST"):
-            useremail = request.POST['user_email']
-            userpassword = request.POST['user_password']
-            try:
-                userdata = MySiteUser.objects.get(user_email=useremail)
-                dp = userdata.user_password
-                get_id = userdata.site_role_id_id
-                if (dp == userpassword):
-                    request.session['authenticate'] = True
-                    request.session['email'] = useremail
-                    request.session['role_id'] = get_id
-                    form = LoginDetailsForm(request.POST)
-                    if form.is_valid():
-                        f1 = form.save(commit=False)
-                        f1.user_email = request.session['email']
-                        f1.login_time = dt.datetime.now().strftime("%H:%M:%S")
-                        f1.save()
 
-                    if get_id == 1:
-                        return redirect("/")
-                    if get_id == 4:
-                        return redirect("/")
-                    if get_id == 3:
-                        return redirect("/")
-                    if get_id == 2:
-                        return redirect("/master")
-                else:
-                    return render(request, "login.html", {"pass2": True, 'login': True}, )
-            except:
-                return render(request, "login.html", {"pass1": True, 'login': True})
-        return render(request, "login.html", {'login': True})"""
 
 
 def logout(request):
@@ -137,28 +106,33 @@ def page_not_found(request):
     return render(request,"404.html",{'su':siteuserdata})
 
 def about(request):
-    email = request.session['email']
-    siteuserdata = MySiteUser.objects.get(user_email=email)
-    return render(request,"about.html",{'su':siteuserdata})
+    try:
+        email = request.session['email']
+        siteuserdata = MySiteUser.objects.get(user_email=email)
+        return render(request,"about.html",{'su':siteuserdata})
+    except:
+        return render(request, "about.html")
 
 def contact(request):
-    email = request.session['email']
-    siteuserdata = MySiteUser.objects.get(user_email=email)
-    if (request.method == "POST"):
-            form = ContactForm(request.POST)
-            if form.is_valid():
-                f1 = form.save(commit=False)
-                f1.user_name = request.POST['user_name']
-                f1.user_email = request.POST['user_email']
-                f1.user_mobile = request.POST['user_mobile']
-                f1.user_subject= request.POST['user_subject']
-                f1.user_message=request.POST['user_message']
-                f1.save()
-                return render(request, "contact.html", {'valid': True},{'su':siteuserdata})
-            else:
-                return render(request, "contact.html", {'invalid': True},{'su':siteuserdata})
-    return render(request, "contact.html",{'su':siteuserdata})
-
+    try:
+        email = request.session['email']
+        siteuserdata = MySiteUser.objects.get(user_email=email)
+        if (request.method == "POST"):
+                form = ContactForm(request.POST)
+                if form.is_valid():
+                    f1 = form.save(commit=False)
+                    f1.user_name = request.POST['user_name']
+                    f1.user_email = request.POST['user_email']
+                    f1.user_mobile = request.POST['user_mobile']
+                    f1.user_subject= request.POST['user_subject']
+                    f1.user_message=request.POST['user_message']
+                    f1.save()
+                    return render(request, "contact.html", {'valid': True},{'su':siteuserdata})
+                else:
+                    return render(request, "contact.html", {'invalid': True},{'su':siteuserdata})
+        return render(request, "contact.html",{'su':siteuserdata})
+    except:
+        return render(request, "contact.html")
 
 def faq(request):
     return render(request,"faq.html")
@@ -189,7 +163,6 @@ def updatepassword(request):
             interval = curr_time - get_time
             interval=float(interval.total_seconds())
             limit=float(14400)
-
             get_otp = userdata.otp
             pw = userdata.user_password
             current_password=request.POST["password"]
@@ -202,14 +175,18 @@ def updatepassword(request):
                 update=MySiteUser(user_email=email,user_password=new_password,otp=otp,otp_time_generation=otpgrn)
                 update.save(update_fields=["user_password","otp","otp_time_generation"])
                 return redirect("/logout")
-            else:
-                return render(request, "passwordupdate.html",{'valid':True,"i":interval} )
+            elif get_otp != curr_otp:
+                return render(request, "passwordupdate.html", {'invalidotp': True, })
+            elif pw != current_password:
+                return render(request, "passwordupdate.html", {'invalidpwd': True, })
+            elif interval > limit:
+                return render(request, "passwordupdate.html", {'invalidtime': True, })
         else:
             if timedb == "":
                 otp, time = otp_generation.otpgenerate()
                 update = MySiteUser(user_email=email, otp_time_generation=time, otp=otp)
                 update.save(update_fields=["otp", "otp_time_generation"])
-                otp_send(email, otp, "Change Password", "Change Password")
+                otp_send(email, otp, "Change Password", "Change Password","OTP")
             else:
                 get_time = dt.datetime.strptime(timedb, '%Y-%m-%d %H:%M:%S.%f')
                 curr_time = dt.datetime.now()
@@ -220,7 +197,7 @@ def updatepassword(request):
                     otp, time = otp_generation.otpgenerate()
                     update = MySiteUser(user_email=email, otp_time_generation=time, otp=otp)
                     update.save(update_fields=["otp", "otp_time_generation"])
-                    otp_send(email, otp, "Change Password", "Change Password")
+                    otp_send(email, otp, "Change Password", "Change Password","OTP")
     else:
         return redirect("/login")
     return render(request,"passwordupdate.html")
@@ -244,7 +221,7 @@ def forgototp(request):
                     pwd=request.POST["new_password"]
                     update = MySiteUser(user_email=email, user_password=pwd, otp="", otp_time_generation="")
                     update.save(update_fields=["user_password", "otp", "otp_time_generation"])
-                    otp_send(email, pwd, "Password Changed", "Change Password")
+                    otp_send(email, pwd, "Password Changed", "Updated Password","Password")
                     return redirect("/logout")
                 else:
                     return render(request, "login.html", {'ud': userdata, "otp_gen": True, 'em': email,"valid":True})
@@ -256,7 +233,7 @@ def forgototp(request):
                     otp, time = otp_generation.otpgenerate()
                     update = MySiteUser(user_email=email, otp_time_generation=time, otp=otp)
                     update.save(update_fields=["otp", "otp_time_generation"])
-                    otp_send(email, otp, "Change Password", "Change Password")
+                    otp_send(email, otp, "Forget Password", "Recover Password","OTP" )
                 else:
                     get_time = dt.datetime.strptime(timedb, '%Y-%m-%d %H:%M:%S.%f')
                     curr_time = dt.datetime.now()
@@ -267,7 +244,7 @@ def forgototp(request):
                         otp, time = otp_generation.otpgenerate()
                         update = MySiteUser(user_email=email, otp_time_generation=time, otp=otp)
                         update.save(update_fields=["otp", "otp_time_generation"])
-                        otp_send(email, otp, "Change Password", "Change Password")
+                        otp_send(email, otp, "Forget Password", "Recover Password","OTP")
                 return render(request, "login.html", {'ud': userdata,"otp_gen":True,'em':email,"sent":True})
             else:
                 return render(request, "login.html", {'ud': userdata, "otp_gen": True, 'em': email, "not_sent": True})
@@ -353,6 +330,15 @@ def forgototp(request):
         return redirect("/login")
     return render(request,"passwordupdate.html",{"up":True})
         """
+
+def profile(request):
+    if request.session['authenticate']==True:
+        email=request.session['email']
+        userdata=MySiteUser.objects.get(user_email=email)
+        return render(request,"profileupdate.html",{"su":userdata})
+    else:
+        return redirect("/login")
+
 
 
 

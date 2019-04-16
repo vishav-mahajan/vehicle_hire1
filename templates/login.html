@@ -83,13 +83,15 @@
 									<input type="text"   id="user_email" name="user_email" value="{{ em }}" readonly="True" placeholder="Email or Username">
 								</div>
                                     <div class="password">
-									<input type="password" id="otp_gen" name="otp_gen"  required placeholder="Enter OTP to regenerate Password">
+									<input type="password" id="otp_gen" name="otp_gen"   required placeholder="Enter OTP to regenerate Password">
 								</div>
                                     {% if valid %}
                                 <p>OTP Doesn't Match</p>
                                 {% endif %}
                                     <div class="password">
-									<input type="password" id="new_password" name="new_password" required placeholder="New Password">
+									<input type="password" id="new_password" name="new_password" required placeholder="New Password"
+                                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                                           title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
 								</div>
                                     <div class="password">
 									<input type="password" id="confirm_password" name="confirm_password" required placeholder="Confirm Password">

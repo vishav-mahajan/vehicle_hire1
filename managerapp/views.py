@@ -40,6 +40,7 @@ def business_index(request):
 
 
 def vehicle_category(request):
+    try:
         if (request.method == "POST"):
             form = VehicleCategoryForm(request.POST)
             if form.is_valid():
@@ -51,19 +52,26 @@ def vehicle_category(request):
             else:
                 return render(request, "vehiclecategories.html", {'invalid': True})
         return render(request, "vehiclecategories.html")
+    except:
+        return render(request, "vehiclecategories.html",{'exist':True})
+
 
 
 def vehicle_company(request):
-    if (request.method == "POST"):
-        form = VehicleCompanyForm(request.POST)
-        if form.is_valid():
-            f1 = form.save(commit=False)
-            f1.company_name =request.POST['company_name']
-            f1.save()
-            return render(request, "vehiclecompanies.html", {'valid': True})
-        else:
-            return render(request, "vehiclecompanies.html", {'invalid': True})
-    return render(request, "vehiclecompanies.html")
+    try:
+        if (request.method == "POST"):
+            form = VehicleCompanyForm(request.POST)
+            if form.is_valid():
+                f1 = form.save(commit=False)
+                f1.company_name =request.POST['company_name']
+                f1.save()
+                return render(request, "vehiclecompanies.html", {'valid': True})
+            else:
+                return render(request, "vehiclecompanies.html", {'invalid': True})
+        return render(request, "vehiclecompanies.html")
+    except:
+        return render(request, "vehiclecompanies.html",{'exist': True})
+
 
 
 def vehicle_details(request):

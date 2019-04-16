@@ -15,12 +15,17 @@
                                 {% csrf_token %}
     {% if valid %}
         <script>alert("Submitted")</script>
-        <h3>Vehicle Company Added</h3>
+
     {% endif %}
 {% if invalid %}
     <script>alert("Invalid , Not Submitted")</script>
     <h3>Enter Again</h3>
 {% endif %}
+                            {% if exist %}
+        <script>alert("Category Already Exist")</script>
+
+    {% endif %}
+
                                 <div class="form-group">
                                     <label>Vehicle Category</label>
                                     <input type="text" class="form-control" placeholder="Enter Category" name="vehicle_category_name" required>

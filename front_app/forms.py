@@ -40,7 +40,9 @@ class MySiteUserForm(forms.ModelForm):
             "user_isqueue",
             "registered_on",
             "otp",
-            "otp_time_generation"
+            "otp_time_generation",
+            "user_isverified",
+            "user_token"
         ]
 
 class LoginDetailsForm(forms.ModelForm):

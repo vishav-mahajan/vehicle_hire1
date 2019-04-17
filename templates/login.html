@@ -54,7 +54,12 @@
                                  <h6>Please Login to Access</h6>
                                 {% endif %}
                             {% endif %}
-
+                                {% if vl %}
+                                 <script>alert("Please Verify to access Your Account,Verification Link Sent on the Email")</script>
+                                {% endif %}
+                            {% if vf %}
+                                 <script>alert("Please Verify First, Verification Link Has been already Sent")</script>
+                                {% endif %}
 
 
 

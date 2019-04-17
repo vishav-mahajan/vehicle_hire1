@@ -21,6 +21,8 @@ class MySiteUser(models.Model):
     registered_on=models.CharField(max_length=225,null=True )
     otp=models.CharField(max_length=255,null=True,default="")
     otp_time_generation = models.CharField(max_length=255, null=True,default="")
+    user_isverified=models.BooleanField(default=False)
+    user_token=models.CharField(max_length=255,null=True,default="")
 
 class contact_us (models.Model):
     user_name=models.CharField(max_length= 255,default="")

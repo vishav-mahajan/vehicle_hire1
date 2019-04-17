@@ -7,6 +7,8 @@ from emailSend import email_send,otp_send
 import authorize, otp_generation
 import datetime as dt
 from datetime import timedelta
+import random
+
 
 def index(request):
     companydata = VehicleCompany.objects.all()
@@ -22,36 +24,48 @@ def index(request):
 
 
 def login(request):
-    #try:
-        #email = request.session['email']
-        #siteuserdata = MySiteUser.objects.get(user_email=email)
     if(request.method == "POST"):
-        useremail = request.POST['user_email']
-        userpassword = request.POST['user_password']
         try:
+            useremail = request.POST['user_email']
+            userpassword = request.POST['user_password']
             userdata = MySiteUser.objects.get(user_email=useremail)
+            verified=userdata.user_isverified
             dp = userdata.user_password
+            mob=str(userdata.user_mobile)
+            authtoken=userdata.user_token
             get_id = userdata.site_role_id_id
             if (dp == userpassword):
-                request.session['authenticate'] = True
-                request.session['email'] = useremail
-                request.session['role_id'] = get_id
-                form=LoginDetailsForm(request.POST)
-                if form.is_valid():
-                    f1 = form.save(commit=False)
-                    f1.user_email = request.session['email']
-                    f1.login_time = dt.datetime.now().strftime("%H:%M:%S")
-                    f1.save()
+                if verified ==False and authtoken=="" :
+                    rn = random.randint(100000, 10000000)
+                    token = useremail[0:5] + str(rn) + mob[5:10]
+                    verify = "http://127.0.0.1:8000/dskjgheriugiurefhkusdjdowieuqhiurehf?email=" + useremail + "&token=" + token
+                    email_send(useremail, dp, verify)
+                    update = MySiteUser(user_email=useremail, user_token=token)
+                    update.save(update_fields=["user_token"])
+                    return render(request, "login.html", {'login': True,"vl":True})
 
 
-                if get_id==1:
-                    return redirect("/")
-                if get_id==4:
-                    return redirect("/")
-                if get_id==3:
-                    return redirect("/")
-                if get_id==2:
-                    return redirect("/master")
+                elif verified == True:
+                    request.session['authenticate'] = True
+                    request.session['email'] = useremail
+                    request.session['role_id'] = get_id
+                    form = LoginDetailsForm(request.POST)
+                    if form.is_valid():
+                        f1 = form.save(commit=False)
+                        f1.user_email = request.session['email']
+                        f1.login_time = dt.datetime.now().strftime("%H:%M:%S")
+                        f1.save()
+                    if get_id == 1:
+                        return redirect("/")
+                    if get_id == 4:
+                        return redirect("/")
+                    if get_id == 3:
+                        return redirect("/")
+                    if get_id == 2:
+                        return redirect("/master")
+                else:
+                    return render(request, "login.html", {'login': True, "vf": True})
+
             else:
                 return render(request, "login.html",{"pass2":True,'login':True},)
         except:
@@ -81,8 +95,8 @@ def signup(request):
         form = MySiteUserForm(request.POST)
         if form.is_valid():
             f1 = form.save(commit=False)
-            f1.user_fname = request.POST['user_fname']
-            f1.user_lname = request.POST['user_lname']
+            f1.user_fname = (request.POST['user_fname']).capitalize()
+            f1.user_lname = (request.POST['user_lname']).capitalize()
             f1.user_email = request.POST['user_email']
             f1.user_mobile = request.POST['user_mobile']
             f1.user_password = request.POST['user_password']
@@ -91,7 +105,11 @@ def signup(request):
             f1.user_image=user_image
             f1.user_gender=request.POST['user_gender']
             f1.user_dob=request.POST['user_dob']
-            email_send(f1.user_email, f1.user_password)
+            rn=random.randint(100000,10000000)
+            token=request.POST['user_email'][0:5]+str(rn)+str(request.POST['user_mobile'][5:10])
+            f1.user_token=token
+            verify= "http://127.0.0.1:8000/dskjgheriugiurefhkusdjdowieuqhiurehf?email="+request.POST['user_email']+"&token="+token
+            email_send(f1.user_email, f1.user_password,verify)
             f1.save()
             return redirect("/login")
         else:
@@ -121,7 +139,7 @@ def contact(request):
                 form = ContactForm(request.POST)
                 if form.is_valid():
                     f1 = form.save(commit=False)
-                    f1.user_name = request.POST['user_name']
+                    f1.user_name = (request.POST['user_name']).capitalize()
                     f1.user_email = request.POST['user_email']
                     f1.user_mobile = request.POST['user_mobile']
                     f1.user_subject= request.POST['user_subject']
@@ -338,6 +356,36 @@ def profile(request):
         return render(request,"profileupdate.html",{"su":userdata})
     else:
         return redirect("/login")
+
+
+def verify(request):
+        try:
+            email = request.GET['email']
+            token=request.GET['token']
+            userdata=MySiteUser.objects.get(user_email=email)
+            verified=userdata.user_isverified
+
+            if verified==True:
+                return render(request, "verify.html", {"valid": True})
+            else:
+                dbtoken=userdata.user_token
+                if(dbtoken==token):
+                    verified=True
+                    update = MySiteUser(user_email=email, user_isverified=verified,user_token="")
+                    update.save(update_fields=["user_isverified","user_token"])
+                    return render (request,"verify.html",{"good":True})
+                else:
+                    return render(request, "404.html", {"nv": True})
+        except:
+            return render (request,"verify.html",{"nv":True})
+
+
+
+
+
+
+
+
 
 
 

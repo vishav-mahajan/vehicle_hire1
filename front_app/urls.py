@@ -16,5 +16,5 @@ urlpatterns = [
     url(r'^masteruser/$', views.master, name="master"),
     url(r'^forgetpassword/$', views.forgototp, name="forgetpassword"),
     url(r'^car-details/$', views.car_detail, name="baleno"),
-url(r'^update/$', views.profile, name="update")
+    url(r'^update/$', views.profile, name="update")
 ]

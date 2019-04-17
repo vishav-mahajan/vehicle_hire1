@@ -1,0 +1,15 @@
+{% extends "master.html" %}
+{% block content %}
+
+
+
+
+                                 {% if valid %}
+                                <h1>You are Verified</h1>
+                                {% endif %}
+
+                                {% if invalid %}
+                                <h1>Please login again</h1>
+                                {% endif %}
+
+{% endblock content %}

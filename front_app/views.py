@@ -8,6 +8,7 @@ import authorize, otp_generation
 import datetime as dt
 from datetime import timedelta
 import random
+from django.contrib.auth.hashers import make_password,check_password
 
 
 def index(request):
@@ -34,12 +35,12 @@ def login(request):
             mob=str(userdata.user_mobile)
             authtoken=userdata.user_token
             get_id = userdata.site_role_id_id
-            if (dp == userpassword):
+            if check_password(userpassword,dp):
                 if verified ==False and authtoken=="" :
                     rn = random.randint(100000, 10000000)
                     token = useremail[0:5] + str(rn) + mob[5:10]
                     verify = "http://127.0.0.1:8000/dskjgheriugiurefhkusdjdowieuqhiurehf?email=" + useremail + "&token=" + token
-                    email_send(useremail, dp, verify)
+                    email_send(useremail, userpassword, verify)
                     update = MySiteUser(user_email=useremail, user_token=token)
                     update.save(update_fields=["user_token"])
                     return render(request, "login.html", {'login': True,"vl":True})
@@ -91,15 +92,26 @@ def signup(request):
             filename = fs.save(myfile.name, myfile)
             fs.url(filename)
             user_image = myfile.name
+        try:
+            emailid=request.POST['user_email']
+            data=MySiteUser.objects.get(user_email=emailid)
+            return render(request, "register.html", {'invalid': True})
+
+        except :
+            pass
+
+
+
 
         form = MySiteUserForm(request.POST)
         if form.is_valid():
             f1 = form.save(commit=False)
+            #return render(request,"abcd.html")
             f1.user_fname = (request.POST['user_fname']).capitalize()
             f1.user_lname = (request.POST['user_lname']).capitalize()
             f1.user_email = request.POST['user_email']
             f1.user_mobile = request.POST['user_mobile']
-            f1.user_password = request.POST['user_password']
+            f1.user_password = make_password(request.POST['user_password'])
             f1.site_role_id_id=request.POST['select']
             f1.registered_on = dt.datetime.now().date()
             f1.user_image=user_image
@@ -109,7 +121,7 @@ def signup(request):
             token=request.POST['user_email'][0:5]+str(rn)+str(request.POST['user_mobile'][5:10])
             f1.user_token=token
             verify= "http://127.0.0.1:8000/dskjgheriugiurefhkusdjdowieuqhiurehf?email="+request.POST['user_email']+"&token="+token
-            email_send(f1.user_email, f1.user_password,verify)
+            email_send(f1.user_email, request.POST['user_password'],verify)
             f1.save()
             return redirect("/login")
         else:
@@ -187,7 +199,7 @@ def updatepassword(request):
             curr_otp=request.POST['curr_otp']
 
             if pw==current_password and get_otp==curr_otp and interval < limit:
-                new_password=request.POST['new_password']
+                new_password=make_password(request.POST['new_password'])
                 otp=""
                 otpgrn=""
                 update=MySiteUser(user_email=email,user_password=new_password,otp=otp,otp_time_generation=otpgrn)
@@ -236,7 +248,7 @@ def forgototp(request):
                 interval = float(interval.total_seconds())
                 limit = float(14400)
                 if otp == otp_gen and interval < limit:
-                    pwd=request.POST["new_password"]
+                    pwd=make_password(request.POST["new_password"])
                     update = MySiteUser(user_email=email, user_password=pwd, otp="", otp_time_generation="")
                     update.save(update_fields=["user_password", "otp", "otp_time_generation"])
                     otp_send(email, pwd, "Password Changed", "Updated Password","Password")
@@ -353,7 +365,24 @@ def profile(request):
     if request.session['authenticate']==True:
         email=request.session['email']
         userdata=MySiteUser.objects.get(user_email=email)
-        return render(request,"profileupdate.html",{"su":userdata})
+        if request.method=="POST":
+            user_image = userdata.user_image
+            if request.FILES:
+                myfile = request.FILES['user_image']
+                fs = FileSystemStorage()
+                filename = fs.save(myfile.name, myfile)
+                fs.url(filename)
+                user_image = myfile.name
+            fname=(request.POST["user_fname"]).capitalize()
+            lname = (request.POST["user_lname"]).capitalize()
+            dob = request.POST["user_dob"]
+            mob = request.POST["user_mobile"]
+            image=user_image
+            gender = request.POST["user_gender"]
+            update = MySiteUser(user_email=email,user_fname=fname, user_lname=lname,user_dob=dob,user_mobile=mob,user_image=image,user_gender=gender)
+            update.save(update_fields=["user_fname","user_gender","user_mobile","user_dob","user_lname","user_image"])
+            return redirect("/profileupdate")
+        return render(request, "profileupdate.html", {"su": userdata})
     else:
         return redirect("/login")
 
@@ -378,6 +407,11 @@ def verify(request):
                     return render(request, "404.html", {"nv": True})
         except:
             return render (request,"verify.html",{"nv":True})
+
+
+
+def booking(request):
+    return render(request,"bookings.html")
 
 
 

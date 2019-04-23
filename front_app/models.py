@@ -23,6 +23,8 @@ class MySiteUser(models.Model):
     otp_time_generation = models.CharField(max_length=255, null=True,default="")
     user_isverified=models.BooleanField(default=False)
     user_token=models.CharField(max_length=255,null=True,default="")
+    def __str__(self):
+        return self.user_email
 
 class contact_us (models.Model):
     user_name=models.CharField(max_length= 255,default="")
@@ -37,7 +39,14 @@ class login_details(models.Model):
     login_time = models.CharField(max_length=225, default="")
     logout_time = models.CharField(max_length=225, default="")
 
-
-
-
-
+class booking_details(models.Model):
+    booking_id=models.AutoField(primary_key=True)
+    user_detail=models.CharField(max_length=255,default="")
+    vehicle_detail=models.CharField(max_length=255,default="")
+    start_date=models.CharField(max_length=255,default="")
+    end_date=models.CharField(max_length=255,default="")
+    is_returned=models.BooleanField(default=False)
+    is_fine=models.BooleanField(default=False)
+    security_amount=models.BigIntegerField(default=0)
+    fine_amount=models.BigIntegerField(default=0)
+    balance_amount=models.BigIntegerField(default=0)

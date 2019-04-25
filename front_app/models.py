@@ -1,4 +1,5 @@
 from django.db import models
+from managerapp.models import VehiclesDetails
 
 # Create your models here.
 class User_role (models.Model):
@@ -50,3 +51,4 @@ class booking_details(models.Model):
     security_amount=models.BigIntegerField(default=0)
     fine_amount=models.BigIntegerField(default=0)
     balance_amount=models.BigIntegerField(default=0)
+    vehicle_info = models.ForeignKey(VehiclesDetails, on_delete=models.CASCADE, default="")

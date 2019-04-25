@@ -10,9 +10,10 @@
                 <div class="row">
                     <div class="col-lg-5">
                         <div class="book-a-car">
-                            <form action="index.html">
+                            <form method="post">
+                                {% csrf_token %}
                                 <!--== Pick Up Location ==-->
-                                <div class="pickup-location book-item">
+                                <!--div class="pickup-location book-item">
                                     <h4>PICK-UP LOCATION:</h4>
                                     <select class="custom-select">
                                       <option selected>Select</option>
@@ -21,22 +22,22 @@
                                       <option value="3">Shimla</option>
                                       <option value="3">Haryana</option>
                                     </select>
-                                </div>
+                                </div-->
                                 <!--== Pick Up Location ==-->
 
                                 <!--== Pick Up Date ==-->
                                 <div class="pick-up-date book-item">
-                                    <h4>PICK-UP DATE:</h4>
-                                    <input  id="startDate" placeholder="Pick Up Date" >
+                                    <h4>PICK-UP DATE:{{ try }}{{ exp }}</h4>
+                                    <input type="date" name="start_date" value="{{ sd }}" id="startDate" placeholder="Pick Up Date" >
 
                                     <div class="return-car">
                                         <h4>Return DATE:</h4>
-                                        <input id="endDate" placeholder="Return Date" >
+                                        <input type="date" name="end_date" value="{{ ed }}" id="endDate" placeholder="Return Date" >
                                     </div>
                                 </div>
                                 <!--== Pick Up Location ==-->
 
-                                <!--== Car Choose ==-->
+                                <!--== Car Choose ==>
                                 <div class="choose-car-type book-item">
                                     <h4>CHOOSE CAR TYPE:</h4>
                                     {% if ccd %}
@@ -49,11 +50,11 @@
                                      {% endfor %}
                                     </select>
                                     {% endif %}
-                                </div>
+                                </div-->
                                 <!--== Car Choose ==-->
 
                                 <div class="book-button text-center">
-                                    <button class="book-now-btn">Explore</button>
+                                    <input type="submit" value="Explore" style="border-radius: 25px" class="book-now-btn">
                                 </div>
                             </form>
                         </div>
@@ -75,6 +76,115 @@
         <!--== slide Item One ==-->
     </section>
     <!--== Slider Area End ==-->
+     <!--== Choose Car Area Start ==-->
+    <section id="choose-car" class="section-padding">
+        <div class="container">
+            <div class="row">
+                <!-- Section Title Start -->
+                <div class="col-lg-12">
+                    <div class="section-title  text-center">
+                        <h2>Choose your Car</h2>
+                        <span class="title-line"><i class="fa fa-car"></i></span>
+                        <p></p>
+                    </div>
+                </div>
+                <!-- Section Title End -->
+            </div>
+
+
+            <div class="row">
+                <!-- Choose Area Content Start -->
+                <div class="col-lg-12">
+                    <div class="choose-content-wrap">
+                        <!-- Choose Area Tab Menu -->
+
+                        <!-- Choose Area Tab Menu -->
+
+                        <!-- Choose Area Tab content -->
+                        <div class="tab-content" id="myTabContent">
+                            <!-- Popular Cars Tab Start -->
+                            <div class="tab-pane fade show active" id="popular_cars" role="tabpanel" aria-labelledby="home-tab">
+                                <!-- Popular Cars Content Wrapper Start -->
+                                <div class="popular-cars-wrap">
+                                    <!-- Filtering Menu -->
+
+
+                                    <div class="popucar-menu text-center">
+                                        <a href="#" data-filter="*" class="active">all</a>
+                                        {% if ccd %}
+                                        {% for i in ccd %}
+                                        <a href="#" data-filter=".{{ i.vehicle_category_name }}">{{ i.vehicle_category_name }}</a>
+                                        {% endfor %}
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <!-- Filtering Menu -->
+                                {% if ud %}
+
+                                    <!-- PopularCars Tab Content Start -->
+                                    <div class="row popular-car-gird">
+                                    {% for i in ud %}
+                                        <!-- Single Popular Car Start -->
+                                        <div class="col-lg-4 col-md-6  {{ i.vehicle_id.vehicle_category_name }}">
+
+                                            <div class="single-popular-car">
+                                                <div class="p-car-thumbnails">
+                                                    <a class="car-hover" href="/media/{{ i.vehicle_image }}">
+                                                      <img src="amedia/{{ i.vehicle_image }}" width="1280px" height="800px" style="object-fit:fill" alt="JSOFT">
+                                                   </a>
+                                                </div>
+
+                                                <div class="p-car-content">
+                                                    <h3>
+                                                        <a href={% url 'front_app:baleno' %}>{{ i.vehicle_name }}</a>
+                                                        <span class="price"><i class="fa fa-tag"></i> Rs {{ i.vehicle_price }}/hour</span>
+                                                    </h3>
+
+                                                    <h5>{{ i.vehicle_id.vehicle_category_name }}</h5>
+
+
+                                                    <div class="p-car-feature">
+                                                        <a>{{ i.vehicle_model }}</a>
+                                                        <a>Manual</a>
+                                                        <a>AIR CONDITION</a>
+                                                    </div>
+                                                    <p>  </p>
+                                                    {% if book and request.session.authenticate %}
+                                                    <div class="mt-4" >
+                                                    <a class="btn btn-outline-warning btn-sm " style="border-radius: 25px" href="{% url 'front_app:booking' %}?id={{ i.vehicle_ref_id }}&sd={{ sd }}&ed={{ ed }}">Book Now</a>
+                                                </div>{% endif %}
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <!-- Single Popular Car End -->
+                                        {% endfor %}
+
+                                        {% endif %}
+
+
+
+                                    </div>
+                                    <!-- PopularCars Tab Content End -->
+                                </div>
+                                <!-- Popular Cars Content Wrapper End -->
+                            </div>
+                            <!-- Popular Cars Tab End -->
+
+                            <!-- Newest Cars Tab Start -->
+
+                        </div>
+                        <!-- Choose Area Tab content -->
+                    </div>
+                </div>
+                <!-- Choose Area Content End -->
+            </div>
+        </div>
+    </section>
+    <!--== Choose Car Area End ==-->
 
 
 
@@ -224,114 +334,89 @@
     </section>
     <!--== Fun Fact Area End ==-->
 
-    <!--== Choose Car Area Start ==-->
-    <section id="choose-car" class="section-padding">
+
+    <!--== What We Do Area Start ==-->
+    <section id="what-do-area" class="section-padding">
         <div class="container">
             <div class="row">
                 <!-- Section Title Start -->
                 <div class="col-lg-12">
                     <div class="section-title  text-center">
-                        <h2>Choose your Car</h2>
+                        <h2>How AdRENTure Works</h2>
                         <span class="title-line"><i class="fa fa-car"></i></span>
-                        <p></p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
                     </div>
                 </div>
                 <!-- Section Title End -->
             </div>
 
-
             <div class="row">
-                <!-- Choose Area Content Start -->
-                <div class="col-lg-12">
-                    <div class="choose-content-wrap">
-                        <!-- Choose Area Tab Menu -->
-
-                        <!-- Choose Area Tab Menu -->
-
-                        <!-- Choose Area Tab content -->
-                        <div class="tab-content" id="myTabContent">
-                            <!-- Popular Cars Tab Start -->
-                            <div class="tab-pane fade show active" id="popular_cars" role="tabpanel" aria-labelledby="home-tab">
-                                <!-- Popular Cars Content Wrapper Start -->
-                                <div class="popular-cars-wrap">
-                                    <!-- Filtering Menu -->
-
-
-                                    <div class="popucar-menu text-center">
-                                        <a href="#" data-filter="*" class="active">all</a>
-                                        {% if ccd %}
-                                        {% for i in ccd %}
-                                        <a href="#" data-filter=".{{ i.vehicle_category_name }}">{{ i.vehicle_category_name }}</a>
-                                        {% endfor %}
-                                        {% endif %}
-
-                                    </div>
-
-
-                                    <!-- Filtering Menu -->
-                                {% if ud %}
-
-                                    <!-- PopularCars Tab Content Start -->
-                                    <div class="row popular-car-gird">
-                                    {% for i in ud %}
-                                        <!-- Single Popular Car Start -->
-                                        <div class="col-lg-4 col-md-6  {{ i.vehicle_id.vehicle_category_name }}">
-
-                                            <div class="single-popular-car">
-                                                <div class="p-car-thumbnails">
-                                                    <a class="car-hover" href="/media/{{ i.vehicle_image }}">
-                                                      <img src="media/{{ i.vehicle_image }}" width="1280px" height="800px" style="object-fit:fill" alt="JSOFT">
-                                                   </a>
-                                                </div>
-
-                                                <div class="p-car-content">
-                                                    <h3>
-                                                        <a href={% url 'front_app:baleno' %}>{{ i.vehicle_name }}</a>
-                                                        <span class="price"><i class="fa fa-tag"></i> Rs {{ i.vehicle_price }}/hour</span>
-                                                    </h3>
-
-                                                    <h5>{{ i.vehicle_id.vehicle_category_name }}</h5>
-
-
-                                                    <div class="p-car-feature">
-                                                        <a>{{ i.vehicle_model }}</a>
-                                                        <a>Manual</a>
-                                                        <a>AIR CONDITION</a>
-                                                    </div>
-                                                    <p>  </p>
-                                                    <div class="mt-4" >
-                                                    <a class="btn btn-outline-warning btn-sm " style="border-radius: 25px" href="/about">Book Now</a>
-                                                </div>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                        <!-- Single Popular Car End -->
-                                        {% endfor %}
-
-                                        {% endif %}
-
-
-
-                                    </div>
-                                    <!-- PopularCars Tab Content End -->
+                <!-- Single We Do Start -->
+                <div class="col-lg-3 col-md-3">
+                    <div class="single-we-do we-do-bg-1">
+                        <div class="we-do-content">
+                            <div class="display-table">
+                                <div class="display-table-cell">
+                                    <h3>CAR INSPECTION</h3>
+                                    <p>Erspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
+                                    <a href="#">Read More</a>
                                 </div>
-                                <!-- Popular Cars Content Wrapper End -->
                             </div>
-                            <!-- Popular Cars Tab End -->
-
-                            <!-- Newest Cars Tab Start -->
-
                         </div>
-                        <!-- Choose Area Tab content -->
                     </div>
                 </div>
-                <!-- Choose Area Content End -->
+                <!-- Single We Do End -->
+                <!-- Single We Do Start -->
+                <div class="col-lg-3 col-md-3">
+                    <div class="single-we-do we-do-bg-1">
+                        <div class="we-do-content">
+                            <div class="display-table">
+                                <div class="display-table-cell">
+                                    <h3>CAR INSPECTION</h3>
+                                    <p>Erspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
+                                    <a href="#">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single We Do End -->
+
+                <!-- Single We Do Start -->
+                <div class="col-lg-3 col-md-3">
+                    <div class="single-we-do we-do-bg-2">
+                        <div class="we-do-content">
+                            <div class="display-table">
+                                <div class="display-table-cell">
+                                    <h3>CAR INSPECTION</h3>
+                                    <p>Erspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
+                                    <a href="#">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single We Do End -->
+
+                <!-- Single We Do Start -->
+                <div class="col-lg-3 col-md-3">
+                    <div class="single-we-do we-do-bg-3">
+                        <div class="we-do-content">
+                            <div class="display-table">
+                                <div class="display-table-cell">
+                                    <h3>CAR INSPECTION</h3>
+                                    <p>Erspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
+                                    <a href="#">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single We Do End -->
             </div>
         </div>
     </section>
-    <!--== Choose Car Area End ==-->
+    <!--== What We Do Area End ==-->
 
     <!--== Pricing Area Start ==-->
     <section id="pricing-area" class="section-padding overlay">

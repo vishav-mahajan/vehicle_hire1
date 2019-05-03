@@ -246,9 +246,6 @@
         });
 
 
-
-
-
     }); //Ready Function End
 
     jQuery(window).load(function () {

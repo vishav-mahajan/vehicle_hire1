@@ -1,0 +1,102 @@
+{% extends "admin_master.html" %}
+{% block content %}
+<div id="page-wrapper">
+    <div class="main-page">
+        <div class="tables">
+            <div class=" bs-example widget-shadow">
+                <h4>User Bookings:</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+
+                            <th>Invoice</th>
+                            <th>Booking Date</th>
+                            <th>Start Date</th>
+                            <th>End DAte</th>
+                            <th>Vehicle Name</th>
+                            <th>Seller</th>
+
+                            <th>Amount(Rs.)</th>
+                            <th>Total(Rs.)</th>
+                            <th>Status</th>
+                            <th>Operations</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% if bd %}
+                    {% for i in bd %}
+                        <tr>
+
+
+                           <td><a href="{% url 'front_app:invoice' %}?id={{ i.booking_id }}" >{{ i.invoice }}</a></td>
+                            <td>{{ i.booking_date }}</td>
+                            <td>{{ i.start_date }}</td>
+                            <td>{{ i.end_date }}</td>
+                            <td>{{ i.vehicle_detail }}</td>
+                            <td>{{ i.seller_detail }}</td>
+
+                            <td>{{ i.amount_exp }}</td>
+                            <td>{{ i.total }}</td>
+                            <td>
+                                {% if i.is_active == True and i.is_returned == False %}
+                            <p style="color:green">Active</p>
+                            {% endif %}
+                        {% if i.is_active == False and i.is_returned == True and i.cancellation_time != ""  %}
+                            <p style="color:Red">Cancelled</p>
+
+                            {% endif %}
+                        {% if i.is_active == False and i.is_returned == True and i.cancellation_time == ""  %}
+                            <p style="color:blue">Completed</p>
+
+                            {% endif %}
+                        </td>
+                            {% if i.is_active == False and i.is_returned == True and i.cancellation_time == ""  %}
+                            <td><a href="/view_bookings?id={{i.invoice}}">View </a> </td>
+
+                            {% elif i.is_active == False and i.is_returned == True and i.cancellation_time != "" %}
+                            <td><a href="/view_bookings?id={{i.invoice}}">View </a> </td>
+                            {% else %}
+                            <td><a href="/cancel_booking?id={{ i.cancel_token }}">Cancel</a> / <a href="/view_bookings?id={{i.invoice}}">View</a></td>
+                        {% endif %}
+                        </tr>
+                    {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+
+                {% if request.session.duration  %}
+                <script>alert("Time Duration Should be Greater than 12 Hours")</script>
+{% endif %}
+                {% if request.session.date_greater %}
+                <script>alert("Trip has already been Started")</script>
+{% endif %}
+                {% if request.session.cancelled %}
+                <script>alert("Booking Already Cancelled")</script>
+{% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<script>
+
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+        });
+    $('[data-toggle="popover-hover"]').popover({
+        html: true,
+        trigger: 'hover',
+        placement: 'bottom',
+        content: function () { return '<img src="' + $(this).data('img') + '" />'; }
+        });
+</script>
+
+{% endblock %}

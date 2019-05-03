@@ -33,7 +33,9 @@ SECRET_KEY = 'r8&b8^5dw7iez!43ngz)2saa_+$)tet8(y=e)d05e!=76o_u*2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "*"
+]
 
 
 # Application definition
@@ -142,4 +144,4 @@ MEDIA_URL='/media/'
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 
 #SESSION_COOKIE_AGE=5*60
-#SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+SESSION_EXPIRE_AT_BROWSER_CLOSE=True

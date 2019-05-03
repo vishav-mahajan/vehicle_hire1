@@ -1,0 +1,103 @@
+{% extends 'admin_master.html' %}
+{% block content %}
+<div id="page-wrapper">
+    <div class="main-page">
+        <div class="row">
+            <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a><i class="fa fa-angle-right"></i>Gallery</li>
+        </ol>
+            <div class=" btn btn-group-justified" role="group" aria-label="Basic example">
+                <a  class="btn btn-secondary" >All</a>
+                {% if ccd %}
+                {% for i in ccd  %}
+                    <a class = "btn btn-secondary ">{{ i.vehicle_category_name }}</a>
+                {% endfor %}
+                {% endif %}
+            </div>
+            <div class="card">
+                {% if ud %}
+                {% for i in ud %}
+                    <div class="col-md-3">
+                        <div  style="width: 18rem; border: groove">
+                            <img class="card-img-top" height="170" width="282" src="/media/{{ i.vehicle_image }}" alt="Card image cap">
+                            <div class="card-body ">
+                                <h3 class="card-title pb-2">{{ i.company_id.company_name }} {{ i.vehicle_name }}</h3>
+                                <h5>{{ i.vehicle_id.vehicle_category_name }},{{ i.vehicle_model }}</h5>
+                                <h4>Rs.{{ i.vehicle_price }}/hour</h4>
+                                {% if request.session.role_id == 2 %}
+                                    <h5>{{ i.u_email }}</h5>
+                                {% endif %}
+                                {% if request.session.role_id == 4%}
+                                    <a class="btn btn-primary btn-sm" href="{% url 'businessuserapp:delete_data' %}?id={{ i.vehicle_ref_id }}">Delete</a>
+                                    <a class="btn btn-primary btn-sm" href="{% url 'businessuserapp:updatedata' %}?id={{ i.vehicle_ref_id }}">Edit</a>
+                                    {% elif request.session.role_id == 1  %}
+                                    <a class="btn btn-primary btn-sm"  href="{% url 'managerapp:delete_data' %}?id={{ i.vehicle_ref_id }}">Delete</a>
+                                    <a class="btn btn-primary btn-sm" href="{% url 'managerapp:updatedata' %}?id={{ i.vehicle_ref_id }}">Edit</a>
+                                      {% elif request.session.role_id == 2  %}
+                                    <a class="btn btn-primary btn-sm"  href="{% url 'superuser:delete_data' %}?id={{ i.vehicle_ref_id }}">Delete</a>
+                                    <a class="btn btn-primary btn-sm" href="{% url 'superuser:updatedata' %}?id={{ i.vehicle_ref_id }}">Edit</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--div class="agile3-grids mt-5">
+		    {% if ud %}
+            {% for i in ud %}
+                <div class="col-md-3">
+
+
+						<a class="example-image-link" href="#" data-lightbox="example-set" data-title="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vitae cursus ligula">
+							<img src="/media/{{ i.vehicle_image }}" alt="image name" style="height: 200px; width: 200px;">
+                            <h3>{{ i.company_id.company_name }} {{ i.vehicle_name }}</h3>
+
+                            <h5>{{ i.vehicle_id.vehicle_category_name }}</h5>
+                            <h4>Rs.{{ i.vehicle_price }}/hour</h4>
+                            {% if request.session.role_id == 4%}
+                            <a href="{% url 'businessuserapp:delete_data' %}?id={{ i.vehicle_ref_id }}"><button> Delete</button></a>
+                            <a href="{% url 'businessuserapp:updatedata' %}?id={{ i.vehicle_ref_id }}"><button> Edit</button></a>
+                            {% elif request.session.role_id == 1 %}
+                            <a href="{% url 'managerapp:delete_data' %}?id={{ i.vehicle_ref_id }}"><button> Delete</button></a>
+                            <a href="{% url 'managerapp:updatedata' %}?id={{ i.vehicle_ref_id }}"><button> Edit</button></a>
+                            {% else %}
+                            <a href="{% url 'adminapp:delete_data' %}?id={{ i.vehicle_ref_id }}"><button> Delete</button></a>
+                            <a href="{% url 'adminapp:updatedata' %}?id={{ i.vehicle_ref_id }}"><button> Edit</button></a>
+                            {% endif %}
+						</a>
+                        </div>
+    {% endfor %}
+                {% else %}
+            <h2>no data found</h2>
+                {% endif %}
+
+
+</div>
+    </div></div></div-->
+
+
+<div class="clearfix">
+        <script src="/assets/assets_admin/js/lightbox-plus-jquery.min.js"> </script>
+    </div>
+
+<!-- script-for sticky-nav -->
+<script>
+$(document).ready(function() {
+ var navoffeset=$(".header-main").offset().top;
+ $(window).scroll(function(){
+    var scrollpos=$(window).scrollTop();
+    if(scrollpos >=navoffeset){
+        $(".header-main").addClass("fixed");
+    }else{
+        $(".header-main").removeClass("fixed");
+    }
+ });
+});
+</script>
+<!-- /script-for sticky-nav -->
+{% endblock content %}

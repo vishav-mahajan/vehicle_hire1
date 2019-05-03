@@ -25,11 +25,12 @@ urlpatterns = [
     url(r'admin/', admin.site.urls),
     url(r'^logout/',views.logout ),
     url(r'^', include('front_app.urls')),
-    url(r'^master/', include('adminapp.urls')),
+    url(r'^superuser/', include('adminapp.urls',namespace="superuser")),
     url(r'^manager/', include('managerapp.urls')),
     url(r'^businessuser/', include('businessuserapp.urls')),
     url(r'^changepassword/',views.updatepassword),
     url(r'^profileupdate/',views.profile),
+
     url(r'^dskjgheriugiurefhkusdjdowieuqhiurehf/',views.verify)
     #url(r'^fpassword/',views.fpassword)
 

@@ -34,5 +34,9 @@ class VehicleDetailsForm(forms.ModelForm):
                     "u_email",
                     "vehicle_isavailable",
                     "vehicle_price",
-                    "vehicle_model"
+                    "vehicle_model",
+            "seats",
+            "airbags",
+            "abs",
+            "transmission"
                      ]

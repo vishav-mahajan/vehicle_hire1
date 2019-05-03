@@ -1,0 +1,184 @@
+{% extends "admin_master.html" %}
+{% block content %}
+
+<div id="page-wrapper">
+    <div class="main-page">
+        <div class="row">
+            <h3 class="title1">Booking Details</h3>
+            <div class="form-three widget-shadow">
+                <form method="POST" enctype="multipart/form-data" class="form-horizontal">
+                    {% csrf_token %}
+
+
+                    <div class="form-group has-success">
+										<label class="col-md-2 control-label">Pick-Up Date-Time</label>
+										<div class="col-md-8">
+											<div class="input-group input-icon right">
+												<span class="input-group-addon">
+													<i class="fa fa-calendar"></i>
+												</span>
+												<input readonly name="start_date" class="form-control1" value="{{ sd }}" type="text" >
+											</div>
+                                        </div></div>
+
+                    <div class="form-group has-success">
+										<label class="col-md-2 control-label">Return Date-Time</label>
+										<div class="col-md-8">
+											<div class="input-group input-icon right">
+												<span class="input-group-addon">
+													<i class="fa fa-calendar"></i>
+												</span>
+												<input readonly name="end_date" class="form-control1" value="{{ ed }}" type="text" >
+											</div>
+                                        </div></div>
+
+
+                    <!--div class="form-group">
+                        <label class="col-sm-2 control-label">Select Time</label>
+                        <div class="col-sm-4">
+                            <div class="input-group input-icon right " id="start_time">
+												<span class="input-group-addon ml-1">
+													<i class="fa fa-clock-o"></i>
+												</span>
+
+                            <input type="text" name="start_time"     placeholder="HH:MM:SS">
+                            </div>
+                        </div>
+                        <div class="col-sm-4" >
+                            <div class="input-group input-icon right" id="end_time">
+												<span class="input-group-addon">
+													<i class="fa fa-clock-o"></i>
+												</span>
+                            <input type="text"  placeholder="HH:MM:SS" name="end_time">
+                            </div></div>
+                    </div-->
+
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Vehicle Category</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" readonly name="vehicle_category" value="{{ ud.vehicle_id.vehicle_category_name }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Minimum Price</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" readonly name="vehicle_price" value="{{ ud.vehicle_id.vehicle_category_price }} (For First 4 Hours)" placeholder="Enter Name">
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Vehicle Name</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" readonly name="vehicle_name" value="{{ ud.company_id.company_name }} {{ ud.vehicle_name }}" placeholder="Enter Name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Seller Email</label>
+                        <div class="col-sm-8">
+                            <input disabled="" type="email" class="form-control1" name="u_email" placeholder="{{ ud.u_email }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Email</label>
+                        <div class="col-sm-8">
+                            <input disabled="" type="email" class="form-control1" name="u_email" placeholder="{{ request.session.email }}">
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Description</label>
+                        <div class="col-sm-8"><input type="text" name="vehicle_description" value="{{ ud.vehicle_description }}" readonly  id="vehicle_description" cols="50" rows="4" class="form-control1"></div>
+
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Vehicle Image</label>
+
+
+                        <img class="col-md-4 ml-2" src="/media/{{ ud.vehicle_image }}"  alt="image name" style="height: 250px; width: 400px;">
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="form-group">
+                        <div class="control-label col-sm-6">
+                            <button  type="submit" class="btn btn-default">Confirm Detail</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if nt %}
+<script>
+    alert("Some Other Vehicle already Booked and and Not Returned")
+</script>{% endif %}
+
+<!--script type="text/javascript">
+
+var a = document.getElementById("start_date");
+var b = document.getElementById("end_date");
+if(a.value == b.value){
+$(function () {
+        $('#start_time').datetimepicker({
+        format : "HH:mm:ss"
+        });
+        $('#end_time').datetimepicker({
+            format : "HH:mm:ss"
+
+        });
+        $("#start_time").on("dp.change", function (e) {
+            $('#end_time').data("DateTimePicker").minDate(e.date);
+        });
+        $("#end_time").on("dp.change", function (e) {
+            $('#start_time').data("DateTimePicker").maxDate(e.date);
+        });
+    });
+}
+else{
+$(function () {
+                $('#start_time,#end_time').datetimepicker({
+                    format: 'hh:mm:00'
+                });
+            });
+}
+
+
+
+
+        </script-->
+<script>
+
+
+    $(function () {
+    $('#start_time,#end_time').datetimepicker({
+        sideBySide: true,
+        format:"YYYY-MM-DD HH:mm:ss",
+        stepping : 15
+    });
+});
+</script>
+
+
+
+
+{% endblock %}
+
+
+

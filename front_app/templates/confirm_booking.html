@@ -1,0 +1,176 @@
+{% extends "admin_master.html" %}
+{% block content %}
+
+<div>
+    <div id="page-wrapper">
+        <div class="main-page">
+            <div class="row">
+
+                <form method="POST" enctype="multipart/form-data" class="form-horizontal">
+                    {% csrf_token %}
+
+                    <div class="form-group has-success">
+                                <label class="col-md-2 control-label">Pick-Up Date-Time</label>
+                                <div class="col-md-8">
+                                    <div class="input-group input-icon right">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <input readonly name="start_date" class="form-control1" value="{{ request.session.start_date }}" type="text" >
+                                    </div>
+                                </div></div>
+                    <div class="form-group has-success">
+                                <label class="col-md-2 control-label">Return Date-Time</label>
+                                <div class="col-md-8">
+                                    <div class="input-group input-icon right">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <input readonly name="end_date" class="form-control1" value="{{ request.session.end_date }}" type="text" >
+                                    </div>
+                                </div></div>
+
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Category</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly class="form-control1" name="vehicle_category" value="{{ request.session.category }}">
+                        </div>
+
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Vehicle Name</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control1" readonly name="vehicle_name" value="{{ request.session.vehicle_name }}" >
+                        </div>
+
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"> Seller email</label>
+                        <div class="col-sm-8">
+                            <input readonly type="email" class="form-control1" name="seller" value="{{ request.session.seller }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                            <label class="col-sm-2 control-label"> User email</label>
+                            <div class="col-sm-8">
+                                <input readonly type="email" class="form-control1" name="user_email" value="{{ request.session.email }}">
+                            </div>
+                        </div>
+
+
+<br/><br/>
+                    <!--div class="form-group">
+                            <label class="col-sm-2 control-label">Address</label>
+                            <div class="col-sm-8">
+                                <input  type="text" class="form-control1" name="user_house" placeholder="Enter House Number" >
+                            </div>
+                        </div>
+                    <div class="form-group">
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-8">
+                                <input  type="email" class="form-control1" name="user_society" placeholder="Enter Socity Name/Locality" >
+                            </div>
+                        </div>
+                    <div class="form-group">
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-8">
+                                <input readonly type="email" class="form-control1" name="user_pincode" placeholder="Enter Pin Code">
+                            </div>
+                        </div>
+                    <div class="form-group">
+                            <label class="col-sm-2 control-label"> </label>
+                            <div class="col-sm-8">
+                                <input  type="email" class="form-control1" name="user_district" placeholder="Enter District" >
+                            </div>
+                        </div>
+                    <div class="form-group">
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-8">
+                                <input  type="email" class="form-control1" name="user_state" placeholder="Enter State" >
+                            </div>
+                        </div-->
+
+                     <div class="form-group ">
+                            <label class="col-sm-2 control-label">Bill generation</label>
+                            <div class="col-md-3 ml-auto text-justify">
+                                <table class="table " >
+                                    <thead class="thead-dark">
+<tr>
+
+<td>Security</td>
+<td>Rs. 10,000/-</td>
+</tr>
+</thead>
+                                    <tbody>
+<tr>
+
+<td>Expected Pay</td>
+<td>Rs. {{ request.session.amt }}/-</td>
+
+</tr>
+<tr>
+
+<td>Total Amount</td>
+<td>Rs. {{ request.session.total }}/-</td>
+</tr>
+<tr>
+
+</tbody>
+                                </table>
+                            </div>
+                     </div>
+
+                    <div class="form-group">
+									<label for="selector1" class="col-sm-2 control-label">Payment Method</label>
+									<div class="col-sm-8">
+                                    <select name="selector1" id="selector1" class="form-control1">
+
+										<option name="pay" value="0">Paypal</option>
+                                        <option name="pay" value="0">Credit CArd</option>
+                                        <option name="pay" value="0">Debit CArd</option>
+                                        <option name="pay" value="0">Netbanking</option>
+
+
+									</select>
+                                    </div>
+								</div>
+
+                    <!--div class="form-group" >
+                            <label class="col-sm-2 control-label">Payment Method</label>
+                            <div class="col-sm-8">
+                                    <div class="radio-inline">
+                                        <input type="radio" name="pay" value="cod" required>Pay on Delivery
+                                    </div>
+                                <div class="radio-inline">
+                                        <label><input type="radio" name="pay" value="0" required>Paypal</label>
+                                </div>
+                            </div>
+                        </div-->
+
+                                <!--<div class="form-group">
+                                    <label class="col-sm-2 control-label">Image</label>
+                                    <input class="col-sm-8" type="file" name="vehicle_image" id="vehicle_image" required>
+                                </div>-->
+                    <div class="form-group">
+                        <div class="control-label col-sm-6">
+                        <button  type="submit" class="btn btn-default">Confirm Booking</button>
+
+                        </div>
+                    </div>
+
+
+                    </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

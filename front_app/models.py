@@ -28,7 +28,7 @@ class MySiteUser(models.Model):
         return self.user_email
 
 class contact_us (models.Model):
-    user_name=models.CharField(max_length= 255,default="")
+    user_name = models.CharField(max_length= 255,default="")
     user_email = models.CharField(max_length=180,default="")
     user_mobile = models.CharField(max_length=180, default="", null=False)
     user_subject=models.CharField(max_length=180,default="")
@@ -41,8 +41,11 @@ class login_details(models.Model):
     logout_time = models.CharField(max_length=225, default="")
 
 class booking_details(models.Model):
+    booking_date=models.CharField(max_length=255, default="")
     booking_id=models.AutoField(primary_key=True)
-    user_detail=models.CharField(max_length=255,default="")
+    invoice=models.CharField(max_length=255,unique=True, default="")
+    user_detail=models.ForeignKey(MySiteUser, on_delete=models.CASCADE, default="")
+    seller_detail=models.CharField(max_length=255,default="")
     vehicle_detail=models.CharField(max_length=255,default="")
     start_date=models.CharField(max_length=255,default="")
     end_date=models.CharField(max_length=255,default="")
@@ -51,4 +54,9 @@ class booking_details(models.Model):
     security_amount=models.BigIntegerField(default=0)
     fine_amount=models.BigIntegerField(default=0)
     balance_amount=models.BigIntegerField(default=0)
+    amount_exp=models.BigIntegerField(default=0)
+    total=models.BigIntegerField(default=0)
     vehicle_info = models.ForeignKey(VehiclesDetails, on_delete=models.CASCADE, default="")
+    cancel_token=models.CharField(max_length=255, default="")
+    is_active=models.BooleanField(default=True)
+    cancellation_time=models.CharField(max_length=255,default="")

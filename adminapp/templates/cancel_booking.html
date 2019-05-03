@@ -1,0 +1,202 @@
+{% extends "admin_master.html" %}
+{% block content %}
+
+<div>
+    <div id="page-wrapper">
+        <div class="main-page">
+            <div class="row">
+
+                <form method="POST" enctype="multipart/form-data" class="form-horizontal">
+                    {% csrf_token %}
+
+                    <div class="form-group has-success">
+                                <label class="col-md-2 control-label">Pick-Up Date-Time</label>
+                                <div class="col-md-8">
+                                    <div class="input-group input-icon right">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <input readonly name="start_date" class="form-control1" value="{{ bd.start_date }}" type="text" >
+                                    </div>
+                                </div></div>
+                    <div class="form-group has-success">
+                                <label class="col-md-2 control-label">Return Date-Time</label>
+                                <div class="col-md-8">
+                                    <div class="input-group input-icon right">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <input readonly name="end_date" class="form-control1" value="{{ bd.end_date }}" type="text" >
+                                    </div>
+                                </div></div>
+
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Category</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly class="form-control1" name="vehicle_category" value="{{ bd.vehicle_info.vehicle_id.vehicle_category_name }}">
+                        </div>
+
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Vehicle Name</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control1" readonly name="vehicle_name" value="{{ bd.vehicle_info.vehicle_name }}" >
+                        </div>
+
+
+                    </div>
+                    <div class="form-group has-success">
+                        <label class="col-sm-2 control-label"> Seller email</label>
+                        <div class="col-sm-8">
+                            <input readonly type="email" class="form-control1" name="seller" value="{{ bd.seller_detail }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group has-success">
+                            <label class="col-sm-2 control-label"> User email</label>
+                            <div class="col-sm-8">
+                                <input readonly type="email" class="form-control1" name="user_email" value="{{ request.session.email }}">
+                            </div>
+                        </div>
+
+
+<br/><br/>
+                    <!--div class="form-group">
+                            <label class="col-sm-2 control-label">Address</label>
+                            <div class="col-sm-8">
+                                <input  type="text" class="form-control1" name="user_house" placeholder="Enter House Number" >
+                            </div>
+                        </div>
+                    <div class="form-group">
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-8">
+                                <input  type="email" class="form-control1" name="user_society" placeholder="Enter Socity Name/Locality" >
+                            </div>
+                        </div>
+                    <div class="form-group">
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-8">
+                                <input readonly type="email" class="form-control1" name="user_pincode" placeholder="Enter Pin Code">
+                            </div>
+                        </div>
+                    <div class="form-group">
+                            <label class="col-sm-2 control-label"> </label>
+                            <div class="col-sm-8">
+                                <input  type="email" class="form-control1" name="user_district" placeholder="Enter District" >
+                            </div>
+                        </div>
+                    <div class="form-group">
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-8">
+                                <input  type="email" class="form-control1" name="user_state" placeholder="Enter State" >
+                            </div>
+                        </div-->
+
+                     <div class="form-group ">
+                            <label class="col-sm-2 control-label">Refund Amount</label>
+                            <div class="col-md-3 ml-auto text-justify">
+                                <table class="table " >
+                                    <thead class="thead-dark">
+<tr>
+
+<td>Security</td>
+<td>Rs. 10,000/-</td>
+</tr>
+<tr>
+
+    <tr>
+
+<td>Vehicle Cost</td>
+<td>Rs. {{ bd.amount_exp }}/-</td>
+</tr>
+<tr>
+
+<td>Amount Paid</td>
+<td>Rs. {{ bd.total }}/-</td>
+</tr>
+</thead>
+<tbody>
+
+<tr>
+
+<td>Cancellation Charges</td>
+<td>Rs. 5000/-</td>
+
+</tr>
+<tr>
+
+<td><b>Balance</b></td>
+<td>Rs. {{ bd.balance_amount }} /-</td>
+</tr>
+<tr>
+
+</tbody>
+                                </table>
+                            </div>
+                     </div>
+
+                    <div class="form-group">
+									<label for="selector1" class="col-sm-2 control-label">Refund Method</label>
+									<div class="col-sm-8">
+                                    <select name="selector1" id="selector1" class="form-control1">
+
+										<option name="pay" value="0">Paypal Account</option>
+
+
+
+									</select>
+                                    </div>
+								</div>
+
+                        <div class="form-group">
+                        {% if cancel %}
+                            <script>alert("Your Booking Has Been Cancelled")</script>
+                            <div class="form-group">
+                        <div class="control-label col-sm-6">
+                            <a href="/show_bookings"><button  type="button" class="btn btn-success"> View Bookings</button></a>
+
+                        </div>
+                    </div>
+                            {% else %}
+                            <div class="form-group">
+                        <div class="control-label col-sm-6">
+                        <button  type="submit" class="btn btn-default">Confirm Cancellation</button>
+
+                        </div>
+                    </div>
+                            {% endif %}
+                    </div>
+                    <!--div class="form-group" >
+                            <label class="col-sm-2 control-label">Payment Method</label>
+                            <div class="col-sm-8">
+                                    <div class="radio-inline">
+                                        <input type="radio" name="pay" value="cod" required>Pay on Delivery
+                                    </div>
+                                <div class="radio-inline">
+                                        <label><input type="radio" name="pay" value="0" required>Paypal</label>
+                                </div>
+                            </div>
+                        </div-->
+
+                                <!--<div class="form-group">
+                                    <label class="col-sm-2 control-label">Image</label>
+                                    <input class="col-sm-8" type="file" name="vehicle_image" id="vehicle_image" required>
+                                </div>-->
+
+
+
+                    </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+

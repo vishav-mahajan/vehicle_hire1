@@ -1,0 +1,70 @@
+{% extends "admin_master.html" %}
+
+
+{% block head %}
+{% endblock %}
+
+
+
+{% block content %}
+
+<div id="page-wrapper">
+    <div class="main-page">
+        <div class="tables">
+            <div class=" bs-example widget-shadow">
+                <h4>Quries:</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Query ID</th>
+                            <th>Email</th>
+                            <th>User Name</th>
+                            <th>Contact</th>
+                            <th>Subject</th>
+                            <th>operation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% if q %}
+                    {% for i in q %}
+                        <tr>
+                            <th scope="row">1</th>
+                            <td >{{ i.user_email }}</td>
+                            <td>{{ i.user_name }}</td>
+                            <td>{{ i.user_mobile }}</td>
+                            <td >
+                                <a class="btn btn-dark-green" data-toggle="popover-hover" title="Message" data-content="{{ i.user_message }}">{{ i.user_subject }}</a>
+                            </td>
+                            <td  >Respond</td>
+                        </tr>
+                    {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<script>
+
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+        });
+    $('[data-toggle="popover-hover"]').popover({
+        html: true,
+        trigger: 'hover',
+        placement: 'bottom',
+        content: function () { return '<img src="' + $(this).data('img') + '" />'; }
+        });
+</script>
+
+{% endblock %}

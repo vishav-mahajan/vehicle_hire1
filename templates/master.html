@@ -29,9 +29,7 @@
     <!--=== Responsive CSS ===-->
     <link href="/assets/css/responsive.css" rel="stylesheet">
 
-    <script>
- $($("#redirectauto").click()) ;
-      </script>
+    <link href="/assets/assets_admin/css/bootstrap-datetimepicker.min.css" rel='stylesheet' type='text/css' />
 
 
 
@@ -67,7 +65,7 @@
                 <div class="row">
                     <!--== Logo Start ==-->
                     <div class="col-lg-4">
-                        <a href={% url 'front_app:index' %} class="logo">
+                        <a href="{% url 'front_app:index' %}" class="logo">
                             <img src="/assets/images/logo.png" alt="JSOFT">
                         </a>
                     </div>
@@ -83,20 +81,20 @@
                                 <li><a href="{% url 'front_app:contact'%}">Contact</a></li>
                                 <li><a class="mr-4" href="{% url 'front_app:team'%}">Team</a></li>
                                 {% if request.session.authenticate %}
-                                    <li><img  width="60" height="60" style="object-fit: fill; border-radius: 100%; border: groove; border-color: #e0a800"src="/media/{{ su.user_image }}">
+                                    <li><img   style="object-fit: fill ;height: 60px; width: 60px; border-radius: 100%; border: groove; border-color: #e0a800" src="/media/{{ su.user_image }}">
                                     <ul class="aligncenter">
                                     <li><a title="{{ request.session.email }}({{ su.site_role_id.role_name }})" class="btn btn-outline-warning btn-lg " href="#" ><h6> {{ su.user_fname }} {{ su.user_lname }} </h6></a>
                                         </li>
                                         {% if request.session.role_id == 4 %}
                                     <li><a href="/businessuser">Dashboard</a></li>
                                             {% elif request.session.role_id == 3 %}
-                                    <li><a href="/">Dashboard</a></li>
+                                    <li><a href="/user">Dashboard</a></li>
                                             {% elif request.session.role_id == 1 %}
                                     <li><a href="/manager">Dashboard</a></li>
                                             {% elif request.session.role_id == 2 %}
-                                    <li><a href="/master">Dashboard</a></li>
+                                    <li><a href="/superuser">Dashboard</a></li>
                                             {% endif %}
-                                    <li><a href="#">My Bookings</a></li>
+                                    <li><a href="/show_bookings">My Bookings</a></li>
                                     <li><a href="/logout">Logout</a></li>
                                     </ul>
 
@@ -209,15 +207,19 @@
     </div>
     <!--== Scroll Top Area End ==-->
 
+
+
     <!--=======================Javascript============================-->
     <!--=== Jquery Min Js ===-->
     <script src="/assets/js/jquery-3.2.1.min.js"></script>
+    <script src="/assets/assets_admin/js/moment.min.js" type="text/javascript"></script>
     <!--=== Jquery Migrate Min Js ===-->
     <script src="/assets/js/jquery-migrate.min.js"></script>
     <!--=== Popper Min Js ===-->
     <script src="/assets/js/popper.min.js"></script>
     <!--=== Bootstrap Min Js ===-->
     <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/assets_admin/js/bootstrap-datetimepicker.min.js"></script>
     <!--=== Gijgo Min Js ===-->
     <script src="/assets/js/plugins/gijgo.js"></script>
     <!--=== Vegas Min Js ===-->

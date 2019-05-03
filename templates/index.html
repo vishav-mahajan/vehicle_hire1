@@ -1,7 +1,7 @@
 {% extends "master.html" %}
 
 {% block content %}
-    <div>
+<div>
      <!--== Slider Area Start ==-->
     <section id="slider-area">
         <!--== slide Item One ==-->
@@ -26,23 +26,50 @@
                                 <!--== Pick Up Location ==-->
 
                                 <!--== Pick Up Date ==-->
-                                <div class="pick-up-date book-item">
-                                    <h4>PICK-UP DATE:{{ try }}{{ exp }}</h4>
-                                    <input type="date" name="start_date" value="{{ sd }}" id="startDate" placeholder="Pick Up Date" >
 
-                                    <div class="return-car">
-                                        <h4>Return DATE:</h4>
-                                        <input type="date" name="end_date" value="{{ ed }}" id="endDate" placeholder="Return Date" >
-                                    </div>
-                                </div>
-                                <!--== Pick Up Location ==-->
+<div class="col-auto">
+    <h4>PICK-UP DATE-TIME</h4>
+    <label class="sr-only" for="inlineFormInputGroup"></label>
+    <div class="input-group mb-2">
+        <div class="input-group input-icon left" id="start_date">
+             <span class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+
+            </span>
+            <input type="text" class="form-control" name="start_date" id="cancel-s" value="{{ sd }}" placeholder="Enter Pick-up Date">
+
+
+
+        </div>
+        <span class="input-group-addon">
+                <i id ="close-s" class="fa fa-close"></i>
+
+            </span>
+    </div>
+</div>
+
+<div class="col-auto pt-4">
+    <h4>RETURN DATE-TIME</h4>
+    <label class="sr-only" for="inlineFormInputGroup"></label>
+    <div class="input-group mb-2">
+        <div class="input-group input-icon left" id="end_date">
+            <span class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+            </span>
+            <input type="text" class="form-control" name="end_date" id="cancel-e" value="{{ ed }}" placeholder="Return Date">
+
+        </div>
+        <span class="input-group-addon">
+                <i id ="close-e" class="fa fa-close"></i>
+
+            </span>
+    </div>
+</div>
 
                                 <!--== Car Choose ==>
                                 <div class="choose-car-type book-item">
                                     <h4>CHOOSE CAR TYPE:</h4>
                                     {% if ccd %}
-
-
                                     <select class="custom-select">
                                       <option selected>Select</option>
                                         {% for i in ccd %}
@@ -52,8 +79,8 @@
                                     {% endif %}
                                 </div-->
                                 <!--== Car Choose ==-->
-
-                                <div class="book-button text-center">
+<br/>
+                                <div class="book-button text-center ">
                                     <input type="submit" value="Explore" style="border-radius: 25px" class="book-now-btn">
                                 </div>
                             </form>
@@ -76,7 +103,8 @@
         <!--== slide Item One ==-->
     </section>
     <!--== Slider Area End ==-->
-     <!--== Choose Car Area Start ==-->
+
+    <!--== Choose Car Area Start ==-->
     <section id="choose-car" class="section-padding">
         <div class="container">
             <div class="row">
@@ -91,14 +119,10 @@
                 <!-- Section Title End -->
             </div>
 
-
             <div class="row">
                 <!-- Choose Area Content Start -->
                 <div class="col-lg-12">
                     <div class="choose-content-wrap">
-                        <!-- Choose Area Tab Menu -->
-
-                        <!-- Choose Area Tab Menu -->
 
                         <!-- Choose Area Tab content -->
                         <div class="tab-content" id="myTabContent">
@@ -107,8 +131,6 @@
                                 <!-- Popular Cars Content Wrapper Start -->
                                 <div class="popular-cars-wrap">
                                     <!-- Filtering Menu -->
-
-
                                     <div class="popucar-menu text-center">
                                         <a href="#" data-filter="*" class="active">all</a>
                                         {% if ccd %}
@@ -116,66 +138,53 @@
                                         <a href="#" data-filter=".{{ i.vehicle_category_name }}">{{ i.vehicle_category_name }}</a>
                                         {% endfor %}
                                         {% endif %}
-
                                     </div>
+                                    <!-- Filtering Menu End -->
 
-
-                                    <!-- Filtering Menu -->
-                                {% if ud %}
-
+                                    {% if ud %}
                                     <!-- PopularCars Tab Content Start -->
                                     <div class="row popular-car-gird">
                                     {% for i in ud %}
                                         <!-- Single Popular Car Start -->
                                         <div class="col-lg-4 col-md-6  {{ i.vehicle_id.vehicle_category_name }}">
-
                                             <div class="single-popular-car">
                                                 <div class="p-car-thumbnails">
                                                     <a class="car-hover" href="/media/{{ i.vehicle_image }}">
-                                                      <img src="amedia/{{ i.vehicle_image }}" width="1280px" height="800px" style="object-fit:fill" alt="JSOFT">
+                                                      <img src="media/{{ i.vehicle_image }}" width="1280px" height="800px" style="object-fit:fill" alt="JSOFT">
                                                    </a>
                                                 </div>
 
                                                 <div class="p-car-content">
                                                     <h3>
-                                                        <a href={% url 'front_app:baleno' %}>{{ i.vehicle_name }}</a>
+                                                        <a href="{% url 'front_app:baleno' %}">{{ i.vehicle_name }}</a>
                                                         <span class="price"><i class="fa fa-tag"></i> Rs {{ i.vehicle_price }}/hour</span>
                                                     </h3>
-
                                                     <h5>{{ i.vehicle_id.vehicle_category_name }}</h5>
-
 
                                                     <div class="p-car-feature">
                                                         <a>{{ i.vehicle_model }}</a>
-                                                        <a>Manual</a>
-                                                        <a>AIR CONDITION</a>
+                                                        <a>{{ i.transmission }}</a>
+                                                        <a>{{ i.airbags }}</a>
+                                                        <a>{{ i.seats }}</a>
                                                     </div>
                                                     <p>  </p>
                                                     {% if book and request.session.authenticate %}
                                                     <div class="mt-4" >
                                                     <a class="btn btn-outline-warning btn-sm " style="border-radius: 25px" href="{% url 'front_app:booking' %}?id={{ i.vehicle_ref_id }}&sd={{ sd }}&ed={{ ed }}">Book Now</a>
-                                                </div>{% endif %}
+                                                    </div>
+                                                    {% endif %}
                                                 </div>
-
                                             </div>
-
                                         </div>
                                         <!-- Single Popular Car End -->
-                                        {% endfor %}
-
-                                        {% endif %}
-
-
-
+                                    {% endfor %}
+                                    {% endif %}
                                     </div>
                                     <!-- PopularCars Tab Content End -->
                                 </div>
                                 <!-- Popular Cars Content Wrapper End -->
                             </div>
                             <!-- Popular Cars Tab End -->
-
-                            <!-- Newest Cars Tab Start -->
-
                         </div>
                         <!-- Choose Area Tab content -->
                     </div>
@@ -185,10 +194,6 @@
         </div>
     </section>
     <!--== Choose Car Area End ==-->
-
-
-
-    <!--== Partner Area End ==-->
 
     <!--== Services Area Start ==-->
     <section id="service-area" class="section-padding">
@@ -270,9 +275,6 @@
 			</div>
 				<!-- Single Service End -->
 
-				<!-- Single Service Start -->
-
-				<!-- Single Service End -->
 			</div>
 			<!-- Service Content End -->
     </section>
@@ -334,7 +336,6 @@
     </section>
     <!--== Fun Fact Area End ==-->
 
-
     <!--== What We Do Area Start ==-->
     <section id="what-do-area" class="section-padding">
         <div class="container">
@@ -357,8 +358,8 @@
                         <div class="we-do-content">
                             <div class="display-table">
                                 <div class="display-table-cell">
-                                    <h3>CAR INSPECTION</h3>
-                                    <p>Erspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
+                                    <h3>SELECT DURATION</h3>
+                                    <p>Select the Duration to View Available Cars</p>
                                     <a href="#">Read More</a>
                                 </div>
                             </div>
@@ -372,8 +373,8 @@
                         <div class="we-do-content">
                             <div class="display-table">
                                 <div class="display-table-cell">
-                                    <h3>CAR INSPECTION</h3>
-                                    <p>Erspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
+                                    <h3>VIEW AVAILABLE CARS</h3>
+                                    <p>View the Cars available for booking in a particular duration</p>
                                     <a href="#">Read More</a>
                                 </div>
                             </div>
@@ -388,8 +389,8 @@
                         <div class="we-do-content">
                             <div class="display-table">
                                 <div class="display-table-cell">
-                                    <h3>CAR INSPECTION</h3>
-                                    <p>Erspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
+                                    <h3>BOOK VEHICLE, PAYMENT</h3>
+                                    <p>Confirm Your booking and make Payments</p>
                                     <a href="#">Read More</a>
                                 </div>
                             </div>
@@ -404,8 +405,8 @@
                         <div class="we-do-content">
                             <div class="display-table">
                                 <div class="display-table-cell">
-                                    <h3>CAR INSPECTION</h3>
-                                    <p>Erspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
+                                    <h3>DOC. VERIFICATION</h3>
+                                    <p>Company Professional will verify the eligibility of customer for driving and after Confirmation hand over the Vehicle </p>
                                     <a href="#">Read More</a>
                                 </div>
                             </div>
@@ -435,20 +436,20 @@
 
             <!-- Pricing Table Conatent Start -->
             <div class="row">
+
                 <!-- Single Pricing Table -->
                 <div class="col-lg-4 col-md-6 text-center">
                     <div class="single-pricing-table">
                         <h3>PREMIMUM</h3>
-                        <h2> RS  10000</h2>
+                        <h2>RS  10000</h2>
                         <h5>PER MONTH</h5>
-
-
+                        <h5>First 200 KMS</h5>
                         <ul class="package-list">
                             <li>FREE MAINTAINANCE</li>
                             <li>ROAD SIDE ASSISTANCE</li>
                             <li>INSURANCE INCLUDED</li>
-                            <li>FREE WASH</li>
-
+                            <li>FREE HOME DELIVERY</li>
+                            <li>2 HOURS RELAXED</li>
                         </ul>
                     </div>
                 </div>
@@ -459,12 +460,13 @@
                     <div class="single-pricing-table">
                         <h3>Trial</h3>
                         <h2>Free</h2>
-                        <h5>PER MONTH</h5>
+                        <h5>First 10 KMS</h5>
 
                         <ul class="package-list">
-                            <li>FREE VEHICLE DELIVERY</li>
-                            <li>OTHER CELEBRATIONS</li>
-                            <li>FULL INSURANCE</li>
+                            <li>FOR 2 HOURS ONLY</li>
+                            <li>PAY FOR HOME DELIVERY</li>
+                            <li>ROAD SIDE ASSISTANCE</li>
+                            <li>INSURANCE INCLUDED</li>
 
                         </ul>
                     </div>
@@ -475,13 +477,14 @@
                 <div class="col-lg-4 col-md-6 text-center">
                     <div class="single-pricing-table">
                         <h3>Standard</h3>
-                        <h2>Rs 900</h2>
-                        <h5>PER MONTH</h5>
+                        <h2>VEHICLE PRICE</h2>
+                        <h5>First 20 KMS</h5>
 
                         <ul class="package-list">
-                            <li>DELIVERY AT AIRPORT</li>
-                            <li>WEDDINGS AND OTHER</li>
-                            <li>FULL INCLUDED</li>
+                            <li>PLAN YOUR TIME</li>
+                            <li>HOME DELIVERY*</li>
+                            <li>ROAD SIDE ASSISTANCE</li>
+                            <li>INSURANCE INCLUDED</li>
 
                         </ul>
                     </div>
@@ -493,5 +496,62 @@
     </section>
     <!--== Pricing Area End ==-->
 
-    </div>
+</div>
+
+
+
+
 {% endblock content %}
+
+{% block jquery %}
+
+<!--script>
+
+
+    $(function () {
+    $('#start_date,#end_date').datetimepicker({
+        sideBySide: true,
+        format:"YYYY-MM-DD HH:mm:ss",
+        stepping : 15
+    });
+});
+</script-->
+<script type="text/javascript">
+
+    $("#close-s").click(function(){
+    document.getElementById("cancel-s").value = "";
+    })
+    $("#close-e").click(function(){
+    document.getElementById("cancel-e").value = "";
+    })
+
+    $(function () {
+        $('#start_date').datetimepicker({
+        minDate:new Date(),
+        sideBySide: true,
+        format:"YYYY-MM-DD HH:mm:ss",
+        stepping : 15,
+
+
+         });
+
+
+
+        $('#end_date').datetimepicker({
+
+        sideBySide: true,
+        format:"YYYY-MM-DD HH:mm:ss",
+        stepping : 15,
+        useCurrent: false, //Important! See issue #1075
+
+
+        });
+        $("#start_date").on("dp.change", function (e) {
+            $('#end_date').data("DateTimePicker").minDate(e.date);
+        });
+        $("#end_date").on("dp.change", function (e) {
+            $('#start_date').data("DateTimePicker").maxDate(e.date);
+        });
+    });
+</script>
+    {% endblock %}

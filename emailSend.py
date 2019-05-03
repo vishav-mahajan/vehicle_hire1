@@ -2,6 +2,7 @@ import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
 
 def email_send(email,password,verify):
     msg = MIMEMultipart()
@@ -48,4 +49,33 @@ def otp_send(email,otp, subject, message,type):
         server.quit()
 
 
+def email_invoice(email,invoice):
+    msg = MIMEMultipart()
+    msg["From"] = 'vishavmahajan96@gmail.com'
+    msg['To'] = email
+    msg['Subject'] = 'Booking Invoice #'+invoice
 
+
+
+
+    filename = "AdRENTureDashboard.pdf"
+    with open(filename,'rb') as f:
+        message = MIMEApplication(f.read(), _subtype='pdf')
+        msg.add_header('Content-disposition','inline', filename = filename)
+        msg.attach(message)
+
+
+    body = 'Thanks For Booking \n'+"\n"+"Your Invoice is attached below :- \n"\
+    "\n"
+
+    msg.attach(MIMEText(body,'plain'))
+    server = smtplib.SMTP('smtp.gmail.com',587)
+    server.starttls()
+    server.login('vishavmahajan96@gmail.com','vishav@123')
+    text = msg.as_string()
+    server.sendmail(msg["From"],msg['To'],text)
+    server.quit()
+    print('mail sent')
+
+
+#email_invoice("sanyamm02@gmail.com","327638")

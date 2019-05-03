@@ -1,5 +1,5 @@
 from django import forms
-from front_app.models import MySiteUser,User_role,contact_us,login_details
+from front_app.models import MySiteUser,User_role,contact_us,login_details,booking_details
 
 
 class ContactForm(forms.ModelForm):
@@ -55,4 +55,28 @@ class LoginDetailsForm(forms.ModelForm):
             "logout_time"
         ]
 
+class BookingForm(forms.ModelForm):
+    class Meta():
+        model=booking_details
+        exclude=[
+            "booking_id",
+            "user_detail",
+            "vehicle_detail",
+            "start_date",
+            "end_date",
+            "is_returned",
+            "is_fine",
+            "security_amount",
+            "fine_amount",
+            "balance_amount",
+            "vehicle_info",
+            "amount_exp",
+            "invoice",
+            "seller_detail",
+            "total",
+            "booking_date",
+            "cancel_token",
+            "is_active",
+            "cancellation_time"
+        ]
 

@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from managerapp import views
+from businessuserapp import views
 from django.conf import settings
 
 app_name = 'businessuserapp'

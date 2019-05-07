@@ -15,5 +15,8 @@ urlpatterns = [
         url(r'^vehicle_details/$', views.vehicle_details, name="vehicle_details"),
         url(r'^showdata/$', views.showdata, name="showdata"),
         url(r'^updatedata/$', views.updatedata, name="updatedata"),
-        url(r'^delete_data/$', views.delete_data, name="delete_data")
+        url(r'^delete_data/$', views.delete_data, name="delete_data"),
+        url(r'^mybookings/$', views.my_bookings, name="my_bookings"),
+        url(r'^chkreturn/', views.chkreturn),
+        url(r'^balance/', views.balance)
 ]

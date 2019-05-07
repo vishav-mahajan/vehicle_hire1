@@ -1,26 +1,26 @@
 {% extends "admin_master.html" %}
+
+
+
 {% block content %}
 <div id="page-wrapper">
     <div class="main-page">
         <div class="tables">
             <div class=" bs-example widget-shadow">
                 <h4>User Bookings:</h4>
-                <table class="table table-bordered">
+                <table id="dtBasicExample" class="table table-bordered  sortable">
                     <thead>
                         <tr>
-
-                            <th>Invoice</th>
+                            <th >Invoice</th>
                             <th>Booking Date</th>
-                            <th>Start Date</th>
+                            <th >Start Date</th>
                             <th>End DAte</th>
-                            <th>Vehicle Name</th>
-                            <th>Seller</th>
-
+                            <th >Vehicle Name</th>
+                            <th >Seller</th>
                             <th>Amount(Rs.)</th>
                             <th>Total(Rs.)</th>
                             <th>Status</th>
                             <th>Operations</th>
-
                         </tr>
                     </thead>
                     <tbody>
@@ -88,15 +88,44 @@
 
 <script>
 
-    $(function () {
-        $('[data-toggle="popover"]').popover()
+   var table = $('table');
+
+$('.sortable th')
+    .wrapInner('<span title="sort this column"/>')
+    .each(function(){
+
+        var th = $(this),
+            thIndex = th.index(),
+            inverse = false;
+
+        th.click(function(){
+
+            table.find('td').filter(function(){
+
+                return $(this).index() === thIndex;
+
+            }).sortElements(function(a, b){
+
+                if( $.text([a]) == $.text([b]) )
+                    return 0;
+
+                return $.text([a]) > $.text([b]) ?
+                    inverse ? -1 : 1
+                    : inverse ? 1 : -1;
+
+            }, function(){
+
+                // parentNode is the element we want to move
+                return this.parentNode;
+
+            });
+
+            inverse = !inverse;
+
         });
-    $('[data-toggle="popover-hover"]').popover({
-        html: true,
-        trigger: 'hover',
-        placement: 'bottom',
-        content: function () { return '<img src="' + $(this).data('img') + '" />'; }
-        });
+
+    });
+
 </script>
 
 {% endblock %}

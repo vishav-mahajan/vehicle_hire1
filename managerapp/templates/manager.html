@@ -13,10 +13,13 @@
                             <ul class="bt-list">
                                 {% if request.session.role_id == 1 %}
                                         <li><a href="/" class="hvr-icon-fade col-1">Home</a></li>
-										<li><a href="/manager/vehicle_company" class="hvr-icon-up col-2">Add Company</a></li>
+										<li><a href="/manager/vehicle_company" class="hvr-icon-up col-24">Add Company</a></li>
 										<li><a href="/manager/vehicle_details" class="hvr-icon-up col-3">Add Vehicle</a></li>
 										<li><a href="/manager/showdata" class="hvr-icon-down col-4">Show Vehicles</a></li>
-										<li><a href="/changepassword" class="hvr-icon-fade col-5">Change Password</a></li>
+								<li><a href="/queries" class="hvr-icon-spin col-5">Queries</a></li>
+								<li><a href="/show_bookings" class="hvr-icon-pop col-15">My Bookings</a></li>
+								<li><a href="/manager/mybookings" class="hvr-icon-float col-21">User Bookings</a></li>
+										<li><a href="/changepassword" class="hvr-icon-fade col-11">Change Password</a></li>
 
 										<li><a href="/logout" class="hvr-icon-buzz-out col-6">Logout</a></li>
 										<li><a href="/update" class="hvr-icon-drop col-7">Update Profile </a></li>
@@ -26,10 +29,13 @@
 										{% else %}
                                <ul>
 										<li><a href="/" class="hvr-icon-fade col-1">Home</a></li>
-										<li><a href="/businessuser/vehicle_company" class="hvr-icon-up col-2">Add Company</a></li>
+										<li><a href="/businessuser/vehicle_company" class="hvr-icon-up col-24">Add Company</a></li>
 										<li><a href="/businessuser/vehicle_details" class="hvr-icon-up col-3">Add Vehicle</a></li>
 										<li><a href="/businessuser/showdata" class="hvr-icon-down col-4">Show Vehicles</a></li>
-										<li><a href="/changepassword" class="hvr-icon-fade col-5">Change Password</a></li>
+								   <li><a href="/queries" class="hvr-icon-spin col-5">Queries</a></li>
+								   <li><a href="/show_bookings" class="hvr-icon-pop col-15">My Bookings</a></li>
+								<li><a href="/businessuser/mybookings" class="hvr-icon-float col-21">User Bookings</a></li>
+										<li><a href="/changepassword" class="hvr-icon-fade col-11">Change Password</a></li>
 
 										<li><a href="/logout" class="hvr-icon-buzz-out col-6">Logout</a></li>
 										<li><a href="/update" class="hvr-icon-drop col-7">Update Profile </a></li>
@@ -38,17 +44,7 @@
 								</ul>
                             {% endif %}
 
-                                <!--{% if request.session.role_id == 4 %}
-                                <!--a href="/businessuser/vehicle_company"><div type="submit" class="bg-primary pv20 text-white fw600 text-center" >Add Company</div></a>
-                                <a href="/businessuser/vehicle_category"><div class="bg-primary pv20 text-white fw600 text-center">Add Category</div></a>
-                                <a href="/businessuser/vehicle_details"><div class="bg-primary pv20 text-white fw600 text-center">Vehicle Details</div></a>
-                                <a href="/businessuser/showdata"><div class="bg-primary pv20 text-white fw600 text-center">Show Vehicles</div></a>
-                                {% else %}
-                                <a href="/manager/vehicle_company"><div type="submit" class="bg-primary pv20 text-white fw600 text-center" >Add Company</div></a>
-                                <!--a href="/manager/vehicle_category"><div class="bg-primary pv20 text-white fw600 text-center">Add Category</div></a>
-                                <a href="/manager/vehicle_details"><div class="bg-primary pv20 text-white fw600 text-center">Vehicle Details</div></a>
-                                <a-- href="/manager/showdata"><div class="bg-primary pv20 text-white fw600 text-center">Show Vehicles</div></a-->
-                                {% endif %}
+
 								</div>
                             </div>
                         </div>

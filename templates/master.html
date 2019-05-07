@@ -75,15 +75,15 @@
                     <div class="col-lg-8 d-none d-xl-block">
                         <nav class="mainmenu alignright">
                             <ul>
-                                <li ><a href={% url 'front_app:index' %}>Home</a>
+                                <li ><a href="{% url 'front_app:index' %}">Home</a>
                                 </li>
                                 <li><a href="{% url 'front_app:about'%}">About</a></li>
                                 <li><a href="{% url 'front_app:contact'%}">Contact</a></li>
                                 <li><a class="mr-4" href="{% url 'front_app:team'%}">Team</a></li>
                                 {% if request.session.authenticate %}
-                                    <li><img   style="object-fit: fill ;height: 60px; width: 60px; border-radius: 100%; border: groove; border-color: #e0a800" src="/media/{{ su.user_image }}">
+                                    <li><img   style="object-fit: fill ;height: 60px; width: 60px; border-radius: 100%; border: groove; border-color: #e0a800" src="/media/{{ request.session.image }}">
                                     <ul class="aligncenter">
-                                    <li><a title="{{ request.session.email }}({{ su.site_role_id.role_name }})" class="btn btn-outline-warning btn-lg " href="#" ><h6> {{ su.user_fname }} {{ su.user_lname }} </h6></a>
+                                    <li><a title="{{ request.session.email }}({{ request.session.rolename }})" class="btn btn-outline-warning btn-lg " href="#" ><h6> {{ request.session.name }} </h6></a>
                                         </li>
                                         {% if request.session.role_id == 4 %}
                                     <li><a href="/businessuser">Dashboard</a></li>
@@ -114,12 +114,7 @@
                                 {% else %}
 
                                     <li>
-                                        <a>Login</a>
-                                    <ul>
-                                    <li><a href="{% url 'front_app:login' %}">User</a></li>
-                                    <li><a href="{% url 'front_app:login' %}">Business User</a></li>
-                                    <li><a href="{% url 'front_app:login' %}">Manager</a></li>
-                                    </ul>
+                                        <a href="/login">Login</a>
 
                                 </li>
                                 {% endif %}

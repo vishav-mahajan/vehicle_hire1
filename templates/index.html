@@ -28,7 +28,7 @@
                                 <!--== Pick Up Date ==-->
 
 <div class="col-auto">
-    <h4>PICK-UP DATE-TIME</h4>
+    <h4>PICK-UP DATE-TIME{{exp}}{{try}}</h4>
     <label class="sr-only" for="inlineFormInputGroup"></label>
     <div class="input-group mb-2">
         <div class="input-group input-icon left" id="start_date">
@@ -156,7 +156,7 @@
 
                                                 <div class="p-car-content">
                                                     <h3>
-                                                        <a href="{% url 'front_app:baleno' %}">{{ i.vehicle_name }}</a>
+                                                        <a href="/car-details/?id={{ i.vehicle_ref_id}}">{{ i.vehicle_name }}</a>
                                                         <span class="price"><i class="fa fa-tag"></i> Rs {{ i.vehicle_price }}/hour</span>
                                                     </h3>
                                                     <h5>{{ i.vehicle_id.vehicle_category_name }}</h5>
@@ -172,6 +172,15 @@
                                                     <div class="mt-4" >
                                                     <a class="btn btn-outline-warning btn-sm " style="border-radius: 25px" href="{% url 'front_app:booking' %}?id={{ i.vehicle_ref_id }}&sd={{ sd }}&ed={{ ed }}">Book Now</a>
                                                     </div>
+                                                    {% elif request.session.authenticate %}
+                                                    <br>
+                                                    <p>Enter Date to Get Availability</p>
+                                                    {% elif book %}
+                                                    <br>
+                                                    <p>Login to Book</p>
+                                                    {% else %}
+                                                    <br>
+                                                    <p>Enter Date and Login to Book</p>
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -438,7 +447,7 @@
             <div class="row">
 
                 <!-- Single Pricing Table -->
-                <div class="col-lg-4 col-md-6 text-center">
+                <!--div class="col-lg-4 col-md-6 text-center">
                     <div class="single-pricing-table">
                         <h3>PREMIMUM</h3>
                         <h2>RS  10000</h2>
@@ -452,11 +461,11 @@
                             <li>2 HOURS RELAXED</li>
                         </ul>
                     </div>
-                </div>
+                </div-->
                 <!-- Single Pricing Table -->
 
                 <!-- Single Pricing Table -->
-                <div class="col-lg-4 col-md-6 text-center">
+                <div class="col-lg-6 col-md-6 text-center">
                     <div class="single-pricing-table">
                         <h3>Trial</h3>
                         <h2>Free</h2>
@@ -474,7 +483,7 @@
                 <!-- Single Pricing Table -->
 
                 <!-- Single Pricing Table -->
-                <div class="col-lg-4 col-md-6 text-center">
+                <div class="col-lg-6 col-md-6 text-center">
                     <div class="single-pricing-table">
                         <h3>Standard</h3>
                         <h2>VEHICLE PRICE</h2>

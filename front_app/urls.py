@@ -15,7 +15,7 @@ urlpatterns = [
     url(r'^signup$', views.signup, name="signup"),
     url(r'^masteruser/$', views.master, name="master"),
     url(r'^forgetpassword/$', views.forgototp, name="forgetpassword"),
-    url(r'^car-details/$', views.car_detail, name="baleno"),
+    url(r'^car-details/$', views.car_detail, name="car"),
     url(r'^update/$', views.profile, name="update"),
     url(r'^booking/$', views.booking, name="booking"),
     url(r'^invoice/$', views.invoice, name="invoice"),
@@ -25,4 +25,7 @@ url(r'^view_bookings/', views.view_current_book),
     url(r'^cancel_booking/', views.cancel_booking),
     url(r'^queries/', views.queries),
 url(r'^user/', views.user_index)
+
+
+
 ]

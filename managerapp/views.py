@@ -2,10 +2,12 @@ from django.shortcuts import render,redirect
 import datetime as dt
 import authorize as au
 from managerapp.models import VehicleCompany,VehicleCategories,VehiclesDetails
-from front_app.models import MySiteUser
+from front_app.models import MySiteUser,booking_details
+from front_app.forms import BookingForm
 from django.core.files.storage import FileSystemStorage
 from managerapp.forms import VehicleCategoryForm, VehicleCompanyForm, VehicleDetailsForm
-
+import math
+from django.db.models import Sum
 # Create your views here.
 def manager_index(request):
 
@@ -44,21 +46,7 @@ def business_index(request):
 
 
 
-def vehicle_category(request):
-        try:
-            if (request.method == "POST"):
-                form = VehicleCategoryForm(request.POST)
-                if form.is_valid():
-                    f1 = form.save(commit=False)
-                    f1.vehicle_category_name = (request.POST['vehicle_category_name']).capitalize()
-                    f1.vehicle_category_price = request.POST['vehicle_category_price']
-                    f1.save()
-                    return render(request, "vehiclecategories.html", {'valid': True})
-                else:
-                    return render(request, "vehiclecategories.html", {'invalid': True})
-            return render(request, "vehiclecategories.html")
-        except:
-            return render(request, "vehiclecategories.html",{'exist':True})
+
 
 
 
@@ -249,4 +237,154 @@ def updatedata(request):
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
+def my_bookings(request):
+    try:
+        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],request.session['role_id'])
+        email = request.session['email']
+        siteuserdata = MySiteUser.objects.get(user_email=email)
+    except:
+        return redirect("/login")
+    if auth==True:
+        if request.session['role_id'] == 1 :
+            book_id=[]
 
+
+            bd = booking_details.objects.filter(seller_detail=email)
+            curr_date=dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            curr_date = dt.datetime.now().strptime(curr_date,"%Y-%m-%d %H:%M:%S")
+            for i in bd:
+                end_date = i.end_date
+                end_date=dt.datetime.strptime(end_date,"%Y-%m-%d %H:%M:%S")
+                return_date=i.return_date
+                try:
+                    return_date=dt.datetime.strptime(return_date,"%Y-%m-%d %H:%M:%S")
+                except:
+                    return_date="2001-01-01 00:00:00"
+                    return_date = dt.datetime.strptime(return_date, "%Y-%m-%d %H:%M:%S")
+
+
+                if curr_date > end_date and i.is_active==True:
+                    book_id.extend([i.booking_id])
+                if return_date > end_date:
+                    book_id.extend([i.booking_id])
+
+
+
+
+            return render(request, "mybookings.html", {"bd": bd,"book_id":book_id})
+        else:
+            return redirect("/error")
+    else:
+        auth,message = auth
+        if (message=="Not Logged In"):
+            return render(request,"login.html",{"pass":True})
+        elif(message=="Wrong Level"):
+            return render(request,"404.html",{"pass":True})
+
+def chkreturn(request):
+    try:
+        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],request.session['role_id'])
+        email = request.session['email']
+        siteuserdata = MySiteUser.objects.get(user_email=email)
+
+    except:
+        return redirect("/login")
+    if auth==True:
+        id=request.GET['id']
+        bd=booking_details.objects.get(invoice=id)
+        curr_date = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        curr_date = dt.datetime.now().strptime(curr_date, "%Y-%m-%d %H:%M:%S")
+        end_date = bd.end_date
+        end_date = dt.datetime.now().strptime(end_date, "%Y-%m-%d %H:%M:%S")
+        if request.session['email'] == bd.seller_detail:
+
+            if request.method == "POST":
+
+                if request.POST['documents']== "no":
+                    fine = request.POST['fine']
+                    is_fine=True
+                else:
+                    fine=0
+                    is_fine=False
+
+
+                if request.POST['damage']== "damage":
+                    if request.POST['covered']=="notcovered":
+                        damage_amount=request.POST['damage_amount']
+                    else:
+                        damage_amount=1000
+                else:
+                    damage_amount=0
+
+                if request.POST["exceed"] == "1" and curr_date > end_date:
+                    duration =float((curr_date - end_date).total_seconds() / 3600)
+                    if duration > 0.5:
+                        duration=math.ceil(duration)
+                    else:
+                        duration=math.floor(duration)
+                else:
+                    duration=0
+
+
+                update = booking_details(booking_id=bd.booking_id, is_fine=is_fine, fine_amount=fine, damage_amount=damage_amount, extension=duration)
+                update.save(update_fields=["is_fine", "fine_amount" ,"damage_amount", "extension"])
+                request.session['id']=id
+                return redirect("/manager/balance")
+
+            return render(request,"chkreturn.html",{"bd":bd})
+        else:
+            return redirect("/error")
+
+    else:
+        auth,message = auth
+        if (message=="Not Logged In"):
+            return render(request,"login.html",{"pass":True})
+        elif(message=="Wrong Level"):
+            return render(request,"404.html",{"pass":True})
+
+
+
+def balance(request):
+
+    try:
+        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],request.session['role_id'])
+        email = request.session['email']
+        siteuserdata = MySiteUser.objects.get(user_email=email)
+
+    except:
+        return redirect("/login")
+    if auth==True:
+
+        bd=booking_details.objects.get(invoice=request.session['id'])
+        if bd.seller_detail==email:
+            excess_amount=bd.extension*4*bd.vehicle_info.vehicle_price
+            total_fine = bd.fine_amount + bd.damage_amount + bd.extension*4*bd.vehicle_info.vehicle_price
+            security=bd.security_amount
+            return_date = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            return_date = dt.datetime.now().strptime(return_date, "%Y-%m-%d %H:%M:%S")
+            if request.method == "POST":
+                update = booking_details(booking_id=bd.booking_id, is_active=False, return_date=return_date,is_returned=True,cancel_token="")
+                update.save(update_fields=["is_active", "is_returned", "cancel_token", "return_date"])
+                return redirect("/manager/mybookings")
+
+            if total_fine> security:
+                pay=total_fine-security
+                update = booking_details(booking_id=bd.booking_id, ext_amount=excess_amount, balance_amount=pay,total_fine=total_fine)
+                update.save(update_fields=["ext_amount", "total_fine","balance_amount"])
+            else:
+                mgr_pay = security - total_fine
+                update = booking_details(booking_id=bd.booking_id, ext_amount=excess_amount, balance_amount=mgr_pay,total_fine=total_fine)
+                update.save(update_fields=["ext_amount", "total_fine","balance_amount"])
+
+            bd = booking_details.objects.get(invoice=request.session['id'])
+
+
+            return render (request,"balance.html",{"bd":bd,"ea":excess_amount})
+        else:
+            return redirect("/error")
+    else:
+        auth,message = auth
+        if (message=="Not Logged In"):
+            return render(request,"login.html",{"pass":True})
+        elif(message=="Wrong Level"):
+            return render(request,"404.html",{"pass":True})

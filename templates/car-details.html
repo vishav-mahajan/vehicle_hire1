@@ -1,34 +1,44 @@
 {% extends "master.html" %}
 {% block content %}
 
+  <!--== Page Title Area Start ==-->
+    <section id="page-title-area" class="section-padding overlay">
+        <div class="container">
+            <div class="row">
+                <!-- Page Title Start -->
+                <div class="col-lg-12">
+                    <div class="section-title  text-center">
+                        <h2>car detail</h2>
+                        <span class="title-line"><i class="fa fa-car"></i></span>
+                        <p>{{ vd.vehicle_description}}</p>
+                    </div>
+                </div>
+                <!-- Page Title End -->
+            </div>
+        </div>
+    </section>
+    <!--== Page Title Area End ==-->
+
     <!--== Car List Area Start ==-->
-    <p>
-
-
-
-
-    </p>
     <section id="car-list-area" class="section-padding">
         <div class="container">
             <div class="row">
                 <!-- Car List Content Start -->
                 <div class="col-lg-8">
                     <div class="car-details-content">
-                        <h2>Maruti Baleno<span class="price">Rent: <b>Rs. 500/day</b></span></h2>
+                        <h2>{{vd.company_id.company_name}} {{ vd.vehicle_name}}<span class="price">Rent: <b>Rs. {{ vd.vehicle_price}}/Hour</b></span></h2>
                         <div class="car-preview-crousel">
                             <div class="single-car-preview">
-                                <img src="/assets/img/car/car-05.jpg" alt="JSOFT">
+                                <img src="/media/{{ vd.vehicle_image}}" alt="JSOFT">
                             </div>
                             <div class="single-car-preview">
-                                <img src="/assets/img/car/car-1.jpg" alt="JSOFT">
+                                <img src="/media/{{ vd.vehicle_image}}" alt="JSOFT">
                             </div>
                             <div class="single-car-preview">
-                                <img src="/assets/img/car/car-06.jpg" alt="JSOFT">
+                                <img src="/media/{{ vd.vehicle_image}}" alt="JSOFT">
                             </div>
                         </div>
                         <div class="car-details-info">
-                            <h4>Additional Info</h4>
-
 
                             <div class="technical-info">
                                 <div class="row">
@@ -37,19 +47,24 @@
                                             <table class="table table-bordered">
                                                 <tr>
                                                     <th>Class</th>
-                                                    <td>Hatchbag</td>
+                                                    <td>{{ vd.vehicle_id.vehicle_category_name}}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th>Fuel</th>
-                                                    <td>Petrol</td>
+                                                    <th>Model</th>
+                                                    <td>{{ vd.vehicle_model}}</td>
                                                 </tr>
+
                                                 <tr>
-                                                    <th>Doors</th>
-                                                    <td>5</td>
+                                                    <th>Capacity</th>
+                                                    <td>{{ vd.seats }}</td>
                                                 </tr>
                                                 <tr>
                                                     <th>GearBox</th>
-                                                    <td>Manual</td>
+                                                    <td>{{vd.transmission}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Airbags</th>
+                                                    <td>{{vd.airbags}}</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -58,13 +73,19 @@
                                     <div class="col-lg-6">
                                         <div class="tech-info-list">
                                             <ul>
+                                                {% if vd.abs == True %}
                                                 <li>ABS</li>
+                                                {% endif %}
+                                                {% if vd.airbags != "0-Airbags" %}
+
                                                 <li>Air Bags</li>
+                                                {% endif %}
                                                 <li>Bluetooth</li>
                                                 <li>Car Kit</li>
                                                 <li>GPS</li>
                                                 <li>Music</li>
-                                                <li>GPS</li>
+
+
                                             </ul>
                                         </div>
                                     </div>
@@ -72,14 +93,14 @@
                             </div>
 
                             <div class="review-area">
-                                <h3>Be the first to review “Maruti Baleno”</h3>
+                                <h3>Be the first to review "{{vd.company_id.company_name}} {{ vd.vehicle_name}}"</h3>
                                 <div class="review-star">
                                     <p class="rating">
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>
-                                        <i class="fa fa-star "></i>
-                                        <i class="fa fa-star unmark"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
                                     </p>
                                 </div>
                                 <div class="review-form">
@@ -123,14 +144,12 @@
 
                             <div class="sidebar-body">
                                 <p><i class="fa fa-mobile"></i> +91-7508001801</p>
-                                <p><i class="fa fa-clock-o"></i> Mon - Sat 8.00 - 18.00</p>
+                                <p><i class="fa fa-clock-o"></i> Mon - Sat 8:00 - 18:00</p>
                             </div>
                         </div>
                         <!-- Single Sidebar End -->
 
-                        <!-- Single Sidebar Start -->
 
-                        <!-- Single Sidebar End -->
 
                         <!-- Single Sidebar Start -->
                         <div class="single-sidebar">
@@ -139,7 +158,8 @@
                             <div class="sidebar-body">
                                 <div class="social-icons text-center">
                                     <a href="#" target="_blank"><i class="fa fa-facebook"></i></a>
-                                    <a href="#" target="_blank"><i class="fa fa-twitter"></i></a>
+                                    <a href="#" target="_blank"><i class="fa fa-instagram"></i></a>
+
                                     <a href="#" target="_blank"><i class="fa fa-linkedin"></i></a>
 
                                 </div>

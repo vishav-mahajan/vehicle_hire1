@@ -14,6 +14,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <script src="/assets/assets_admin/js/jquery-1.11.1.min.js"></script>
+<script src="/assets/admin_assets/sorttable.js"></script>
 <!-- Bootstrap Core CSS -->
 <link href="/assets/assets_admin/css/bootstrap.css" rel='stylesheet' type='text/css' />
 
@@ -53,16 +54,19 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 <script src="/assets/assets_admin/js/metisMenu.min.js"></script>
 <script src="/assets/assets_admin/js/custom.js"></script>
 <link href="/assets/assets_admin/css/custom.css" rel="stylesheet">
+
 <!--//Metis Menu -->
 <style>
 #chartdiv {
   width: 100%;
   height: 295px;
 }
+
+{% block style %}{% endblock %}
 </style>
 
 
-  {% block head %}{% endblock %}
+
 </head>
 <body class="cbp-spmenu-push">
 	<div class="main-content">
@@ -121,6 +125,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
                 <span>Show Vehicles</span>
                 </a>
               </li>
+
                 <li class="treeview">
                 <a href="/queries">
                 <i class="fa fa-question"></i> <span>Your Queries</span>
@@ -143,21 +148,21 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
                 </a>
               </li>
             </ul>
-              <ul class="sidebar-menu">
-              <li class="treeview">
-                <a href="#">
-                <i class="fa fa-laptop"></i>
-                <span>UI Elements</span>
-                <i class="fa fa-angle-left pull-right"></i>
-                </a>
-                <ul class="treeview-menu">
-                  <li><a href="general.html"><i class="fa fa-angle-right"></i> General</a></li>
-                  <li><a href="icons.html"><i class="fa fa-angle-right"></i> Icons</a></li>
-                  <li><a href="buttons.html"><i class="fa fa-angle-right"></i> Buttons</a></li>
-                  <li><a href="typography.html"><i class="fa fa-angle-right"></i> Typography</a></li>
-                </ul>
-              </li>
-            </ul>
+
+            <ul class="sidebar-menu">
+      <li class="treeview">
+        <a href="#">
+        <i class="fa fa-laptop"></i>
+        <span>Bookings</span>
+        <i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="/show_bookings"><i class="fa fa-angle-right"></i> My Bookings</a></li>
+          <li><a href="/businessuser/mybookings"><i class="fa fa-angle-right"></i> User Bookings</a></li>
+
+        </ul>
+      </li>
+        </ul>
 
           </div>
 
@@ -240,14 +245,14 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
       <li class="treeview">
         <a href="#">
         <i class="fa fa-laptop"></i>
-        <span>UI Elements</span>
+
+        <span>Bookings</span>
         <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li><a href="general.html"><i class="fa fa-angle-right"></i> General</a></li>
-          <li><a href="icons.html"><i class="fa fa-angle-right"></i> Icons</a></li>
-          <li><a href="buttons.html"><i class="fa fa-angle-right"></i> Buttons</a></li>
-          <li><a href="typography.html"><i class="fa fa-angle-right"></i> Typography</a></li>
+            <li><a href="/show_bookings"><i class="fa fa-angle-right"></i> My Bookings</a></li>
+          <li><a href="/manager/mybookings"><i class="fa fa-angle-right"></i> User Bookings</a></li>
+
         </ul>
       </li>
         </ul></div>
@@ -287,13 +292,18 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
                 </li>
 
                 <li class="treeview">
-                <a href="/superuser/vehicle_company">
+                <a href="/superuser/vehicle_category">
                 <i class="fa fa-plus-circle"></i> <span>Add Category</span>
                 </a>
                 </li>
                 <li class="treeview">
-                <a href="/superuser/vehicle_details">
+                <a href="/superuser/vehicle_company">
                 <i class="fa fa-plus-square"></i> <span>Add Company</span>
+                </a>
+                </li>
+                <li class="treeview">
+                <a href="/superuser/vehicle_details">
+                <i class="fa fa-plus-square"></i> <span>Add Vehicle</span>
                 </a>
                 </li>
 
@@ -334,6 +344,8 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 
             </ul>
     </div></div>
+
+
           {% elif request.session.role_id == 3 %}
 
          <div>
@@ -587,17 +599,17 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 						</label>
 					</form>
 				</div><!--//end-search-box-->
-                {% if su %}
+
 
 				<div class="profile_details">
 					<ul>
 						<li class="dropdown profile_details_drop">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 								<div class="profile_img">
-									<span class="prfil-img"><img src="/media/{{ su.user_image }}" height="50" width="50" style="object-fit: fill" alt=""> </span>
+									<span class="prfil-img"><img src="/media/{{ request.session.image }}" height="50" width="50" style="object-fit: fill" alt=""> </span>
 									<div class="user-name">
-										<h5 class="text-uppercase">{{ su.user_fname}} {{ su.user_lname }}</h5>
-										<span class="text-uppercase">{{ su.site_role_id.role_name }}</span>
+										<h5 class="text-uppercase">{{ request.session.name }}</h5>
+										<span class="text-uppercase">{{ request.session.rolename }}</span>
 									</div>
 									<i class="fa fa-angle-down lnr"></i>
 									<i class="fa fa-angle-up lnr"></i>
@@ -605,15 +617,14 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 								</div>
 							</a>
 							<ul class="dropdown-menu drp-mnu">
-								<li> <a href="#"><i class="fa fa-cog"></i> Settings</a> </li>
-								<li> <a href="#"><i class="fa fa-user"></i> My Account</a> </li>
+
 								<li> <a href="/profileupdate"><i class="fa fa-suitcase"></i> Profile</a> </li>
 								<li> <a href="/logout"><i class="fa fa-sign-out"></i> Logout</a> </li>
 							</ul>
 						</li>
 					</ul>
 				</div>
-                {% endif %}
+
 
             {% block admin %}{% endblock %}
 

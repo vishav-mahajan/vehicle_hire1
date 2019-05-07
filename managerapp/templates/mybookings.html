@@ -1,0 +1,135 @@
+{% extends "admin_master.html" %}
+{% block content %}
+<div id="page-wrapper">
+    <div class="main-page">
+        <div class="tables">
+            <div class=" bs-example widget-shadow">
+                <h4>User Bookings:</h4>
+
+                <div class="panel panel-default">
+
+                <table id="reverse" class="table table-striped datatables-table table-hover">
+                    <thead>
+                        <tr>
+
+                            <th>Invoice</th>
+                            <!--th>Booking Status</th-->
+                            <th>Return Date</th>
+                            <th>Start Date</th>
+                            <th>End DAte</th>
+                            <th>Image</th>
+                            <th>Vehicle</th>
+                            <th>User</th>
+                            <th>Status</th>
+                            <th>Operations</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% if bd %}
+                    {% for i in bd %}
+                        <tr >
+
+
+                           <td ><a href="{% url 'front_app:invoice' %}?id={{ i.booking_id }}" >{{ i.invoice }}</a></td>
+                            <!--td>
+                                {% if i.is_active == True and i.is_returned == False %}
+                            <p style="color:blue">Active</p>
+
+                        {% elif i.cancellation_time != ""  %}
+                            <p style="color:red">Cancelled </p>
+
+
+                        {% elif i.is_active == False and i.is_returned == True and i.cancellation_time == ""  %}
+                            <p style="color:#00e600">Completed</p>
+
+                            {% endif %}
+                        </td-->
+                            <td>{{ i.return_date }}</td>
+                            <td>{{ i.start_date }}</td>
+                            <td>{{ i.end_date }}</td>
+                            <td><a href="/car-details/?id={{i.vehicle_info.vehicle_ref_id}}"><img style="height:55px" src="/media/{{ i.vehicle_info.vehicle_image }}"></a></td>
+                            <td> {{ i.vehicle_detail }}</td>
+                            <td>{{ i.user_detail }}</td>
+
+
+
+
+
+                            <td>
+                                {% if i.cancellation_time != ""  %}
+                            <p style="color:red">Cancelled </p>
+                                {% elif i.return_date != "" and i.is_returned == True  and i.is_active == False %}
+                            <p style="color:#00e600">Returned</p>
+                                {% else %}
+                            <p style="color:blue">Active</p>
+                                {% endif %}
+
+                                {% for j in book_id %}
+                                {% if j == i.booking_id and i.cancellation_time == ""  %}
+                                <p style="color:grey"><b>Late</b></p>
+                                {% endif %}
+                                {% endfor %}
+                            </td>
+
+
+
+
+                            {% if i.is_active == False and i.is_returned == True and i.cancellation_time == ""  %}
+                            <td><a href="/view_bookings?id={{i.invoice}}">View </a> </td>
+
+                            {% elif i.is_active == False and i.is_returned == True and i.cancellation_time != "" %}
+                            <td><a href="/view_bookings?id={{i.invoice}}">View </a> </td>
+                            {% else %}
+                            {% if request.session.role_id == 4%}
+                            <td><a href="/businessuser/chkreturn?id={{ i.invoice }}">Return</a> / <a href="/view_bookings?id={{i.invoice}}">View</a></td>
+                            {% elif request.session.role_id == 1%}
+                            <td><a href="/manager/chkreturn?id={{ i.invoice }}">Return</a> / <a href="/view_bookings?id={{i.invoice}}">View</a></td>
+                            {% endif %}
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+
+                {% if request.session.duration  %}
+                <script>alert("Time Duration Should be Greater than 12 Hours")</script>
+{% endif %}
+                {% if request.session.date_greater %}
+                <script>alert("Trip has already been Started")</script>
+{% endif %}
+                {% if request.session.cancelled %}
+                <script>alert("Booking Already Cancelled")</script>
+{% endif %}
+
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+<script>
+
+tbody = $('#reverse tbody');
+tbody.children().each(function (i, tr) {
+    tbody.prepend(tr);
+});
+
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+        });
+    $('[data-toggle="popover-hover"]').popover({
+        html: true,
+        trigger: 'hover',
+        placement: 'bottom',
+        content: function () { return '<img src="' + $(this).data('img') + '" />'; }
+        });
+
+
+</script>
+
+{% endblock %}

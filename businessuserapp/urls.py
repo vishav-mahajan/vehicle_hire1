@@ -13,5 +13,9 @@ urlpatterns = [
         url(r'^vehicle_company/$', views.vehicle_company, name="vehicle_company"),
         url(r'^showdata/$', views.showdata, name="showdata"),
         url(r'^updatedata/$', views.updatedata, name="updatedata"),
-        url(r'^delete_data/$', views.delete_data, name="delete_data")
+        url(r'^delete_data/$', views.delete_data, name="delete_data"),
+        url(r'^mybookings/$', views.my_bookings),
+        url(r'^chkreturn/', views.chkreturn),
+        url(r'^balance/', views.balance)
 ]
+

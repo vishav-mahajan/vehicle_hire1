@@ -60,3 +60,8 @@ class booking_details(models.Model):
     cancel_token=models.CharField(max_length=255, default="")
     is_active=models.BooleanField(default=True)
     cancellation_time=models.CharField(max_length=255,default="")
+    return_date=models.CharField(max_length=255,default="")
+    damage_amount=models.BigIntegerField(default=0)
+    extension=models.BigIntegerField(default=0)
+    ext_amount=models.BigIntegerField(default=0)
+    total_fine=models.BigIntegerField(default=0)

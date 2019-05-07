@@ -77,6 +77,11 @@ class BookingForm(forms.ModelForm):
             "booking_date",
             "cancel_token",
             "is_active",
-            "cancellation_time"
+            "cancellation_time",
+            "return_date",
+            "damage_amount",
+            "extension",
+            "ext_amount",
+            "total_fine"
         ]
 

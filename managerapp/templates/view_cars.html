@@ -27,6 +27,7 @@
                             <div class="card-body ">
                                 <h3 class="card-title pb-2">{{ i.company_id.company_name }} {{ i.vehicle_name }}</h3>
                                 <h5>{{ i.vehicle_id.vehicle_category_name }},{{ i.vehicle_model }}</h5>
+                                <h5>{{ i.u_email }}</h5>
                                 <h4>Rs.{{ i.vehicle_price }}/hour</h4>
                                 {% if request.session.role_id == 2 %}
                                     <h5>{{ i.u_email }}</h5>

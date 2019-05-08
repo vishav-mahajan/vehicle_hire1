@@ -47,7 +47,7 @@ def index(request):
                 return render(request, 'index.html',
                               {"ud": userdata, "cd": companydata, "ccd": companycategorydata,
                                "book": True,
-                               "sd": request.POST['start_date'], "ed": request.POST['end_date'], "try": "try inner"})
+                               "sd": request.POST['start_date'], "ed": request.POST['end_date'], "try": "try inner","slide":True})
             return render(request, 'index.html',
                           {"ud": userdata, "cd": companydata, "ccd": companycategorydata,
                            "try": "try outer"})
@@ -75,7 +75,7 @@ def login(request):
                 if verified == False and authtoken == "":
                     rn = random.randint(100000, 10000000)
                     token = useremail[0:5] + str(rn) + mob[5:10]
-                    verify = "http://127.0.0.1:8000/dskjgheriugiurefhkusdjdowieuqhiurehf?email=" + useremail + "&token=" + token
+                    verify = "http://192.168.43.111:8000/dskjgheriugiurefhkusdjdowieuqhiurehf?email=" + useremail + "&token=" + token
                     email_send(useremail, userpassword, verify)
                     update = MySiteUser(user_email=useremail, user_token=token)
                     update.save(update_fields=["user_token"])
@@ -210,7 +210,6 @@ def faq(request):
 
 
 def help(request):
-
         return render(request, "help-desk.html")
 
 
@@ -500,11 +499,10 @@ def queries(request):
     try:
         auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],request.session['role_id'])
         email = request.session['email']
-        siteuserdata = MySiteUser.objects.get(user_email=email)
     except:
         return redirect("/login")
     if auth==True:
-        if request.session['role_id'] == 2:
+        if request.session['role_id'] == 1:
             query = contact_us.objects.all()
             return render(request, "Queries.html", {"q": query})
         else:
@@ -650,42 +648,57 @@ def cancel_booking(request):
             cancel_date = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             cancel_date = dt.datetime.strptime(cancel_date, '%Y-%m-%d %H:%M:%S')
             start_date = dt.datetime.strptime(bd.start_date, '%Y-%m-%d %H:%M:%S')
-            duration = float((start_date - cancel_date).total_seconds() / 3600)
 
-            if duration >= 48:
-                balance = bd.total - 5000
-                update = booking_details(booking_id=bd.booking_id, balance_amount=balance)
-                update.save(update_fields=['balance_amount'])
+            if start_date>cancel_date:
+                duration = float((start_date - cancel_date).total_seconds() / 3600)
+
+                if duration >= 36:
+                    balance = bd.total - 1000
+                    request.session["cancel"]=1000
+
+                elif duration >=24:
+                    balance = bd.total - 5000
+                    request.session["cancel"] = 5000
+
+                else:
+                    balance = bd.total - 10000
+                    request.session["cancel"] = 10000
+
             else:
-                balance = bd.total - 5000
-                update = booking_details(booking_id=bd.booking_id, balance_amount=balance)
-                update.save(update_fields=['balance_amount'])
+                """earning=bd.total
+                update = booking_details(booking_id=bd.booking_id, balance_amount=0, earnings=earning, total_fine=bd.total)
+                update.save(update_fields=['balance_amount', "earnings","total_fine"])"""
+                return redirect("/show_bookings")
+
             bd = booking_details.objects.get(cancel_token=id)
             request.session['duration'] = False
             request.session['date_greater'] = False
             request.session['cancelled'] = False
             if bd.is_active == True:
-                if cancel_date > start_date:
+                """if cancel_date > start_date:
                     request.session['date_greater'] = True
                     return redirect("/show_bookings")
                 elif duration < 12:
                     request.session['duration'] = True
                     return redirect("/show_bookings")
+                else:"""
+
+                if (request.method == "POST"):
+
+                    request.session['not_cancel'] = False
+                    update = booking_details(booking_id=bd.booking_id, total_fine=request.session['cancel'],
+                                             balance_amount=balance, earnings=request.session['cancel'], is_active=False,cancel_token="",
+                                             cancellation_time=cancel_date,
+                                             is_returned=True)
+                    update.save(update_fields=['balance_amount', "total_fine", "earnings",'is_active', 'cancellation_time', 'is_returned',"cancel_token"])
+                    update = booking_details(booking_id=bd.booking_id)
+
+                    return render(request, "cancel_booking.html", {"bd": bd, "cancel": True, "balance":balance})
                 else:
-
-                    if (request.method == "POST"):
-                        request.session['not_cancel'] = False
-                        update = booking_details(booking_id=bd.booking_id, is_active=False,cancel_token="",
-                                                 cancellation_time=cancel_date,
-                                                 is_returned=True)
-                        update.save(update_fields=['is_active', 'cancellation_time', 'is_returned',"cancel_token"])
-                        return render(request, "cancel_booking.html", {"bd": bd, "cancel": True})
-                    else:
-                        return render(request, "cancel_booking.html", {"bd": bd, "not_cancel": True})
-            elif bd.is_active == False and bd.cancellation_time != "":
-                request.session['cancelled'] = True
-                return redirect("/show_bookings")
-
+                    return render(request, "cancel_booking.html", {"bd": bd, "not_cancel": True,"balance":balance})
+                """elif bd.is_active == False and bd.cancellation_time != "":
+                    request.session['cancelled'] = True
+                    return redirect("/show_bookings")"""
             else:
                 return redirect("/show_bookings")
         else:
@@ -722,7 +735,6 @@ def view_current_book(request):
     try:
         auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],request.session['role_id'])
         email = request.session['email']
-        siteuserdata = MySiteUser.objects.get(user_email=email)
     except:
         return redirect("/login")
     if auth==True:
@@ -834,3 +846,14 @@ def view_current_book(request):
             b=i.end_date
             b=dt.datetime.strptime(b, '%Y-%m-%d')
         """
+
+def policy(request):
+    return render(request,"policy.html")
+def feepolicy(request):
+    return render(request,"feepolicy.html")
+def privacy(request):
+    return render(request,"privacy.html")
+def member(request):
+    return render(request,"member.html")
+def eligibilty(request):
+    return render(request,"eligibilty.html")

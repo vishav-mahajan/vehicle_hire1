@@ -12,33 +12,37 @@
                             <div class="col-xl-12 agileits-bnt">
                             <ul class="bt-list">
                                 {% if request.session.role_id == 1 %}
-                                        <li><a href="/" class="hvr-icon-fade col-1">Home</a></li>
+                                        <li><a href="/" class="hvr-icon-pulse-grow col-9">Home</a></li>
 										<li><a href="/manager/vehicle_company" class="hvr-icon-up col-24">Add Company</a></li>
 										<li><a href="/manager/vehicle_details" class="hvr-icon-up col-3">Add Vehicle</a></li>
 										<li><a href="/manager/showdata" class="hvr-icon-down col-4">Show Vehicles</a></li>
-								<li><a href="/queries" class="hvr-icon-spin col-5">Queries</a></li>
-								<li><a href="/show_bookings" class="hvr-icon-pop col-15">My Bookings</a></li>
-								<li><a href="/manager/mybookings" class="hvr-icon-float col-21">User Bookings</a></li>
-										<li><a href="/changepassword" class="hvr-icon-fade col-11">Change Password</a></li>
-
-										<li><a href="/logout" class="hvr-icon-buzz-out col-6">Logout</a></li>
-										<li><a href="/update" class="hvr-icon-drop col-7">Update Profile </a></li>
+										<li><a href="/manager/show_other_vehicles" class="hvr-icon-down col-14">Show Other Vehicles</a></li>
+										<li><a href="/queries" class="hvr-icon-grow col-5">Queries</a></li>
+										<li><a href="/show_bookings" class="hvr-icon-pop col-15">My Bookings</a></li>
+										<li><a href="/manager/mybookings" class="hvr-icon-float col-21">User Bookings</a></li>
+										<li><a href="/manager/bankbalance" class=" shadow-radial hvr-icon-spin col-1">Bank Balance</a></li>
+										<li><a href="/changepassword" class="hvr-icon-buzz-out col-11">Change Password</a></li>
+										<li><a href="/update" class="hvr-icon-rotate col-7">Update Profile </a></li>
+										<li><a href="/logout" class="hvr-icon-buzz-out col-16">Logout</a></li>
 
                                     </ul>
 
 										{% else %}
                                <ul>
-										<li><a href="/" class="hvr-icon-fade col-1">Home</a></li>
+										<li><a href="/" class="hvr-icon-pulse-grow col-9">Home</a></li>
 										<li><a href="/businessuser/vehicle_company" class="hvr-icon-up col-24">Add Company</a></li>
 										<li><a href="/businessuser/vehicle_details" class="hvr-icon-up col-3">Add Vehicle</a></li>
 										<li><a href="/businessuser/showdata" class="hvr-icon-down col-4">Show Vehicles</a></li>
-								   <li><a href="/queries" class="hvr-icon-spin col-5">Queries</a></li>
+								   <li><a href="/queries" class="hvr-icon-grow col-5">Queries</a></li>
+								   <li><a href="/manager/bankbalance" class=" shadow-radial hvr-icon-spin col-1">Bank Balance</a></li>
+
 								   <li><a href="/show_bookings" class="hvr-icon-pop col-15">My Bookings</a></li>
 								<li><a href="/businessuser/mybookings" class="hvr-icon-float col-21">User Bookings</a></li>
-										<li><a href="/changepassword" class="hvr-icon-fade col-11">Change Password</a></li>
 
+										<li><a href="/changepassword" class="hvr-icon-buzz-out col-11">Change Password</a></li>
+<li><a href="/update" class="hvr-icon-drop col-7">Update Profile </a></li>
 										<li><a href="/logout" class="hvr-icon-buzz-out col-6">Logout</a></li>
-										<li><a href="/update" class="hvr-icon-drop col-7">Update Profile </a></li>
+
 
 
 								</ul>

@@ -65,3 +65,4 @@ class booking_details(models.Model):
     extension=models.BigIntegerField(default=0)
     ext_amount=models.BigIntegerField(default=0)
     total_fine=models.BigIntegerField(default=0)
+    earnings=models.BigIntegerField(default=0)

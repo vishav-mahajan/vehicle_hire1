@@ -1,9 +1,4 @@
-<!--
-Author: W3layouts
-Author URL: http://w3layouts.com
-License: Creative Commons Attribution 3.0 Unported
-License URL: http://creativecommons.org/licenses/by/3.0/
--->
+
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -83,7 +78,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
             <span class="icon-bar"></span>
             </button>
                 <!-- BUSINESS USER hEADER-->
-            <h3><a class="navbar-brand" href="/businessuser"><span class="fa fa-user"></span>Business User</a></h3>
+            <h4><a class="navbar-brand" href="/businessuser"><span style="display:block-inline" class="fa fa-u"></span><p style="display:relative">Buisness-User</p> </a></h4>
           </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="sidebar-menu">
@@ -124,8 +119,22 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
                 <i class="fa fa-desktop"></i>
                 <span>Show Vehicles</span>
                 </a>
-              </li>
+                </li></ul>
+            <ul class="sidebar-menu">
+      <li class="treeview">
+        <a href="#">
+        <i class="fa fa-laptop"></i>
+        <span>Bookings</span>
+        <i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="/show_bookings"><i class="fa fa-angle-right"></i> My Bookings</a></li>
+          <li><a href="/businessuser/mybookings"><i class="fa fa-angle-right"></i> User Bookings</a></li>
 
+        </ul>
+      </li>
+        </ul>
+            <ul class="sidebar-menu">
                 <li class="treeview">
                 <a href="/queries">
                 <i class="fa fa-question"></i> <span>Your Queries</span>
@@ -149,20 +158,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
               </li>
             </ul>
 
-            <ul class="sidebar-menu">
-      <li class="treeview">
-        <a href="#">
-        <i class="fa fa-laptop"></i>
-        <span>Bookings</span>
-        <i class="fa fa-angle-left pull-right"></i>
-        </a>
-        <ul class="treeview-menu">
-            <li><a href="/show_bookings"><i class="fa fa-angle-right"></i> My Bookings</a></li>
-          <li><a href="/businessuser/mybookings"><i class="fa fa-angle-right"></i> User Bookings</a></li>
 
-        </ul>
-      </li>
-        </ul>
 
           </div>
 
@@ -218,6 +214,31 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
         <span>Show Vehicles</span>
         </a>
       </li>
+        <li class="treeview">
+        <a href="/manager/show_other_vehicles">
+        <i class="fa fa-desktop"></i>
+        <span>Show Other Vehicles</span>
+        </a>
+        </li>
+    </ul>
+            <ul class="sidebar-menu">
+      <li class="treeview">
+        <a href="#">
+        <i class="fa fa-laptop"></i>
+
+        <span>Bookings</span>
+        <i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="/show_bookings"><i class="fa fa-angle-right"></i> My Bookings</a></li>
+          <li><a href="/manager/mybookings"><i class="fa fa-angle-right"></i> User Bookings</a></li>
+
+        </ul>
+      </li>
+        </ul>
+
+
+            <ul class="sidebar-menu">
     <li class="treeview">
         <a href="/changepassword">
         <i class="fa fa-dashboard"></i> <span>Change Password</span>
@@ -241,21 +262,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
         </a>
       </li>
     </ul>
-        <ul class="sidebar-menu">
-      <li class="treeview">
-        <a href="#">
-        <i class="fa fa-laptop"></i>
-
-        <span>Bookings</span>
-        <i class="fa fa-angle-left pull-right"></i>
-        </a>
-        <ul class="treeview-menu">
-            <li><a href="/show_bookings"><i class="fa fa-angle-right"></i> My Bookings</a></li>
-          <li><a href="/manager/mybookings"><i class="fa fa-angle-right"></i> User Bookings</a></li>
-
-        </ul>
-      </li>
-        </ul></div>
+        </div>
 
             {% elif request.session.role_id == 2 %}
 
@@ -432,7 +439,11 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 				<!--toggle button start-->
 				<button id="showLeftPush"><i class="fa fa-bars"></i></button>
 				<!--toggle button end-->
-				<div class="profile_details_left"><!--notifications of menu start -->
+
+
+
+                <!--notifications of menu start -->
+				<!--div-- class="profile_details_left">
 					<ul class="nofitications-dropdown">
 						<li class="dropdown head-dpdn">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-envelope"></i><span class="badge">4</span></a>
@@ -581,15 +592,16 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 						</li>
 					</ul>
 					<div class="clearfix"> </div>
-				</div>
+				</div-->
 				<!--notification menu end -->
+
+
 				<div class="clearfix"> </div>
 			</div>
+
 			<div class="header-right">
-
-
 				<!--search-box-->
-				<div class="search-box">
+				<!--div class="search-box">
 					<form class="input">
 						<input class="sb-search-input input__field--madoka" placeholder="Search..." type="search" id="input-31" />
 						<label class="input__label" for="input-31">
@@ -598,7 +610,8 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 							</svg>
 						</label>
 					</form>
-				</div><!--//end-search-box-->
+				</div-->
+                <!--//end-search-box-->
 
 
 				<div class="profile_details">

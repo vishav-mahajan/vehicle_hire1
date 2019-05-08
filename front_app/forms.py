@@ -82,6 +82,7 @@ class BookingForm(forms.ModelForm):
             "damage_amount",
             "extension",
             "ext_amount",
-            "total_fine"
+            "total_fine",
+            "earnings"
         ]
 

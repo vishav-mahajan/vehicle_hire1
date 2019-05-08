@@ -164,7 +164,7 @@
 												<span class="input-group-addon">
 													<i class="fa fa-rupee"></i>
 												</span>
-                            <input type="text" class="form-control1" name="total" value="5000/-"  readonly>
+                            <input type="text" class="form-control1" name="total" value="{{bd.earnings}}/-"  readonly>
                         </div>
                     </div>
                     </div>
@@ -179,7 +179,11 @@
                         </div>
                     </div>
                     </div>
-                    {% elif bd.is_active == False and bd.is_returned == True and bd.cancellation_time == "" and bd.extension == 0 %}
+
+
+
+
+                    {% elif bd.is_active == False and bd.is_returned == True and bd.return_time != "" and bd.security_amount >= bd.total_fine %}
                     <div class="form-group has-dark">
                         <label class="col-sm-2 control-label">Document Fine</label>
                         <div class="col-sm-5">
@@ -235,7 +239,7 @@
                         </div>
                     </div>
                     </div>
-                    {% elif bd.extension != "" and bd.return_date != "" %}
+                    {% elif  bd.return_date != "" and bd.security_amount < bd.total_fine %}
 
                         <div class="form-group has-dark">
                         <label class="col-sm-2 control-label">Document Fine</label>

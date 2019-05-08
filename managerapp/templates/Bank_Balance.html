@@ -1,0 +1,96 @@
+{% extends "admin_master.html" %}
+
+
+
+{% block content %}
+<div id="page-wrapper">
+    <div class="main-page">
+        <div class="tables row">
+            <div class=" bs-example widget-shadow col-sm-6">
+                <h4>Bank Details:</h4>
+                <table id="dtBasicExample" class="table table-bordered  sortable ">
+                    <thead >
+
+                        <tr>
+                            <th>Earnings From Fine</th>
+
+<td>Rs. {{ fine.total_fine__sum }}/-</td>
+
+                        </tr>
+                    <tr>
+                            <th>Earnings From Vehicles</th>
+
+<td>Rs. {{ amt.amount_exp__sum }}/-</td>
+
+                        </tr>
+                     <tr>
+                            <th>Earnings From Cancellation</th>
+
+<td>Rs. {{ cancel.total_fine__sum }}/-</td>
+
+                        </tr>
+
+                    <tr class="success">
+                            <th style="color=green">Total Earnings</th>
+                            <td>Rs. {{ earn.earnings__sum }}/-</td>
+                        </tr>
+
+                    </thead>
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<script>
+
+   var table = $('table');
+
+$('.sortable th')
+    .wrapInner('<span title="sort this column"/>')
+    .each(function(){
+
+        var th = $(this),
+            thIndex = th.index(),
+            inverse = false;
+
+        th.click(function(){
+
+            table.find('td').filter(function(){
+
+                return $(this).index() === thIndex;
+
+            }).sortElements(function(a, b){
+
+                if( $.text([a]) == $.text([b]) )
+                    return 0;
+
+                return $.text([a]) > $.text([b]) ?
+                    inverse ? -1 : 1
+                    : inverse ? 1 : -1;
+
+            }, function(){
+
+                // parentNode is the element we want to move
+                return this.parentNode;
+
+            });
+
+            inverse = !inverse;
+
+        });
+
+    });
+
+</script>
+
+{% endblock %}

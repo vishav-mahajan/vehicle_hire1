@@ -6,6 +6,7 @@
             <div class=" bs-example widget-shadow">
                 <h4>User Bookings:</h4>
 
+
                 <div class="panel panel-default">
 
                 <table id="reverse" class="table table-striped datatables-table table-hover">
@@ -14,13 +15,14 @@
 
                             <th>Invoice</th>
                             <!--th>Booking Status</th-->
-                            <th>Return Date</th>
+                            <th><p style="color:#00e600;display:inline-block">Return Date</p><p style="color:red; display:inline-block">Cancel Date</p></th>
                             <th>Start Date</th>
                             <th>End DAte</th>
                             <th>Image</th>
                             <th>Vehicle</th>
                             <th>User</th>
                             <th>Status</th>
+                            <th>Earning (Rs.)</th>
                             <th>Operations</th>
 
                         </tr>
@@ -28,7 +30,7 @@
                     <tbody>
                     {% if bd %}
                     {% for i in bd %}
-                        <tr >
+                        <tr  >
 
 
                            <td ><a href="{% url 'front_app:invoice' %}?id={{ i.booking_id }}" >{{ i.invoice }}</a></td>
@@ -45,7 +47,11 @@
 
                             {% endif %}
                         </td-->
-                            <td>{{ i.return_date }}</td>
+                            {%if i.return_date == ""%}
+                            <td style="color:red">{{ i.cancellation_time }}</td>
+                            {%else%}
+                            <td style="color:#00e600">{{ i.return_date }}</td>
+                            {%endif%}
                             <td>{{ i.start_date }}</td>
                             <td>{{ i.end_date }}</td>
                             <td><a href="/car-details/?id={{i.vehicle_info.vehicle_ref_id}}"><img style="height:55px" src="/media/{{ i.vehicle_info.vehicle_image }}"></a></td>
@@ -72,7 +78,7 @@
                                 {% endfor %}
                             </td>
 
-
+                            <td>{{i.earnings}}/-</td>
 
 
                             {% if i.is_active == False and i.is_returned == True and i.cancellation_time == ""  %}

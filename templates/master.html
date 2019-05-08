@@ -79,6 +79,7 @@
                                 </li>
                                 <li><a href="{% url 'front_app:about'%}">About</a></li>
                                 <li><a href="{% url 'front_app:contact'%}">Contact</a></li>
+                                <li><a href="/policy">Policy</a></li>
                                 <li><a class="mr-4" href="{% url 'front_app:team'%}">Team</a></li>
                                 {% if request.session.authenticate %}
                                     <li><img   style="object-fit: fill ;height: 60px; width: 60px; border-radius: 100%; border: groove; border-color: #e0a800" src="/media/{{ request.session.image }}">
@@ -146,7 +147,7 @@
             <div class="container">
                 <div class="row">
                     <!-- Single Footer Widget Start -->
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-3 col-md-6">
                         <div class="single-footer-widget">
                             <h2>About Us</h2>
                             <div class="widget-body">
@@ -159,14 +160,14 @@
                     <!-- Single Footer Widget End -->
 
                     <!-- Single Footer Widget Start -->
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-3 col-md-6">
                         <div class="single-footer-widget">
                             <h2>Write To us at</h2>
                             <div class="widget-body">
                                 <p>For any Queries and Feedback</p>
 
                                 <ul class="get-touch">
-                                    <li><i class="fa fa-envelope"></i> vishavmahajan@gmail.com </li>
+                                    <li><a href="https://in.linkedin.com/in/vishavjeet-mahajan"><i class="fa fa-envelope"></i> vishavmahajan@gmail.com </a></li>
                                     <li><i class="fa fa-envelope"></i> palkinangla1396@gmail.com </li>
                                     <li><i class="fa fa-envelope"></i> 0395ankita@gmail.com </li>
                                 </ul>
@@ -176,7 +177,7 @@
                     <!-- Single Footer Widget End -->
 
                     <!-- Single Footer Widget Start -->
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-3 col-md-6">
                         <div class="single-footer-widget">
                             <h2>Contact Us</h2>
                             <div class="widget-body">
@@ -188,6 +189,20 @@
                                     <li><i class="fa fa-mobile"></i> +91 8628003936</li>
                                 </ul>
                             </div>
+                        </div>
+                    </div>
+                    <!-- Single Footer Widget End -->
+                    <!-- Single Footer Widget Start -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="single-footer-widget">
+                            <h2>Guided By</h2>
+                            <div class="widget-body">
+
+                                <ul class="get-touch">
+                                    <li><i class="fa fa-user-plus"></i>Mr. Daljit Singh <br>(Industry Mentor)</li><br>
+                                    <li><a href="http://sandeepsood.in/"><i class="fa fa-user-plus"></i>Dr. Sandeep Sood<br> (Faculty Mentor)</a></li>
+
+                                </ul>
                         </div>
                     </div>
                     <!-- Single Footer Widget End -->

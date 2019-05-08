@@ -110,7 +110,7 @@
             <div class="row">
                 <!-- Section Title Start -->
                 <div class="col-lg-12">
-                    <div class="section-title  text-center">
+                    <div class="section-title  text-center" id="slide">
                         <h2>Choose your Car</h2>
                         <span class="title-line"><i class="fa fa-car"></i></span>
                         <p></p>
@@ -119,7 +119,7 @@
                 <!-- Section Title End -->
             </div>
 
-            <div class="row">
+            <div class="row" >
                 <!-- Choose Area Content Start -->
                 <div class="col-lg-12">
                     <div class="choose-content-wrap">
@@ -174,13 +174,13 @@
                                                     </div>
                                                     {% elif request.session.authenticate %}
                                                     <br>
-                                                    <p>Enter Date to Get Availability</p>
+                                                    <p style="color:red">Enter Date to Get Availability</p>
                                                     {% elif book %}
                                                     <br>
-                                                    <p>Login to Book</p>
+                                                    <p style="color:red">Login to Book</p>
                                                     {% else %}
                                                     <br>
-                                                    <p>Enter Date and Login to Book</p>
+                                                    <p style="color:red">Enter Date and Login to Book</p>
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -263,20 +263,21 @@
 				<!-- Single Service End -->
 
 				<!-- Single Service Start -->
-				<div class="col-lg-4 text-center">
+                <div class="col-lg-4 text-center">
 					<div class="service-item">
-						<i class="fa fa-bath"></i>
-						<h3>Car Wash</h3>
+						<i class="fa fa-phone"></i>
+						<h3>Road Side Assistance</h3>
 
 					</div>
 				</div>
+
 				<!-- Single Service End -->
 
 				<!-- Single Service Start -->
 				<div class="col-lg-4 text-center">
 					<div class="service-item">
-						<i class="fa fa-phone"></i>
-						<h3>Road Side Assistance</h3>
+						<i class="fa fa-arrow-left"></i>
+						<h3>Easy Returns</h3>
 
 					</div>
 				</div>
@@ -303,7 +304,7 @@
                                         <i class="fa fa-smile-o"></i>
                                     </div>
                                     <div class="funfact-content">
-                                        <p><span class="counter">550</span>+</p>
+                                        <p><span class="counter">200</span>+</p>
                                         <h4>HAPPY CLIENTS</h4>
                                     </div>
                                 </div>
@@ -317,7 +318,7 @@
                                         <i class="fa fa-car"></i>
                                     </div>
                                     <div class="funfact-content">
-                                        <p><span class="counter">250</span>+</p>
+                                        <p><span class="counter">150</span>+</p>
                                         <h4>CARS IN STOCK</h4>
                                     </div>
                                 </div>
@@ -328,11 +329,11 @@
                             <div class="col-lg-4 col-md-6">
                                 <div class="single-funfact">
                                     <div class="funfact-icon">
-                                        <i class="fa fa-bank"></i>
+                                        <i class="fa fa-file"></i>
                                     </div>
                                     <div class="funfact-content">
                                         <p><span class="counter">50</span>+</p>
-                                        <h4>office in cities</h4>
+                                        <h4>Active Bookings</h4>
                                     </div>
                                 </div>
                             </div>
@@ -362,13 +363,13 @@
 
             <div class="row">
                 <!-- Single We Do Start -->
-                <div class="col-lg-3 col-md-3">
-                    <div class="single-we-do we-do-bg-1">
+                <div class="col-lg-4 col-md-3">
+                    <div class="single-we-do we-do-bg-3">
                         <div class="we-do-content">
                             <div class="display-table">
                                 <div class="display-table-cell">
                                     <h3>SELECT DURATION</h3>
-                                    <p>Select the Duration to View Available Cars</p>
+                                    <p>Select the Duration  to View Available Cars</p>
                                     <a href="#">Read More</a>
                                 </div>
                             </div>
@@ -377,23 +378,7 @@
                 </div>
                 <!-- Single We Do End -->
                 <!-- Single We Do Start -->
-                <div class="col-lg-3 col-md-3">
-                    <div class="single-we-do we-do-bg-1">
-                        <div class="we-do-content">
-                            <div class="display-table">
-                                <div class="display-table-cell">
-                                    <h3>VIEW AVAILABLE CARS</h3>
-                                    <p>View the Cars available for booking in a particular duration</p>
-                                    <a href="#">Read More</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Single We Do End -->
-
-                <!-- Single We Do Start -->
-                <div class="col-lg-3 col-md-3">
+                <div class="col-lg-4 col-md-3">
                     <div class="single-we-do we-do-bg-2">
                         <div class="we-do-content">
                             <div class="display-table">
@@ -409,8 +394,8 @@
                 <!-- Single We Do End -->
 
                 <!-- Single We Do Start -->
-                <div class="col-lg-3 col-md-3">
-                    <div class="single-we-do we-do-bg-3">
+                <div class="col-lg-4 col-md-3">
+                    <div class="single-we-do we-do-bg-1">
                         <div class="we-do-content">
                             <div class="display-table">
                                 <div class="display-table-cell">
@@ -423,6 +408,8 @@
                     </div>
                 </div>
                 <!-- Single We Do End -->
+
+
             </div>
         </div>
     </section>
@@ -467,7 +454,7 @@
                 <!-- Single Pricing Table -->
                 <div class="col-lg-6 col-md-6 text-center">
                     <div class="single-pricing-table">
-                        <h3>Trial</h3>
+                        <h3>Trial<small> (Coming Soon)</small></h3>
                         <h2>Free</h2>
                         <h5>First 10 KMS</h5>
 
@@ -525,6 +512,14 @@
     });
 });
 </script-->
+{% if slide %}
+<script>
+    $(document).ready(function(){
+        $('html, body').animate({
+        scrollTop: $('#slide').offset().top },'slow');
+    });
+</script>
+{% endif %}
 <script type="text/javascript">
 
     $("#close-s").click(function(){
@@ -536,15 +531,12 @@
 
     $(function () {
         $('#start_date').datetimepicker({
-        minDate:new Date(),
+
         sideBySide: true,
         format:"YYYY-MM-DD HH:mm:ss",
         stepping : 15,
-
-
+        minDate:new Date(),
          });
-
-
 
         $('#end_date').datetimepicker({
 
@@ -552,12 +544,12 @@
         format:"YYYY-MM-DD HH:mm:ss",
         stepping : 15,
         useCurrent: false, //Important! See issue #1075
-
-
         });
+
         $("#start_date").on("dp.change", function (e) {
             $('#end_date').data("DateTimePicker").minDate(e.date);
         });
+
         $("#end_date").on("dp.change", function (e) {
             $('#start_date').data("DateTimePicker").maxDate(e.date);
         });

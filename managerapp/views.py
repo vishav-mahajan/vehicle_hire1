@@ -8,6 +8,8 @@ from django.core.files.storage import FileSystemStorage
 from managerapp.forms import VehicleCategoryForm, VehicleCompanyForm, VehicleDetailsForm
 import math
 from django.db.models import Sum
+from django.db.models import Q
+
 # Create your views here.
 def manager_index(request):
 
@@ -247,9 +249,15 @@ def my_bookings(request):
     if auth==True:
         if request.session['role_id'] == 1 :
             book_id=[]
-
+            try:
+                if request.method == "POST":
+                    sr = booking_details.objects.filter(invoice__icontains=request.POST['search'])
+                    return render(request, "mybookings.html", {"bd": sr, "book_id": book_id})
+            except:
+                pass
 
             bd = booking_details.objects.filter(seller_detail=email)
+
             curr_date=dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             curr_date = dt.datetime.now().strptime(curr_date,"%Y-%m-%d %H:%M:%S")
             for i in bd:
@@ -262,14 +270,10 @@ def my_bookings(request):
                     return_date="2001-01-01 00:00:00"
                     return_date = dt.datetime.strptime(return_date, "%Y-%m-%d %H:%M:%S")
 
-
                 if curr_date > end_date and i.is_active==True:
                     book_id.extend([i.booking_id])
                 if return_date > end_date:
                     book_id.extend([i.booking_id])
-
-
-
 
             return render(request, "mybookings.html", {"bd": bd,"book_id":book_id})
         else:
@@ -369,12 +373,14 @@ def balance(request):
 
             if total_fine> security:
                 pay=total_fine-security
-                update = booking_details(booking_id=bd.booking_id, ext_amount=excess_amount, balance_amount=pay,total_fine=total_fine)
-                update.save(update_fields=["ext_amount", "total_fine","balance_amount"])
+                earnings=bd.total + pay
+                update = booking_details(booking_id=bd.booking_id, ext_amount=excess_amount, balance_amount=pay,total_fine=total_fine,earnings=earnings)
+                update.save(update_fields=["ext_amount", "total_fine","balance_amount","earnings"])
             else:
                 mgr_pay = security - total_fine
-                update = booking_details(booking_id=bd.booking_id, ext_amount=excess_amount, balance_amount=mgr_pay,total_fine=total_fine)
-                update.save(update_fields=["ext_amount", "total_fine","balance_amount"])
+                earnings = bd.total - mgr_pay
+                update = booking_details(booking_id=bd.booking_id, ext_amount=excess_amount, balance_amount=mgr_pay,total_fine=total_fine,earnings=earnings)
+                update.save(update_fields=["ext_amount", "total_fine","balance_amount","earnings"])
 
             bd = booking_details.objects.get(invoice=request.session['id'])
 
@@ -388,3 +394,46 @@ def balance(request):
             return render(request,"login.html",{"pass":True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
+
+def earnings(request):
+    try:
+        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],request.session['role_id'])
+        email = request.session['email']
+    except:
+        return redirect("/login")
+    if auth==True :
+        total_earning = booking_details.objects.filter(seller_detail=email).aggregate(Sum("earnings"))
+        total_fine = booking_details.objects.filter(seller_detail=email,cancellation_time="").aggregate(Sum("total_fine"))
+        veh_amt = booking_details.objects.filter(seller_detail=email, cancellation_time="").aggregate(Sum("amount_exp"))
+        cancel = booking_details.objects.filter(seller_detail=email, return_date="").aggregate(Sum("total_fine"))
+        return render (request,"Bank_Balance.html",{"earn":total_earning,"fine":total_fine,"amt":veh_amt,"cancel":cancel})
+
+    else:
+        auth, message = auth
+        if (message == "Not Logged In"):
+            return render(request, "login.html", {"pass": True})
+        elif (message == "Wrong Level"):
+            return render(request, "404.html", {"pass": True})
+
+def show_other(request):
+    try:
+        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],request.session['role_id'])
+        email = request.session['email']
+    except:
+        return redirect("/login")
+    if auth==True and request.session["role_id"]==1 :
+        ccd=VehicleCategories.objects.all()
+        ud=VehiclesDetails.objects.filter(~Q(u_email = email))
+        return render(request, "view_cars.html", {'ud': ud, 'ccd': ccd})
+    else:
+        auth, message = auth
+        if (message == "Not Logged In"):
+            return render(request, "login.html", {"pass": True})
+        elif (message == "Wrong Level"):
+            return render(request, "404.html", {"pass": True})
+
+
+def search(request):
+    if request.method=="POST":
+        sr= booking_details.objects.filter(invoice__icontains=request.POST['search'])
+        return render(request, "mybookings.html", {"bd": sr})

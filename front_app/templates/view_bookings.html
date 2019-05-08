@@ -285,6 +285,7 @@
                         </div>
                     </div>
                     </div>
+                    {% if bd.extension != 0 %}
                     <div class="form-group has-error">
                         <label class="col-sm-2 control-label">Extended Hours </label>
                         <div class="col-sm-5">
@@ -296,6 +297,7 @@
                         </div>
                     </div>
                     </div>
+                    {% endif %}
                     <div class="form-group has-warning">
                         <label class="col-sm-2 control-label">Excess Amount </label>
                         <div class="col-sm-5">
@@ -334,52 +336,6 @@
         </div>
     </div>
 </div>
-
-<!--script type="text/javascript">
-
-var a = document.getElementById("start_date");
-var b = document.getElementById("end_date");
-if(a.value == b.value){
-$(function () {
-        $('#start_time').datetimepicker({
-        format : "HH:mm:ss"
-        });
-        $('#end_time').datetimepicker({
-            format : "HH:mm:ss"
-
-        });
-        $("#start_time").on("dp.change", function (e) {
-            $('#end_time').data("DateTimePicker").minDate(e.date);
-        });
-        $("#end_time").on("dp.change", function (e) {
-            $('#start_time').data("DateTimePicker").maxDate(e.date);
-        });
-    });
-}
-else{
-$(function () {
-                $('#start_time,#end_time').datetimepicker({
-                    format: 'hh:mm:00'
-                });
-            });
-}
-
-
-
-
-        </script-->
-<script>
-
-
-    $(function () {
-    $('#start_time,#end_time').datetimepicker({
-        sideBySide: true,
-        format:"YYYY-MM-DD HH:mm:ss",
-        stepping : 15
-    });
-});
-</script>
-
 
 
 

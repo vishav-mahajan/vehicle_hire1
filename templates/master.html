@@ -79,7 +79,16 @@
                                 </li>
                                 <li><a href="{% url 'front_app:about'%}">About</a></li>
                                 <li><a href="{% url 'front_app:contact'%}">Contact</a></li>
-                                <li><a href="/policy">Policy</a></li>
+
+                                <li><a href="#">Policy</a>
+                                <ul class="aligncenter">
+                                    <li><a href="/feepolicy">Fee Policy</a></li>
+                                    <li><a href="/eligibilty/">Eligibility</a></li>
+
+
+                                </ul>
+                                </li>
+
                                 <li><a class="mr-4" href="{% url 'front_app:team'%}">Team</a></li>
                                 {% if request.session.authenticate %}
                                     <li><img   style="object-fit: fill ;height: 60px; width: 60px; border-radius: 100%; border: groove; border-color: #e0a800" src="/media/{{ request.session.image }}">

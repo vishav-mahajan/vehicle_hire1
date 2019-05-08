@@ -75,7 +75,7 @@ def login(request):
                 if verified == False and authtoken == "":
                     rn = random.randint(100000, 10000000)
                     token = useremail[0:5] + str(rn) + mob[5:10]
-                    verify = "http://192.168.43.111:8000/dskjgheriugiurefhkusdjdowieuqhiurehf?email=" + useremail + "&token=" + token
+                    verify = "http://127.0.0.1:8000/dskjgheriugiurefhkusdjdowieuqhiurehf?email=" + useremail + "&token=" + token
                     email_send(useremail, userpassword, verify)
                     update = MySiteUser(user_email=useremail, user_token=token)
                     update.save(update_fields=["user_token"])
@@ -849,11 +849,15 @@ def view_current_book(request):
 
 def policy(request):
     return render(request,"policy.html")
+
 def feepolicy(request):
     return render(request,"feepolicy.html")
+
 def privacy(request):
     return render(request,"privacy.html")
+
 def member(request):
     return render(request,"member.html")
+
 def eligibilty(request):
     return render(request,"eligibilty.html")

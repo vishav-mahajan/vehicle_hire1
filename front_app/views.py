@@ -129,47 +129,50 @@ def logout(request):
 
 
 def signup(request):
-    if (request.method == "POST"):
-        user_image = None
-        if request.FILES:
-            myfile = request.FILES['user_image']  # type of file control name ??
-            fs = FileSystemStorage()
-            filename = fs.save(myfile.name, myfile)
-            fs.url(filename)
-            user_image = myfile.name
-        try:
-            emailid = request.POST['user_email']
-            data = MySiteUser.objects.get(user_email=emailid)
-            return render(request, "register.html", {'invalid': True})
+    if request.session['authenticate']==False:
+        if (request.method == "POST"):
+            user_image = None
+            if request.FILES:
+                myfile = request.FILES['user_image']  # type of file control name ??
+                fs = FileSystemStorage()
+                filename = fs.save(myfile.name, myfile)
+                fs.url(filename)
+                user_image = myfile.name
+            try:
+                emailid = request.POST['user_email']
+                data = MySiteUser.objects.get(user_email=emailid)
+                return render(request, "register.html", {'invalid': True})
 
-        except:
-            pass
+            except:
+                pass
 
-        form = MySiteUserForm(request.POST)
-        if form.is_valid():
-            f1 = form.save(commit=False)
-            # return render(request,"abcd.html")
-            f1.user_fname = (request.POST['user_fname']).capitalize()
-            f1.user_lname = (request.POST['user_lname']).capitalize()
-            f1.user_email = request.POST['user_email']
-            f1.user_mobile = request.POST['user_mobile']
-            f1.user_password = make_password(request.POST['user_password'])
-            f1.site_role_id_id = request.POST['select']
-            f1.registered_on = dt.datetime.now().date()
-            f1.user_image = user_image
-            f1.user_gender = request.POST['user_gender']
-            f1.user_dob = request.POST['user_dob']
-            rn = random.randint(100000, 10000000)
-            token = request.POST['user_email'][0:5] + str(rn) + str(request.POST['user_mobile'][5:10])
-            f1.user_token = token
-            verify = "http://127.0.0.1:8000/dskjgheriugiurefhkusdjdowieuqhiurehf?email=" + request.POST[
-                'user_email'] + "&token=" + token
-            email_send(f1.user_email, request.POST['user_password'], verify)
-            f1.save()
-            return redirect("/login")
-        else:
-            return render(request, "register.html", {'invalid': True})
-    return render(request, "register.html")
+            form = MySiteUserForm(request.POST)
+            if form.is_valid():
+                f1 = form.save(commit=False)
+                # return render(request,"abcd.html")
+                f1.user_fname = (request.POST['user_fname']).capitalize()
+                f1.user_lname = (request.POST['user_lname']).capitalize()
+                f1.user_email = request.POST['user_email']
+                f1.user_mobile = request.POST['user_mobile']
+                f1.user_password = make_password(request.POST['user_password'])
+                f1.site_role_id_id = request.POST['select']
+                f1.registered_on = dt.datetime.now().date()
+                f1.user_image = user_image
+                f1.user_gender = request.POST['user_gender']
+                f1.user_dob = request.POST['user_dob']
+                rn = random.randint(100000, 10000000)
+                token = request.POST['user_email'][0:5] + str(rn) + str(request.POST['user_mobile'][5:10])
+                f1.user_token = token
+                verify = "http://127.0.0.1:8000/dskjgheriugiurefhkusdjdowieuqhiurehf?email=" + request.POST[
+                    'user_email'] + "&token=" + token
+                email_send(f1.user_email, request.POST['user_password'], verify)
+                f1.save()
+                return redirect("/login")
+            else:
+                return render(request, "register.html", {'invalid': True})
+        return render(request, "register.html")
+    else:
+        return redirect("/")
 
 
 def page_not_found(request):
@@ -402,76 +405,76 @@ def booking(request):
         userdata = VehiclesDetails.objects.get(vehicle_ref_id=data)
 
         bd = booking_details.objects.all()
-        # try:
-        email = request.session['email']
-        siteuserdata = MySiteUser.objects.get(user_email=email)
+        try:
+            email = request.session['email']
+            siteuserdata = MySiteUser.objects.get(user_email=email)
 
-        if request.method == "POST":
-            userbooking = booking_details.objects.filter(user_detail=email).order_by("-booking_id")[0:1]
-            for i in userbooking:
-                if i.is_returned == False:
-                    return render(request, 'bookings.html',
-                                  {"ud": userdata, 'su': siteuserdata, "bd": bd, "sd": start_date, "ed": end_date,
-                                   "nt": True})
+            if request.method == "POST":
+                userbooking = booking_details.objects.filter(user_detail=email).order_by("-booking_id")[0:1]
+                for i in userbooking:
+                    if i.is_returned == False:
+                        return render(request, 'bookings.html',
+                                      {"ud": userdata, 'su': siteuserdata, "bd": bd, "sd": start_date, "ed": end_date,
+                                       "nt": True})
 
-            type = userdata.vehicle_id_id
+                type = userdata.vehicle_id_id
 
-            start_duration = start_date
-            start_du = dt.datetime.strptime(start_duration, '%Y-%m-%d %H:%M:%S')
-            # end_duration = end_date +" "+ request.POST['end_time']
-            end_duration = end_date
-            end_du = dt.datetime.strptime(end_duration, '%Y-%m-%d %H:%M:%S')
-            duration = end_du - start_du
-            duration = int(duration.total_seconds() / 3600)
-            if duration <= 4:
-                amt = userdata.vehicle_id.vehicle_category_price
-                security = int(10000)
-                total = security + amt
-                request.session['invoice'] = random.randint(100000, 10000000)
-                request.session['vehicle_name'] = request.POST["vehicle_name"]
-                request.session['vehicle_description'] = request.POST["vehicle_description"]
-                request.session['vehicle_id'] = userdata.vehicle_ref_id
-                request.session['start_date'] = start_date
-                request.session['category'] = userdata.vehicle_id.vehicle_category_name
-                request.session['user_name'] = siteuserdata.user_fname + " " + siteuserdata.user_lname
-                request.session['seller'] = userdata.u_email
-                request.session['end_date'] = end_date
-                request.session['amt'] = amt
-                request.session['total'] = total
-                request.session['booking_date'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                start_duration = start_date
+                start_du = dt.datetime.strptime(start_duration, '%Y-%m-%d %H:%M:%S')
+                # end_duration = end_date +" "+ request.POST['end_time']
+                end_duration = end_date
+                end_du = dt.datetime.strptime(end_duration, '%Y-%m-%d %H:%M:%S')
+                duration = end_du - start_du
+                duration = int(duration.total_seconds() / 3600)
+                if duration <= 4:
+                    amt = userdata.vehicle_id.vehicle_category_price
+                    security = int(10000)
+                    total = security + amt
+                    request.session['invoice'] = random.randint(100000, 10000000)
+                    request.session['vehicle_name'] = request.POST["vehicle_name"]
+                    request.session['vehicle_description'] = request.POST["vehicle_description"]
+                    request.session['vehicle_id'] = userdata.vehicle_ref_id
+                    request.session['start_date'] = start_date
+                    request.session['category'] = userdata.vehicle_id.vehicle_category_name
+                    request.session['user_name'] = siteuserdata.user_fname + " " + siteuserdata.user_lname
+                    request.session['seller'] = userdata.u_email
+                    request.session['end_date'] = end_date
+                    request.session['amt'] = amt
+                    request.session['total'] = total
+                    request.session['booking_date'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-                return redirect("/confirm_booking")
-                # return render(request, 'bookings.html',
-                # {"ud": userdata, 'su': siteuserdata, "bd": bd, "sd": start_date, "ed": end_date,
-                # "amt": amt,"security":security,"t":total})
-            else:
-                veh_id = userdata.vehicle_ref_id
-                security, amt = price_calc(duration, type, veh_id)
-                total = security + amt
+                    return redirect("/confirm_booking")
+                    # return render(request, 'bookings.html',
+                    # {"ud": userdata, 'su': siteuserdata, "bd": bd, "sd": start_date, "ed": end_date,
+                    # "amt": amt,"security":security,"t":total})
+                else:
+                    veh_id = userdata.vehicle_ref_id
+                    security, amt = price_calc(duration, type, veh_id)
+                    total = security + amt
 
-                request.session['invoice'] = random.randint(100000, 10000000)
-                request.session['vehicle_name'] = request.POST["vehicle_name"]
-                request.session['vehicle_description'] = request.POST["vehicle_description"]
-                request.session['vehicle_id'] = userdata.vehicle_ref_id
-                request.session['start_date'] = start_date
-                request.session['category'] = userdata.vehicle_id.vehicle_category_name
-                request.session['user_name'] = siteuserdata.user_fname + " " + siteuserdata.user_lname
-                request.session['seller'] = userdata.u_email
-                request.session['end_date'] = end_date
-                request.session['amt'] = amt
-                request.session['total'] = total
-                request.session['booking_date'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    request.session['invoice'] = random.randint(100000, 10000000)
+                    request.session['vehicle_name'] = request.POST["vehicle_name"]
+                    request.session['vehicle_description'] = request.POST["vehicle_description"]
+                    request.session['vehicle_id'] = userdata.vehicle_ref_id
+                    request.session['start_date'] = start_date
+                    request.session['category'] = userdata.vehicle_id.vehicle_category_name
+                    request.session['user_name'] = siteuserdata.user_fname + " " + siteuserdata.user_lname
+                    request.session['seller'] = userdata.u_email
+                    request.session['end_date'] = end_date
+                    request.session['amt'] = amt
+                    request.session['total'] = total
+                    request.session['booking_date'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-                return redirect("/confirm_booking")
-                # return render(request, 'bookings.html',
-                # {"ud": userdata, 'su': siteuserdata, "bd": bd, "sd": start_date, "ed": end_date,
-                # "amt":amt,"security":security,"t":total})
+                    return redirect("/confirm_booking")
+                    # return render(request, 'bookings.html',
+                    # {"ud": userdata, 'su': siteuserdata, "bd": bd, "sd": start_date, "ed": end_date,
+                    # "amt":amt,"security":security,"t":total})
 
-        return render(request, 'bookings.html',
-                      {"ud": userdata, 'su': siteuserdata, "bd": bd, "sd": start_date, "ed": end_date})
-        # except:
+            return render(request, 'bookings.html',
+                          {"ud": userdata, 'su': siteuserdata, "bd": bd, "sd": start_date, "ed": end_date})
+        except:
 
-        # return redirect("/login")
+            return redirect("/login")
     else:
         auth,message = auth
         if (message=="Not Logged In"):
@@ -638,74 +641,74 @@ def cancel_booking(request):
     except:
         return redirect("/login")
     if auth==True:
-        # try:
-        id = request.GET['id']
         try:
-            bd = booking_details.objects.get(cancel_token=id)
+            id = request.GET['id']
+            try:
+                bd = booking_details.objects.get(cancel_token=id)
+            except:
+                return  redirect("/error")
+            if email == bd.user_detail_id:
+                cancel_date = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                cancel_date = dt.datetime.strptime(cancel_date, '%Y-%m-%d %H:%M:%S')
+                start_date = dt.datetime.strptime(bd.start_date, '%Y-%m-%d %H:%M:%S')
+
+                if start_date>cancel_date:
+                    duration = float((start_date - cancel_date).total_seconds() / 3600)
+
+                    if duration >= 36:
+                        balance = bd.total - 1000
+                        request.session["cancel"]=1000
+
+                    elif duration >=24:
+                        balance = bd.total - 5000
+                        request.session["cancel"] = 5000
+
+                    else:
+                        balance = bd.total - 10000
+                        request.session["cancel"] = 10000
+
+                else:
+                    """earning=bd.total
+                    update = booking_details(booking_id=bd.booking_id, balance_amount=0, earnings=earning, total_fine=bd.total)
+                    update.save(update_fields=['balance_amount', "earnings","total_fine"])"""
+                    return redirect("/show_bookings")
+
+                bd = booking_details.objects.get(cancel_token=id)
+                request.session['duration'] = False
+                request.session['date_greater'] = False
+                request.session['cancelled'] = False
+                if bd.is_active == True:
+                    """if cancel_date > start_date:
+                        request.session['date_greater'] = True
+                        return redirect("/show_bookings")
+                    elif duration < 12:
+                        request.session['duration'] = True
+                        return redirect("/show_bookings")
+                    else:"""
+
+                    if (request.method == "POST"):
+
+                        request.session['not_cancel'] = False
+                        update = booking_details(booking_id=bd.booking_id, total_fine=request.session['cancel'],
+                                                 balance_amount=balance, earnings=request.session['cancel'], is_active=False,cancel_token="",
+                                                 cancellation_time=cancel_date,
+                                                 is_returned=True)
+                        update.save(update_fields=['balance_amount', "total_fine", "earnings",'is_active', 'cancellation_time', 'is_returned',"cancel_token"])
+                        update = booking_details(booking_id=bd.booking_id)
+
+                        return render(request, "cancel_booking.html", {"bd": bd, "cancel": True, "balance":balance})
+                    else:
+                        return render(request, "cancel_booking.html", {"bd": bd, "not_cancel": True,"balance":balance})
+                    """elif bd.is_active == False and bd.cancellation_time != "":
+                        request.session['cancelled'] = True
+                        return redirect("/show_bookings")"""
+                else:
+                    return redirect("/show_bookings")
+            else:
+                return redirect("/error")
+
         except:
-            return  redirect("/error")
-        if email == bd.user_detail_id:
-            cancel_date = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            cancel_date = dt.datetime.strptime(cancel_date, '%Y-%m-%d %H:%M:%S')
-            start_date = dt.datetime.strptime(bd.start_date, '%Y-%m-%d %H:%M:%S')
-
-            if start_date>cancel_date:
-                duration = float((start_date - cancel_date).total_seconds() / 3600)
-
-                if duration >= 36:
-                    balance = bd.total - 1000
-                    request.session["cancel"]=1000
-
-                elif duration >=24:
-                    balance = bd.total - 5000
-                    request.session["cancel"] = 5000
-
-                else:
-                    balance = bd.total - 10000
-                    request.session["cancel"] = 10000
-
-            else:
-                """earning=bd.total
-                update = booking_details(booking_id=bd.booking_id, balance_amount=0, earnings=earning, total_fine=bd.total)
-                update.save(update_fields=['balance_amount', "earnings","total_fine"])"""
-                return redirect("/show_bookings")
-
-            bd = booking_details.objects.get(cancel_token=id)
-            request.session['duration'] = False
-            request.session['date_greater'] = False
-            request.session['cancelled'] = False
-            if bd.is_active == True:
-                """if cancel_date > start_date:
-                    request.session['date_greater'] = True
-                    return redirect("/show_bookings")
-                elif duration < 12:
-                    request.session['duration'] = True
-                    return redirect("/show_bookings")
-                else:"""
-
-                if (request.method == "POST"):
-
-                    request.session['not_cancel'] = False
-                    update = booking_details(booking_id=bd.booking_id, total_fine=request.session['cancel'],
-                                             balance_amount=balance, earnings=request.session['cancel'], is_active=False,cancel_token="",
-                                             cancellation_time=cancel_date,
-                                             is_returned=True)
-                    update.save(update_fields=['balance_amount', "total_fine", "earnings",'is_active', 'cancellation_time', 'is_returned',"cancel_token"])
-                    update = booking_details(booking_id=bd.booking_id)
-
-                    return render(request, "cancel_booking.html", {"bd": bd, "cancel": True, "balance":balance})
-                else:
-                    return render(request, "cancel_booking.html", {"bd": bd, "not_cancel": True,"balance":balance})
-                """elif bd.is_active == False and bd.cancellation_time != "":
-                    request.session['cancelled'] = True
-                    return redirect("/show_bookings")"""
-            else:
-                return redirect("/show_bookings")
-        else:
-            return redirect("/error")
-
-    # except:
-    # return render(request, "cancel_booking.html")
+            return render(request, "cancel_booking.html")
     else:
         auth,message = auth
         if (message=="Not Logged In"):

@@ -61,7 +61,11 @@ def index(request):
 
 
 def login(request):
-    if request.session['authenticate']==False:
+    try:
+        auth=request.session['authenticate']
+    except:
+        auth=False
+    if auth==False:
         if (request.method == "POST"):
             try:
                 useremail = request.POST['user_email']
@@ -114,6 +118,7 @@ def login(request):
         return render(request, "login.html", {'login': True})
     else:
         return redirect("/")
+
 
 def logout(request):
     data = login_details.objects.latest("login_id")
@@ -290,6 +295,13 @@ def updatepassword(request):
 
 
 def forgototp(request):
+    try:
+        if request.session['authenticate']== False or request.session['authenticate']=="":
+            pass
+        else:
+            return redirect("/error")
+    except:
+        return redirect("/error")
     if request.method == "POST":
         try:
             email = request.POST['user_email']
@@ -401,82 +413,85 @@ def booking(request):
     except:
         return redirect("/login")
     if auth==True:
-        data = request.GET['id']
-        start_date = request.GET['sd']
-        end_date = request.GET['ed']
-        userdata = VehiclesDetails.objects.get(vehicle_ref_id=data)
-
-        bd = booking_details.objects.all()
         try:
-            email = request.session['email']
-            siteuserdata = MySiteUser.objects.get(user_email=email)
+            data = request.GET['id']
+            start_date = request.GET['sd']
+            end_date = request.GET['ed']
+            userdata = VehiclesDetails.objects.get(vehicle_ref_id=data)
 
-            if request.method == "POST":
-                userbooking = booking_details.objects.filter(user_detail=email).order_by("-booking_id")[0:1]
-                for i in userbooking:
-                    if i.is_returned == False:
-                        return render(request, 'bookings.html',
-                                      {"ud": userdata, 'su': siteuserdata, "bd": bd, "sd": start_date, "ed": end_date,
-                                       "nt": True})
+            bd = booking_details.objects.all()
+            try:
+                email = request.session['email']
+                siteuserdata = MySiteUser.objects.get(user_email=email)
 
-                type = userdata.vehicle_id_id
+                if request.method == "POST":
+                    userbooking = booking_details.objects.filter(user_detail=email).order_by("-booking_id")[0:1]
+                    for i in userbooking:
+                        if i.is_returned == False:
+                            return render(request, 'bookings.html',
+                                          {"ud": userdata, 'su': siteuserdata, "bd": bd, "sd": start_date, "ed": end_date,
+                                           "nt": True})
 
-                start_duration = start_date
-                start_du = dt.datetime.strptime(start_duration, '%Y-%m-%d %H:%M:%S')
-                # end_duration = end_date +" "+ request.POST['end_time']
-                end_duration = end_date
-                end_du = dt.datetime.strptime(end_duration, '%Y-%m-%d %H:%M:%S')
-                duration = end_du - start_du
-                duration = int(duration.total_seconds() / 3600)
-                if duration <= 4:
-                    amt = userdata.vehicle_id.vehicle_category_price
-                    security = int(10000)
-                    total = security + amt
-                    request.session['invoice'] = random.randint(100000, 10000000)
-                    request.session['vehicle_name'] = request.POST["vehicle_name"]
-                    request.session['vehicle_description'] = request.POST["vehicle_description"]
-                    request.session['vehicle_id'] = userdata.vehicle_ref_id
-                    request.session['start_date'] = start_date
-                    request.session['category'] = userdata.vehicle_id.vehicle_category_name
-                    request.session['user_name'] = siteuserdata.user_fname + " " + siteuserdata.user_lname
-                    request.session['seller'] = userdata.u_email
-                    request.session['end_date'] = end_date
-                    request.session['amt'] = amt
-                    request.session['total'] = total
-                    request.session['booking_date'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    type = userdata.vehicle_id_id
 
-                    return redirect("/confirm_booking")
-                    # return render(request, 'bookings.html',
-                    # {"ud": userdata, 'su': siteuserdata, "bd": bd, "sd": start_date, "ed": end_date,
-                    # "amt": amt,"security":security,"t":total})
-                else:
-                    veh_id = userdata.vehicle_ref_id
-                    security, amt = price_calc(duration, type, veh_id)
-                    total = security + amt
+                    start_duration = start_date
+                    start_du = dt.datetime.strptime(start_duration, '%Y-%m-%d %H:%M:%S')
+                    # end_duration = end_date +" "+ request.POST['end_time']
+                    end_duration = end_date
+                    end_du = dt.datetime.strptime(end_duration, '%Y-%m-%d %H:%M:%S')
+                    duration = end_du - start_du
+                    duration = int(duration.total_seconds() / 3600)
+                    if duration <= 4:
+                        amt = userdata.vehicle_id.vehicle_category_price
+                        security = int(10000)
+                        total = security + amt
+                        request.session['invoice'] = random.randint(100000, 10000000)
+                        request.session['vehicle_name'] = request.POST["vehicle_name"]
+                        request.session['vehicle_description'] = request.POST["vehicle_description"]
+                        request.session['vehicle_id'] = userdata.vehicle_ref_id
+                        request.session['start_date'] = start_date
+                        request.session['category'] = userdata.vehicle_id.vehicle_category_name
+                        request.session['user_name'] = siteuserdata.user_fname + " " + siteuserdata.user_lname
+                        request.session['seller'] = userdata.u_email
+                        request.session['end_date'] = end_date
+                        request.session['amt'] = amt
+                        request.session['total'] = total
+                        request.session['booking_date'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-                    request.session['invoice'] = random.randint(100000, 10000000)
-                    request.session['vehicle_name'] = request.POST["vehicle_name"]
-                    request.session['vehicle_description'] = request.POST["vehicle_description"]
-                    request.session['vehicle_id'] = userdata.vehicle_ref_id
-                    request.session['start_date'] = start_date
-                    request.session['category'] = userdata.vehicle_id.vehicle_category_name
-                    request.session['user_name'] = siteuserdata.user_fname + " " + siteuserdata.user_lname
-                    request.session['seller'] = userdata.u_email
-                    request.session['end_date'] = end_date
-                    request.session['amt'] = amt
-                    request.session['total'] = total
-                    request.session['booking_date'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        return redirect("/confirm_booking")
+                        # return render(request, 'bookings.html',
+                        # {"ud": userdata, 'su': siteuserdata, "bd": bd, "sd": start_date, "ed": end_date,
+                        # "amt": amt,"security":security,"t":total})
+                    else:
+                        veh_id = userdata.vehicle_ref_id
+                        security, amt = price_calc(duration, type, veh_id)
+                        total = security + amt
 
-                    return redirect("/confirm_booking")
-                    # return render(request, 'bookings.html',
-                    # {"ud": userdata, 'su': siteuserdata, "bd": bd, "sd": start_date, "ed": end_date,
-                    # "amt":amt,"security":security,"t":total})
+                        request.session['invoice'] = random.randint(100000, 10000000)
+                        request.session['vehicle_name'] = request.POST["vehicle_name"]
+                        request.session['vehicle_description'] = request.POST["vehicle_description"]
+                        request.session['vehicle_id'] = userdata.vehicle_ref_id
+                        request.session['start_date'] = start_date
+                        request.session['category'] = userdata.vehicle_id.vehicle_category_name
+                        request.session['user_name'] = siteuserdata.user_fname + " " + siteuserdata.user_lname
+                        request.session['seller'] = userdata.u_email
+                        request.session['end_date'] = end_date
+                        request.session['amt'] = amt
+                        request.session['total'] = total
+                        request.session['booking_date'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-            return render(request, 'bookings.html',
-                          {"ud": userdata, 'su': siteuserdata, "bd": bd, "sd": start_date, "ed": end_date})
+                        return redirect("/confirm_booking")
+                        # return render(request, 'bookings.html',
+                        # {"ud": userdata, 'su': siteuserdata, "bd": bd, "sd": start_date, "ed": end_date,
+                        # "amt":amt,"security":security,"t":total})
+
+                return render(request, 'bookings.html',
+                              {"ud": userdata, 'su': siteuserdata, "bd": bd, "sd": start_date, "ed": end_date})
+            except:
+
+                return redirect("/login")
         except:
-
-            return redirect("/login")
+            return redirect("/error")
     else:
         auth,message = auth
         if (message=="Not Logged In"):
@@ -571,7 +586,7 @@ def confirm_booking(request):
 
                 return redirect("/invoice")
             else:
-                return redirect("/login")
+                return redirect("/error")
         return render(request, "confirm_booking.html")
     else:
         auth,message = auth
@@ -743,11 +758,14 @@ def view_current_book(request):
     except:
         return redirect("/login")
     if auth==True:
-        id = request.GET['id']
-        bd = booking_details.objects.get(invoice=id)
-        if email == bd.user_detail_id or email == bd.seller_detail:
-            return render(request, "view_bookings.html", {"bd": bd})
-        else:
+        try:
+            id = request.GET['id']
+            bd = booking_details.objects.get(invoice=id)
+            if email == bd.user_detail_id or email == bd.seller_detail:
+                return render(request, "view_bookings.html", {"bd": bd})
+            else:
+                return redirect("/error")
+        except:
             return redirect("/error")
 
     else:

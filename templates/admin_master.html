@@ -64,9 +64,11 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 
 </head>
 <body class="cbp-spmenu-push">
+    <div class="container">
 	<div class="main-content">
 	<div class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
 		<!--left-fixed -navigation-->
+
 		<aside class="sidebar-left">
       <nav class="navbar navbar-inverse">
             {% if request.session.role_id == 4 %}
@@ -431,7 +433,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 
           <!-- /.navbar-collapse -->
       </nav>
-    </aside>
+        </aside>
 		<!--left-fixed -navigation-->
 		<!-- header-starts -->
 		<div class="sticky-header header-section ">
@@ -692,7 +694,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 			}
 		</script>
 	<!-- //Classie --><!-- //for toggle left push menu script -->
-
+    </div>
     {% block content %}
     {% endblock %}
 </body>

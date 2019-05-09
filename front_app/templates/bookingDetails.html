@@ -8,6 +8,7 @@
         <div class="tables">
             <div class=" bs-example widget-shadow">
                 <h4>My Bookings:</h4>
+                <div class="table-responsive">
                 <table id="reverse" class="table table-bordered  sortable">
                     <thead>
                         <tr>
@@ -64,6 +65,7 @@
                     {% endif %}
                     </tbody>
                 </table>
+                </div>
 
                 {% if request.session.duration  %}
                 <script>alert("Time Duration Should be Greater than 12 Hours")</script>

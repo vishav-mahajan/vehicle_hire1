@@ -91,7 +91,8 @@
                                     </div>
                                 </div>
                             </div>
-
+                        <form method="post" >
+                            {% csrf_token %}
                             <div class="review-area">
                                 <h3>Be the first to review "{{vd.company_id.company_name}} {{ vd.vehicle_name}}"</h3>
                                 <div class="review-star">
@@ -130,6 +131,7 @@
                                     </form>
                                 </div>
                             </div>
+                        </form>
                         </div>
                     </div>
                 </div>
@@ -157,10 +159,11 @@
 
                             <div class="sidebar-body">
                                 <div class="social-icons text-center">
-                                    <a href="#" target="_blank"><i class="fa fa-facebook"></i></a>
-                                    <a href="#" target="_blank"><i class="fa fa-instagram"></i></a>
-
-                                    <a href="#" target="_blank"><i class="fa fa-linkedin"></i></a>
+                                    <a target="_blank" href="https://www.facebook.com/i.vishav"><i class="fa fa-facebook"></i></a>
+                                    <a target="_blank" href="https://www.instagram.com/vishav_mahajan_/"><i class="fa fa-instagram"></i></a>
+                                    <a target="_blank" href="https://in.linkedin.com/in/vishavjeet-mahajan"><i class="fa fa-linkedin"></i></a>
+                                    <a target="_blank" href="https://snapchat.com/vishavmahajan"><i class="fa fa-snapchat"></i></a>
+                                    <a target="_blank" href="https://github.com/vishav-mahajan"><i class="fa fa-github"></i></a>
 
                                 </div>
                             </div>

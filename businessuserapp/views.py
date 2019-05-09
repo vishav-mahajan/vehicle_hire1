@@ -6,6 +6,7 @@ from managerapp.forms import VehicleCategoryForm,VehicleCompanyForm,VehicleDetai
 from django.core.files.storage import FileSystemStorage
 import datetime as dt
 import math
+from django.db.models import Sum
 
 # Create your views here.
 
@@ -27,21 +28,6 @@ def business_index(request):
             return render(request, "404.html", {"pass": True})
 
 
-def vehicle_category(request):
-    try:
-        if (request.method == "POST"):
-            form = VehicleCategoryForm(request.POST)
-            if form.is_valid():
-                f1 = form.save(commit=False)
-                f1.vehicle_category_name = (request.POST['vehicle_category_name']).capitalize()
-                f1.vehicle_category_price = request.POST['vehicle_category_price']
-                f1.save()
-                return render(request, "vehiclecategories.html", {'valid': True})
-            else:
-                return render(request, "vehiclecategories.html", {'invalid': True})
-        return render(request, "vehiclecategories.html")
-    except:
-        return render(request, "vehiclecategories.html", {'exist': True})
 
 
 def vehicle_company(request):
@@ -138,7 +124,7 @@ def showdata(request):
         siteuserdata = MySiteUser.objects.get(user_email=email)
     except:
         return redirect("/login")
-    if auth == True:
+    if auth == True :
         email = request.session['email']
         ccd = VehicleCategories.objects.all()
         userdata = VehiclesDetails.objects.filter(u_email=email)
@@ -158,10 +144,14 @@ def delete_data(request):
         siteuserdata = MySiteUser.objects.get(user_email=email)
     except:
         return redirect("/login")
-    if auth == True:
+    if auth == True :
         carid = request.GET['id']
         try:
             deleteUser = VehiclesDetails.objects.get(vehicle_ref_id=carid)
+            if email == deleteUser.u_email:
+                pass
+            else:
+                return redirect("/error")
             deleteUser.delete()
             if request.session['role_id'] == 4:
                 return redirect("businessuserapp:showdata")
@@ -185,13 +175,17 @@ def updatedata(request):
         siteuserdata = MySiteUser.objects.get(user_email=email)
     except:
         return redirect("/login")
-    if auth == True:
+    if auth == True :
         year = int(dt.datetime.now().strftime(" %Y "))
         companydata = VehicleCompany.objects.all()
         companycategorydata = VehicleCategories.objects.all()
         userdata = VehiclesDetails.objects.all()
         get_id = request.GET['id']
         userdata = VehiclesDetails.objects.get(vehicle_ref_id=get_id)
+        if email == userdata.u_email:
+            pass
+        else:
+            return redirect("/error")
         if request.method == "POST":
             user_image = userdata.vehicle_image
             if request.FILES:
@@ -233,6 +227,7 @@ def my_bookings(request):
     except:
         return redirect("/login")
     if auth==True:
+        request.session['id'] = ""
         if request.session['role_id'] == 4 :
             book_id=[]
             bd = booking_details.objects.filter(seller_detail=email)
@@ -246,7 +241,7 @@ def my_bookings(request):
 
             return render(request, "mybookings.html", {"bd": bd,"book_id":book_id})
         else:
-            return redirect("/login")
+            return redirect("/error")
     else:
         auth,message = auth
         if (message=="Not Logged In"):
@@ -263,49 +258,53 @@ def chkreturn(request):
     except:
         return redirect("/login")
     if auth==True:
-        id=request.GET['id']
-        bd=booking_details.objects.get(invoice=id)
-        curr_date = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        curr_date = dt.datetime.now().strptime(curr_date, "%Y-%m-%d %H:%M:%S")
-        end_date = bd.end_date
-        end_date = dt.datetime.now().strptime(end_date, "%Y-%m-%d %H:%M:%S")
-        if request.session['email'] == bd.seller_detail:
+        try:
+            id=request.GET['id']
+            bd=booking_details.objects.get(invoice=id)
+            curr_date = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            curr_date = dt.datetime.now().strptime(curr_date, "%Y-%m-%d %H:%M:%S")
+            end_date = bd.end_date
+            end_date = dt.datetime.now().strptime(end_date, "%Y-%m-%d %H:%M:%S")
+            if request.session['email'] == bd.seller_detail:
 
-            if request.method == "POST":
+                if request.method == "POST":
 
-                if request.POST['documents']== "no":
-                    fine_amount=request.POST['fine_amount']
-                    is_fine=True
-                else:
-                    fine_amount=0
-                    is_fine=False
-
-
-                if request.POST['damage']== "damage":
-                    if request.POST['covered']=="notcovered":
-                        damage_amount=request.POST['damage_amount']
+                    if request.POST['documents']== "no":
+                        fine = request.POST['fine']
+                        is_fine=True
                     else:
-                        damage_amount=1000
-                else:
-                    damage_amount=0
+                        fine=0
+                        is_fine=False
 
-                if request.POST["exceed"] == "1" and curr_date > end_date:
-                    duration =float((curr_date - end_date).total_seconds() / 3600)
-                    if duration > 0.5:
-                        duration=math.ceil(duration)
+
+                    if request.POST['damage']== "damage":
+                        if request.POST['covered']=="notcovered":
+                            damage_amount=request.POST['damage_amount']
+                        else:
+                            damage_amount=1000
                     else:
-                        duration=math.floor(duration)
-                else:
-                    duration=0
+                        damage_amount=0
+
+                    if request.POST["exceed"] == "1" and curr_date > end_date:
+                        duration =float((curr_date - end_date).total_seconds() / 3600)
+                        if duration > 0.5:
+                            duration=math.ceil(duration)
+                        else:
+                            duration=math.floor(duration)
+                    else:
+                        duration=0
 
 
+                    update = booking_details(booking_id=bd.booking_id, is_fine=is_fine, fine_amount=fine, damage_amount=damage_amount, extension=duration)
+                    update.save(update_fields=["is_fine", "fine_amount" ,"damage_amount", "extension"])
+                    request.session['id']=id
+                    return redirect("/businessuser/balance")
 
-                update = booking_details(booking_id=bd.booking_id, is_fine=is_fine,fine_amount=fine_amount,damage_amount=damage_amount,extension=duration)
-                update.save(update_fields=["is_fine","fine_amount","damage_amount","extension"])
-                request.session['id']=id
-                return redirect("/businessuser/balance")
-
-            return render(request,"chkreturn.html",{"bd":bd})
+                return render(request,"chkreturn.html",{"bd":bd})
+            else:
+                return redirect("/error")
+        except:
+            return redirect("/error")
 
 
     else:
@@ -319,27 +318,75 @@ def chkreturn(request):
 
 def balance(request):
 
-    bd=booking_details.objects.get(invoice=request.session['id'])
-    excess_amount=bd.extension*4*bd.vehicle_info.vehicle_price
-    total_fine=bd.fine_amount + bd.damage_amount + bd.extension*4*bd.vehicle_info.vehicle_price
-    security=bd.security_amount
-    return_date = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return_date = dt.datetime.now().strptime(return_date, "%Y-%m-%d %H:%M:%S")
-    if request.method == "POST":
-        update = booking_details(booking_id=bd.booking_id, is_active=False, return_date=return_date,is_returned=True,cancel_token="")
-        update.save(update_fields=["is_active", "is_returned", "cancel_token", "return_date"])
-        return redirect("/businessuser/mybookings")
+    try:
+        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],request.session['role_id'])
+        email = request.session['email']
+        siteuserdata = MySiteUser.objects.get(user_email=email)
 
-    if total_fine> security:
-        pay=total_fine-security
-        update = booking_details(booking_id=bd.booking_id, ext_amount=excess_amount, balance_amount=pay,total_fine=total_fine)
-        update.save(update_fields=["fine_amount", "ext_amount", "total_fine","balance_amount"])
+    except:
+        return redirect("/login")
+    if auth==True:
+        try:
+            bd=booking_details.objects.get(invoice=request.session['id'])
+
+            if bd.seller_detail==email:
+                excess_amount=bd.extension*4*bd.vehicle_info.vehicle_price
+                total_fine = bd.fine_amount + bd.damage_amount + bd.extension*4*bd.vehicle_info.vehicle_price
+                security=bd.security_amount
+                return_date = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                return_date = dt.datetime.now().strptime(return_date, "%Y-%m-%d %H:%M:%S")
+                if request.method == "POST":
+                    update = booking_details(booking_id=bd.booking_id, is_active=False, return_date=return_date,is_returned=True,cancel_token="")
+                    update.save(update_fields=["is_active", "is_returned", "cancel_token", "return_date"])
+                    return redirect("/businessuser/mybookings")
+
+                if total_fine> security:
+                    pay=total_fine-security
+                    earnings=bd.total + pay
+                    update = booking_details(booking_id=bd.booking_id, ext_amount=excess_amount, balance_amount=pay,total_fine=total_fine,earnings=earnings)
+                    update.save(update_fields=["ext_amount", "total_fine","balance_amount","earnings"])
+                else:
+                    mgr_pay = security - total_fine
+                    earnings = bd.total - mgr_pay
+                    update = booking_details(booking_id=bd.booking_id, ext_amount=excess_amount, balance_amount=mgr_pay,total_fine=total_fine,earnings=earnings)
+                    update.save(update_fields=["ext_amount", "total_fine","balance_amount","earnings"])
+
+                bd = booking_details.objects.get(invoice=request.session['id'])
+
+
+                return render (request,"balance.html",{"bd":bd,"ea":excess_amount})
+            else:
+                return redirect("/error")
+        except:
+            return  redirect("/error")
     else:
-        mgr_pay = security - total_fine
-        update = booking_details(booking_id=bd.booking_id, ext_amount=excess_amount, balance_amount=mgr_pay,total_fine=total_fine)
-        update.save(update_fields=["fine_amount", "ext_amount", "total_fine","balance_amount"])
+        auth,message = auth
+        if (message=="Not Logged In"):
+            return render(request,"login.html",{"pass":True})
+        elif(message=="Wrong Level"):
+            return render(request,"404.html",{"pass":True})
 
-    bd = booking_details.objects.get(invoice=request.session['id'])
+def earnings(request):
+    try:
+        auth = au.authorizeuser(request.session['authenticate'], request.session['role_id'],
+                                request.session['role_id'])
+        email = request.session['email']
+    except:
+        return redirect("/login")
+    if auth == True:
+        total_earning = booking_details.objects.filter(seller_detail=email).aggregate(Sum("earnings"))
+        total_fine = booking_details.objects.filter(seller_detail=email, cancellation_time="").aggregate(
+            Sum("total_fine"))
+        veh_amt = booking_details.objects.filter(seller_detail=email, cancellation_time="").aggregate(
+            Sum("amount_exp"))
+        cancel = booking_details.objects.filter(seller_detail=email, return_date="").aggregate(
+            Sum("total_fine"))
+        return render(request, "Bank_Balance.html",
+                      {"earn": total_earning, "fine": total_fine, "amt": veh_amt, "cancel": cancel})
 
-
-    return render (request,"balance.html",{"bd":bd,"tf":total_fine,"ea":excess_amount})
+    else:
+        auth, message = auth
+        if (message == "Not Logged In"):
+            return render(request, "login.html", {"pass": True})
+        elif (message == "Wrong Level"):
+            return render(request, "404.html", {"pass": True})

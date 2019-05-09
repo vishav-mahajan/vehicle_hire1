@@ -10,7 +10,7 @@ app_name = 'managerapp'
 
 urlpatterns = [
         url(r'^$', views.manager_index, name="manager_index"),
-        #url(r'^vehicle_category/$', views.vehicle_category, name="vehicle_category"),
+        url(r'^vehicle_category/$', views.vehicle_category, name="vehicle_category"),
         url(r'^vehicle_company/$', views.vehicle_company, name="vehicle_company"),
         url(r'^vehicle_details/$', views.vehicle_details, name="vehicle_details"),
         url(r'^showdata/$', views.showdata, name="showdata"),

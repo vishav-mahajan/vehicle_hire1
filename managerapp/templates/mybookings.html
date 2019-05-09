@@ -8,7 +8,7 @@
 
 
                 <div class="panel panel-default">
-
+            <div class="table-responsive">
                 <table id="reverse" class="table table-striped datatables-table table-hover">
                     <thead>
                         <tr>
@@ -98,7 +98,7 @@
                     {% endif %}
                     </tbody>
                 </table>
-
+</div>
                 {% if request.session.duration  %}
                 <script>alert("Time Duration Should be Greater than 12 Hours")</script>
 {% endif %}

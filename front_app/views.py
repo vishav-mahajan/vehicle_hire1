@@ -61,57 +61,59 @@ def index(request):
 
 
 def login(request):
-    if (request.method == "POST"):
-        try:
-            useremail = request.POST['user_email']
-            userpassword = request.POST['user_password']
-            userdata = MySiteUser.objects.get(user_email=useremail)
-            verified = userdata.user_isverified
-            dp = userdata.user_password
-            mob = str(userdata.user_mobile)
-            authtoken = userdata.user_token
-            get_id = userdata.site_role_id_id
-            if check_password(userpassword, dp):
-                if verified == False and authtoken == "":
-                    rn = random.randint(100000, 10000000)
-                    token = useremail[0:5] + str(rn) + mob[5:10]
-                    verify = "http://127.0.0.1:8000/dskjgheriugiurefhkusdjdowieuqhiurehf?email=" + useremail + "&token=" + token
-                    email_send(useremail, userpassword, verify)
-                    update = MySiteUser(user_email=useremail, user_token=token)
-                    update.save(update_fields=["user_token"])
-                    return render(request, "login.html", {'login': True, "vl": True})
+    if request.session['authenticate']==False:
+        if (request.method == "POST"):
+            try:
+                useremail = request.POST['user_email']
+                userpassword = request.POST['user_password']
+                userdata = MySiteUser.objects.get(user_email=useremail)
+                verified = userdata.user_isverified
+                dp = userdata.user_password
+                mob = str(userdata.user_mobile)
+                authtoken = userdata.user_token
+                get_id = userdata.site_role_id_id
+                if check_password(userpassword, dp):
+                    if verified == False and authtoken == "":
+                        rn = random.randint(100000, 10000000)
+                        token = useremail[0:5] + str(rn) + mob[5:10]
+                        verify = "http://127.0.0.1:8000/dskjgheriugiurefhkusdjdowieuqhiurehf?email=" + useremail + "&token=" + token
+                        email_send(useremail, userpassword, verify)
+                        update = MySiteUser(user_email=useremail, user_token=token)
+                        update.save(update_fields=["user_token"])
+                        return render(request, "login.html", {'login': True, "vl": True})
 
 
-                elif verified == True:
-                    request.session['authenticate'] = True
-                    request.session['email'] = useremail
-                    request.session['role_id'] = get_id
-                    request.session['name']=userdata.user_fname+" "+userdata.user_lname
-                    request.session['rolename']=userdata.site_role_id.role_name
-                    request.session["image"]=userdata.user_image
-                    form = LoginDetailsForm(request.POST)
-                    if form.is_valid():
-                        f1 = form.save(commit=False)
-                        f1.user_email = request.session['email']
-                        f1.login_time = dt.datetime.now().strftime("%H:%M:%S")
-                        f1.save()
-                    if get_id == 1:
-                        return redirect("/")
-                    if get_id == 4:
-                        return redirect("/")
-                    if get_id == 3:
-                        return redirect("/")
-                    if get_id == 2:
-                        return redirect("/superuser")
+                    elif verified == True:
+                        request.session['authenticate'] = True
+                        request.session['email'] = useremail
+                        request.session['role_id'] = get_id
+                        request.session['name']=userdata.user_fname+" "+userdata.user_lname
+                        request.session['rolename']=userdata.site_role_id.role_name
+                        request.session["image"]=userdata.user_image
+                        form = LoginDetailsForm(request.POST)
+                        if form.is_valid():
+                            f1 = form.save(commit=False)
+                            f1.user_email = request.session['email']
+                            f1.login_time = dt.datetime.now().strftime("%H:%M:%S")
+                            f1.save()
+                        if get_id == 1:
+                            return redirect("/")
+                        if get_id == 4:
+                            return redirect("/")
+                        if get_id == 3:
+                            return redirect("/")
+                        if get_id == 2:
+                            return redirect("/superuser")
+                    else:
+                        return render(request, "login.html", {'login': True, "vf": True})
+
                 else:
-                    return render(request, "login.html", {'login': True, "vf": True})
-
-            else:
-                return render(request, "login.html", {"pass2": True, 'login': True}, )
-        except:
-            return render(request, "login.html", {"pass1": True, 'login': True})
-    return render(request, "login.html", {'login': True})
-
+                    return render(request, "login.html", {"pass2": True, 'login': True}, )
+            except:
+                return render(request, "login.html", {"pass1": True, 'login': True})
+        return render(request, "login.html", {'login': True})
+    else:
+        return redirect("/")
 
 def logout(request):
     data = login_details.objects.latest("login_id")

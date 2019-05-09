@@ -7,8 +7,8 @@
     <div class="main-page">
         <div class="tables">
             <div class=" bs-example widget-shadow">
-                <h4>User Bookings:</h4>
-                <table id="dtBasicExample" class="table table-bordered  sortable">
+                <h4>My Bookings:</h4>
+                <table id="reverse" class="table table-bordered  sortable">
                     <thead>
                         <tr>
                             <th >Invoice</th>
@@ -87,6 +87,11 @@
 
 
 <script>
+
+tbody = $('#reverse tbody');
+tbody.children().each(function (i, tr) {
+    tbody.prepend(tr);
+});
 
    var table = $('table');
 

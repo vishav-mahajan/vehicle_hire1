@@ -168,7 +168,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
                      </div>
 
 
-                    <div class="form-group">
+                    <div class="form-group" id="id">
                         <div class="control-label col-sm-7">
                         <button  type="button" onclick="invoice_print()" class="btn btn-default">Save Invoice</button>
                             <a href="/"><button  type="button"  class="btn btn-default">Go To Home</button></a>
@@ -179,7 +179,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
                 </form>
 
 
-                <br><br><br><br>
+                <br><br><br><br><br>
                 <div class="row">
             <div class="col-xs-7">
     <div class="panel panel-info">
@@ -339,7 +339,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
                      </div>
 
 
-                    <div class="form-group">
+                    <div class="form-group" id="id">
                         <div class="control-label col-sm-6">
                         <button  type="button" onclick="invoice_print()" class="btn btn-default">Save Invoice </button>
                             <a href="/"><button  type="button"  class="btn btn-default">Go To Home</button></a>
@@ -353,7 +353,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
                 </form>
 
 
-                <br><br><br><br>
+                <br><br><br><br><br>
                 <div class="row">
             <div class="col-xs-7">
     <div class="panel panel-info">
@@ -396,9 +396,14 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
     </div>
 </div>
 <script type="text/javascript">
+
     function invoice_print()
     {
+    $("#id").hide();
+    $('#id').delay(5000).fadeIn(500);
     window.print();
+
+
     };
 
 </script>

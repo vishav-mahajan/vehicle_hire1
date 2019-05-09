@@ -130,6 +130,7 @@ def vehicle_details(request):
                 f.seats = request.POST['seats']
                 # f.vehicle_price= int(f.vehicle_price) + int(base_price)
                 f.vehicle_image = user_image
+                f.role_id = int(request.session['role_id'])
                 f.save()
                 return render(request, "vehicledetails.html",
                               {'valid': True, 'cd': companydata, "ccd": companycategorydata, 'yr': year})
@@ -423,7 +424,8 @@ def show_other(request):
         return redirect("/login")
     if auth==True and request.session["role_id"]==1 :
         ccd=VehicleCategories.objects.all()
-        ud=VehiclesDetails.objects.filter(~Q(u_email = email))
+
+        ud=VehiclesDetails.objects.filter(role_id=4)
         return render(request, "view_cars.html", {'ud': ud, 'ccd': ccd})
     else:
         auth, message = auth

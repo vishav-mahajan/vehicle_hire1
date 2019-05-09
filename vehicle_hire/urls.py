@@ -30,10 +30,9 @@ urlpatterns = [
     url(r'^businessuser/', include('businessuserapp.urls')),
     url(r'^changepassword/',views.updatepassword),
     url(r'^profileupdate/',views.profile),
-    url(r'^policy/',views.policy),
+
 url(r'^feepolicy/',views.feepolicy),
-url(r'^member/',views.member),
-url(r'^privacy/',views.privacy),
+
 url(r'^eligibilty/',views.eligibilty),
 
     url(r'^dskjgheriugiurefhkusdjdowieuqhiurehf/',views.verify)

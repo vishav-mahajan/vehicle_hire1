@@ -38,5 +38,6 @@ class VehicleDetailsForm(forms.ModelForm):
             "seats",
             "airbags",
             "abs",
-            "transmission"
+            "transmission",
+            "role_id"
                      ]

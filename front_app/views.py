@@ -847,17 +847,11 @@ def view_current_book(request):
             b=dt.datetime.strptime(b, '%Y-%m-%d')
         """
 
-def policy(request):
-    return render(request,"policy.html")
+
 
 def feepolicy(request):
     return render(request,"feepolicy.html")
 
-def privacy(request):
-    return render(request,"privacy.html")
-
-def member(request):
-    return render(request,"member.html")
 
 def eligibilty(request):
     return render(request,"eligibilty.html")

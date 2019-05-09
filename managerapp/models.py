@@ -25,7 +25,7 @@ class VehiclesDetails(models.Model):
     vehicle_isactive = models.BooleanField(default=True)
     company_id = models.ForeignKey(VehicleCompany,on_delete=models.CASCADE,default="")
     vehicle_id = models.ForeignKey(VehicleCategories,on_delete=models.CASCADE,default="")
-    u_email=models.CharField(max_length=225,default="")
+    u_email = models.CharField(max_length=225,default="")
     vehicle_isavailable=models.BooleanField(default=True)
     vehicle_price=models.IntegerField(default=0)
     vehicle_model=models.BigIntegerField(default=0)
@@ -33,6 +33,8 @@ class VehiclesDetails(models.Model):
     airbags = models.CharField(max_length=255,default="")
     abs=models.BooleanField(default=False)
     transmission=models.CharField(max_length=20,default="")
+    role_id=models.IntegerField(null=True)
+
 
 
 

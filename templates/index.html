@@ -19,7 +19,7 @@
 
                                       <option value="1">Chandigarh</option>
                                       <option value="2">Mohali</option>
-                                      <option value="3">Panchkula</option>
+
 
                                     </select>
                                 </div>
@@ -36,7 +36,7 @@
                 <i class="fa fa-calendar"></i>
 
             </span>
-            <input required type="text" class="form-control" name="start_date" id="cancel-s" value="{{ sd }}" placeholder="Enter Pick-up Date">
+            <input required type="text" class="form-control" name="start_date" id="cancel-s" value="{{ sd }}" placeholder="Select Pick-up Date">
 
 
 
@@ -56,7 +56,7 @@
             <span class="input-group-addon">
                 <i class="fa fa-calendar"></i>
             </span>
-            <input required type="text" class="form-control" name="end_date" id="cancel-e" value="{{ ed }}" placeholder="Return Date">
+            <input required type="text" class="form-control" name="end_date" id="cancel-e" value="{{ ed }}" placeholder="Select Return Date">
 
         </div>
         <span class="input-group-addon">
@@ -92,7 +92,7 @@
                             <div class="display-table-cell">
                                 <div class="slider-right-text">
                                     <h1>BOOK A CAR TODAY!</h1>
-                                    <p>FOR AS LOW AS Rs 1250 A DAY PLUS OFFERS <br> FOR OUR RETURNING CUSTOMERS</p>
+                                    <p>FOR AS LOW AS Rs. 1250/- A DAY PLUS OFFERS <br> FOR OUR RETURNING CUSTOMERS</p>
                                 </div>
                             </div>
                         </div>
@@ -156,7 +156,7 @@
 
                                                 <div class="p-car-content">
                                                     <h3>
-                                                        <a target="_blank" href="/car-details/?id={{ i.vehicle_ref_id}}">{{ i.vehicle_name }}</a>
+                                                        <a target="_blank" href="/car-details/?id={{ i.vehicle_ref_id}}">{{ i.company_id.company_name }} {{ i.vehicle_name }}</a>
                                                         <span class="price"><i class="fa fa-tag"></i> Rs {{ i.vehicle_price }}/hour</span>
                                                     </h3>
                                                     <h5>{{ i.vehicle_id.vehicle_category_name }}</h5>

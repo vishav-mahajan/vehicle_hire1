@@ -68,7 +68,6 @@ def login(request):
     except:
         auth=False
     if auth==False:
-
         if (request.method == "POST"):
             try:
                 useremail = request.POST['user_email']
@@ -127,14 +126,8 @@ def logout(request):
     data = login_details.objects.latest("login_id")
     data.logout_time = dt.datetime.now()
     data.save()
-    request.session['authenticate'] = False
-    request.session['role_id']=""
-    request.session['email']=""
-    request.session['duration'] = False
-    request.session['date_greater'] = False
-    request.session['name'] = ""
-    request.session['rolename'] = ""
-    request.session["image"] = ""
+    logout_sessions(request)
+    clear_sessions(request)
     return redirect("/login")
 
 
@@ -145,9 +138,14 @@ def signup(request):
         except:
             pass
 
-
-
         if (request.method == "POST"):
+            try:
+                emailid = request.POST['user_email']
+                data = MySiteUser.objects.get(user_email=emailid)
+                return render(request, "register.html", {'exist': True})
+
+            except:
+                pass
             user_image = None
             if request.FILES:
                 myfile = request.FILES['user_image']  # type of file control name ??
@@ -155,13 +153,7 @@ def signup(request):
                 filename = fs.save(myfile.name, myfile)
                 fs.url(filename)
                 user_image = myfile.name
-            """try:
-                emailid = request.POST['user_email']
-                data = MySiteUser.objects.get(user_email=emailid)
-                return render(request, "register.html", {'exist': True})
 
-            except:
-                pass"""
 
             form = MySiteUserForm(request.POST)
             if form.is_valid():
@@ -180,15 +172,14 @@ def signup(request):
                 rn = random.randint(100000, 10000000)
                 token = request.POST['user_email'][0:5] + str(rn) + str(request.POST['user_mobile'][5:10])
                 f1.user_token = token
-                verify = "http://192.168.0.141/dskjgheriugiurefhkusdjdowieuqhiurehf?email=" + request.POST[
+                verify = "http://127.0.0.1:8000/dskjgheriugiurefhkusdjdowieuqhiurehf?email=" + request.POST[
                     'user_email'] + "&token=" + token
                 email_send(f1.user_email, request.POST['user_password'], verify)
                 f1.save()
-                return redirect("/login")
+                return redirect("/confirmation/?id=register")
             else:
                 return render(request, "register.html", {'invalid': True})
         return render(request, "register.html")
-
 
 
 def page_not_found(request):
@@ -221,7 +212,6 @@ def contact(request):
             else:
                 return render(request, "contact.html", {'invalid': True})
         return render(request, "contact.html", {})
-
 
 
 def faq(request):
@@ -274,7 +264,7 @@ def updatepassword(request):
                 otpgrn = ""
                 update = MySiteUser(user_email=email, user_password=new_password, otp=otp, otp_time_generation=otpgrn)
                 update.save(update_fields=["user_password", "otp", "otp_time_generation"])
-                return redirect("/logout")
+                return redirect("/confirmation/?id=changepwd")
             elif get_otp != curr_otp:
                 return render(request, "passwordupdate.html", {'invalidotp': True, })
             elif pw != current_password:
@@ -331,7 +321,7 @@ def forgototp(request):
                     update = MySiteUser(user_email=email, user_password=pwd, otp="", otp_time_generation="")
                     update.save(update_fields=["user_password", "otp", "otp_time_generation"])
                     otp_send(email, request.POST["new_password"], "Password Changed", "Updated Password", "Password")
-                    return redirect("/logout")
+                    return redirect("/confirmation/?id=forgotpwd")
                 else:
                     return render(request, "login.html", {'ud': userdata, "otp_gen": True, 'em': email, "valid": True})
 
@@ -388,6 +378,8 @@ def profile(request):
                                 user_image=image, user_gender=gender)
             update.save(
                 update_fields=["user_fname", "user_gender", "user_mobile", "user_dob", "user_lname", "user_image"])
+            request.session['image']=image
+            request.session['name']=fname+" "+lname
             return redirect("/profileupdate")
         return render(request, "profileupdate.html", {"su": userdata})
     else:
@@ -552,17 +544,24 @@ def confirm_booking(request):
     except:
         return redirect("/login")
     if auth==True:
-        tk=random.randint(10000,1000000)
-        tk=str(tk)+str(request.session['invoice'])
-
-        form=PaymentTokenForm()
-        #if form.is_valid():
-        f=form.save(commit=False)
-        f.user_email=email
-        f.invoice=request.session['invoice']
-        f.token=tk
-        f.save()
-
+        exist=False
+        pay_tok=payment_token.objects.all()
+        for i in pay_tok:
+            if i.invoice == request.session['invoice']:
+                exist=True
+        if exist==False:
+            tk=random.randint(100000,100000000)
+            tk=str(tk)+str(request.session['invoice'])
+            form=PaymentTokenForm()
+            #if form.is_valid():
+            f=form.save(commit=False)
+            f.user_email=email
+            f.invoice=request.session['invoice']
+            f.token=tk
+            f.save()
+        else:
+            pass
+        tok=payment_token.objects.get(invoice=request.session['invoice'])
         host = request.get_host()
         paypal_dict = {
             'business': settings.PAYPAL_RECEIVER_EMAIL,
@@ -571,47 +570,10 @@ def confirm_booking(request):
             'invoice': request.session['invoice'],
             'currency_code': "INR",
             'notify_url': 'http://{}{}'.format(host, reverse('paypal-ipn')),
-            'return_url': 'http://{}{}?token={}'.format(host, reverse('payment_done'),tk)
+            'return_url': 'http://{}{}?token={}'.format(host, reverse('payment_done'),tok.token)
 
         }
         form1 = PayPalPaymentsForm(initial=paypal_dict)
-
-        """if (request.method == "POST"):
-            form = BookingForm(request.POST)
-            if form.is_valid():
-                f1 = form.save(commit=False)
-                # return render(request,"abcd.html")
-                f1.booking_date = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                f1.start_date = request.session['start_date']
-                f1.end_date = request.session['end_date']
-                f1.user_detail_id = request.session['email']
-                f1.vehicle_detail = request.session['vehicle_name']
-                f1.security_amount = int(10000)
-                f1.vehicle_info_id = request.session['vehicle_id']
-                f1.amount_exp = request.session['amt']
-                f1.invoice = request.session['invoice']
-                f1.seller_detail = request.session['seller']
-                f1.total = request.session['total']
-                f1.cancel_token = str(random.randint(1000000, 100000000)) + str(request.session['email'])
-                # email_send(f1.user_email, request.POST['user_password'], verify)
-                f1.save()
-                update = booking_details(booking_id=f1.booking_id, invoice=str(f1.booking_id) + str(f1.invoice))
-                update.save(update_fields=['invoice'])
-                request.session['invoice'] = ""
-                request.session['vehicle_name'] = ""
-                request.session['vehicle_description'] = ""
-                request.session['vehicle_id'] = ""
-                request.session['start_date'] = ""
-                request.session['category'] = ""
-                request.session['user_name'] = ""
-                request.session['seller'] = ""
-                request.session['end_date'] = ""
-                request.session['amt'] = ""
-                request.session['total'] = ""
-                request.session['booking_date'] = ""
-                return redirect("/invoice")
-            else:
-                return redirect("/error")"""
 
         return render(request, "confirm_booking.html",{'form':form1})
     else:
@@ -620,7 +582,6 @@ def confirm_booking(request):
             return render(request, "login.html",{"pass":True})
         elif(message=="Wrong Level"):
             return render(request, "404.html",{"pass":True})
-
 
 
 def invoice(request):
@@ -684,7 +645,7 @@ def payment_done(request):
                     f1.cancel_token = str(random.randint(1000000, 100000000)) + str(request.session['email'])
                     # email_send(f1.user_email, request.POST['user_password'], verify)
                     f1.save()
-                    link="http://192.168.0.141/?id="+request.session['invoice']
+                    link=" http://127.0.0.1:8000/invoice/?id="+request.session['invoice']
                     email_invoice(email,request.session['invoice'],request.session['name'],link)
                     clear_sessions(request)
 
@@ -704,8 +665,6 @@ def payment_done(request):
             return render(request, "404.html", {"pass": True})
 
 
-
-
 def show_bookings(request):
     try:
         auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],request.session['role_id'])
@@ -714,6 +673,13 @@ def show_bookings(request):
     except:
         return redirect("/login")
     if auth==True:
+
+        try:
+            id=request.GET['id']
+            not_cancel=True
+        except:
+            not_cancel=False
+            pass
         if request.session['role_id'] == 2:
             bd = booking_details.objects.all()
 
@@ -721,7 +687,7 @@ def show_bookings(request):
         else:
 
             bd = booking_details.objects.filter(user_detail=request.session['email'])
-            return render(request, "bookingDetails.html", {"bd": bd})
+            return render(request, "bookingDetails.html", {"bd": bd,"not_cancel":not_cancel})
     else:
         auth,message = auth
         if (message=="Not Logged In"):
@@ -770,20 +736,14 @@ def cancel_booking(request):
                     update = booking_details(booking_id=bd.booking_id, balance_amount=0, earnings=earning, total_fine=bd.total)
                     update.save(update_fields=['balance_amount', "earnings","total_fine"])"""
 
-                    return redirect("/show_bookings")
+                    return redirect("/show_bookings/?id=00")
 
                 bd = booking_details.objects.get(cancel_token=id)
                 request.session['duration'] = False
                 request.session['date_greater'] = False
                 request.session['cancelled'] = False
                 if bd.is_active == True:
-                    """if cancel_date > start_date:
-                        request.session['date_greater'] = True
-                        return redirect("/show_bookings")
-                    elif duration < 12:
-                        request.session['duration'] = True
-                        return redirect("/show_bookings")
-                    else:"""
+
 
                     if (request.method == "POST"):
 
@@ -799,9 +759,7 @@ def cancel_booking(request):
                         return render(request, "cancel_booking.html", {"bd": bd, "cancel": True, "balance":balance})
                     else:
                         return render(request, "cancel_booking.html", {"bd": bd, "not_cancel": True,"balance":balance})
-                    """elif bd.is_active == False and bd.cancellation_time != "":
-                        request.session['cancelled'] = True
-                        return redirect("/show_bookings")"""
+
                 else:
                     return redirect("/show_bookings")
             else:
@@ -859,102 +817,6 @@ def view_current_book(request):
             return render(request,"404.html",{"pass":True})
 
 
-
-
-
-"""def fpassword(request):
-        get_id=request.GET["id"]
-        userdata = MySiteUser.objects.get(user_email=get_id)
-        if request.method=="POST":
-            get_otp = userdata.otp
-            curr_otp=request.POST['curr_otp']
-
-            if get_otp==curr_otp:
-                new_password=request.POST['new_password']
-                otp=""
-                otpgrn=""
-                update=MySiteUser(user_email=get_id,user_password=new_password,otp=otp,otp_time_generation=otpgrn)
-                update.save(update_fields=["user_password","otp","otp_time_generation"])
-                return redirect("/logout")
-            else:
-                return render(request, "passwordupdate.html",{'valid':True} )
-        else:
-            pass
-        return render(request,"passwordupdate.html")
-
-
-
-        def updatepassword(request):
-    if request.session['authenticate'] == True:
-        email = request.session['email']
-        userdata = MySiteUser.objects.get(user_email=email)
-        pw = userdata.user_password
-        timedb = userdata.otp_time_generation
-
-        if request.method=="POST":
-            get_time = dt.datetime.strptime(timedb, '%H:%M:%S').time()
-            get_time = get_time.second + get_time.minute * 60 + get_time.hour * 3600
-            curr_time = dt.datetime.now().strftime("%H:%M:%S")
-            curr_time = dt.datetime.now().strptime(curr_time, "%H:%M:%S").time()
-            curr_time = curr_time.second + curr_time.minute * 60 + curr_time.hour * 3600
-            interval = curr_time - get_time
-            get_otp = userdata.otp
-            pw = userdata.user_password
-            current_password=request.POST["password"]
-            curr_otp=request.POST['curr_otp']
-
-            if pw==current_password and get_otp==curr_otp and interval <= 14400:
-                new_password=request.POST['new_password']
-                otp=""
-                otpgrn=""
-                update=MySiteUser(user_email=email,user_password=new_password,otp=otp,otp_time_generation=otpgrn)
-                update.save(update_fields=["user_password","otp","otp_time_generation"])
-                return redirect("/logout")
-            else:
-                return render(request, "passwordupdate.html",{'valid':True} )
-        else:
-            if timedb == "":
-                otp, time = otp_generation.otpgenerate()
-                update = MySiteUser(user_email=email, otp_time_generation=time, otp=otp)
-                update.save(update_fields=["otp", "otp_time_generation"])
-                otp_send(email, otp, "Change Password", "Change Password")
-            else:
-                get_time = dt.datetime.strptime(timedb, '%H:%M:%S').time()
-                get_time = get_time.second + get_time.minute * 60 + get_time.hour * 3600
-                curr_time = dt.datetime.now().strftime("%H:%M:%S")
-                curr_time = dt.datetime.now().strptime(curr_time,"%H:%M:%S").time()
-                curr_time = curr_time.second + curr_time.minute * 60 + curr_time.hour * 3600
-                interval = curr_time - get_time
-                if interval > 14400:
-                    otp, time = otp_generation.otpgenerate()
-                    update = MySiteUser(user_email=email, otp_time_generation=time, otp=otp)
-                    update.save(update_fields=["otp", "otp_time_generation"])
-                    otp_send(email, otp, "Change Password", "Change Password")
-    else:
-        return redirect("/login")
-    return render(request,"passwordupdate.html",{"up":True})
-
-        start_date=request.GET['start_date']
-        start_date=dt.datetime.strptime(start_date, '%Y-%m-%d %H:%M:%S.%f')
-        end_date=request.GET['end_date']
-        end_date=dt.datetime.strptime(end_date, '%Y-%m-%d %H:%M:%S.%f')
-        bookingdata=booking_details.objects.all()
-
-
-    start_date=request.GET['start_date']
-        start_date=dt.datetime.strptime(start_date, '%Y-%m-%d')
-        end_date=request.GET['end_date']
-        end_date=dt.datetime.strptime(end_date, '%Y-%m-%d')
-        bookingdata=booking_details.objects.all()
-        for i in bookingdata:
-            a=i.start_date
-            a=dt.datetime.strptime(a, '%Y-%m-%d')
-            b=i.end_date
-            b=dt.datetime.strptime(b, '%Y-%m-%d')
-        """
-
-
-
 def feepolicy(request):
     return render(request,"feepolicy.html")
 
@@ -965,8 +827,6 @@ def eligibilty(request):
 
 
 def clear_sessions(request):
-    request.session['date_greater'] = False
-    request.session['duration'] = False
     request.session['invoice'] = ""
     request.session['vehicle_name'] = ""
     request.session['vehicle_description'] = ""
@@ -979,3 +839,24 @@ def clear_sessions(request):
     request.session['amt'] = ""
     request.session['total'] = ""
     request.session['booking_date'] = ""
+
+def logout_sessions(request):
+    request.session['authenticate'] = False
+    request.session['role_id'] = ""
+    request.session['email'] = ""
+    request.session['duration'] = False
+    request.session['date_greater'] = False
+    request.session['name'] = ""
+    request.session['rolename'] = ""
+    request.session["image"] = ""
+
+
+
+def confirmation_messages(request):
+    try:
+        id = request.GET['id']
+        if id == "changepwd":
+            logout_sessions(request)
+        return render (request,"verify.html",{"id":id})
+    except:
+        return redirect("/")

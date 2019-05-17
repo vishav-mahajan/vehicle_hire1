@@ -30,7 +30,7 @@
                         <tr>
 
 
-                           <td><a href="{% url 'front_app:invoice' %}?id={{ i.booking_id }}" >{{ i.invoice }}</a></td>
+                           <td><a href="{% url 'front_app:invoice' %}?id={{ i.invoice }}" >{{ i.invoice }}</a></td>
                             <td>{{ i.booking_date }}</td>
                             <td>{{ i.start_date }}</td>
                             <td>{{ i.end_date }}</td>
@@ -47,10 +47,15 @@
                             <p style="color:Red">Cancelled</p>
 
                             {% endif %}
+
                         {% if i.is_active == False and i.is_returned == True and i.cancellation_time == ""  %}
                             <p style="color:blue">Completed</p>
 
                             {% endif %}
+
+                                {% if i.is_active == False and i.refunded == False %}
+                                <p title="Refund will be issued within 5-7 Bussiness Days"><small>Refund Pending</small></p></a>
+                                {% endif %}
                         </td>
                             {% if i.is_active == False and i.is_returned == True and i.cancellation_time == ""  %}
                             <td><a href="/view_bookings?id={{i.invoice}}">View </a> </td>
@@ -67,15 +72,10 @@
                 </table>
                 </div>
 
-                {% if request.session.duration  %}
-                <script>alert("Time Duration Should be Greater than 12 Hours")</script>
+                {% if not_cancel   %}
+                <script>alert("Trip Has Already started, Booking cannot be Cancelled.")</script>
 {% endif %}
-                {% if request.session.date_greater %}
-                <script>alert("Trip has already been Started")</script>
-{% endif %}
-                {% if request.session.cancelled %}
-                <script>alert("Booking Already Cancelled")</script>
-{% endif %}
+
             </div>
         </div>
     </div>
@@ -95,43 +95,7 @@ tbody.children().each(function (i, tr) {
     tbody.prepend(tr);
 });
 
-   var table = $('table');
 
-$('.sortable th')
-    .wrapInner('<span title="sort this column"/>')
-    .each(function(){
-
-        var th = $(this),
-            thIndex = th.index(),
-            inverse = false;
-
-        th.click(function(){
-
-            table.find('td').filter(function(){
-
-                return $(this).index() === thIndex;
-
-            }).sortElements(function(a, b){
-
-                if( $.text([a]) == $.text([b]) )
-                    return 0;
-
-                return $.text([a]) > $.text([b]) ?
-                    inverse ? -1 : 1
-                    : inverse ? 1 : -1;
-
-            }, function(){
-
-                // parentNode is the element we want to move
-                return this.parentNode;
-
-            });
-
-            inverse = !inverse;
-
-        });
-
-    });
 
 </script>
 

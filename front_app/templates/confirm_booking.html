@@ -163,8 +163,8 @@
 
                 {% if request.session.invoice != "" %}
                 <div class="form-group">
-                        <div class="control-label">
-                        {{form.render}}<br>
+                        <div class="control-label col-sm-offset-8">
+                            <div >{{form.render}}</div> <br>
                             <a href="/"  type="button" class="btn btn-default">Cancel & Go to Home</a>
 
 
@@ -178,6 +178,9 @@
         </div>
     </div>
 </div>
+
+
+
 {% endblock %}
 
 

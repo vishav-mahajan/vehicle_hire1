@@ -220,7 +220,7 @@ def updatedata(request):
             get_id = request.GET['id']
 
             userdata = VehiclesDetails.objects.get(vehicle_ref_id=get_id)
-            if email==userdata.u_email:
+            if email==userdata.u_email or request.session['role_id'] == 1:
                 pass
             else:
                 return redirect("/error")
@@ -244,8 +244,8 @@ def updatedata(request):
                                          vehicle_image=image, vehicle_price=price, vehicle_model=model)
                 update.save(update_fields=["vehicle_name", "vehicle_description", "vehicle_image", "vehicle_price",
                                            "vehicle_model"])
-                if request.session['role_id'] == 4:
-                    return redirect("businessuserapp:showdata")
+                if userdata.role_id ==4 :
+                    return redirect("/manager/show_other_vehicles")
                 else:
                     return redirect("managerapp:showdata")
             return render(request, "update_cars.html",

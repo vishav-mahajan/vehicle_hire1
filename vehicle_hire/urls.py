@@ -35,7 +35,7 @@ urlpatterns = [
     url(r'^eligibilty/',views.eligibilty),
     url(r'^dskjgheriugiurefhkusdjdowieuqhiurehf/',views.verify),
     url(r'^paypal/',include('paypal.standard.ipn.urls')),
-
+    url(r'^confirmation',views.confirmation_messages),
     url(r'^payment_done/',views.payment_done, name='payment_done'),
     url(r'^payment_cancelled/', TemplateView.as_view(template_name='payment_canceled'), name='payment_canceled')
 

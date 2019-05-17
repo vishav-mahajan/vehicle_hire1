@@ -60,7 +60,7 @@ def email_invoice(email,invoice_no,name,link):
     # msg.add_header('Content-disposition','attatchment', filename = filename)
     # msg.attach(message)
     body ="Thanks "+ name +" For booking with AdRENTure.\n" + "Your Booking has been Confirmed \n " +\
-    "Invoice Number : "+invoice_no + "\n" +"Click The link below to Save your Invoice\n"+link
+    "Invoice Number : "+invoice_no + "\n" +"Click The link below to View/Save your Invoice\n"+link
 
 
     msg.attach(MIMEText(body, 'plain'))

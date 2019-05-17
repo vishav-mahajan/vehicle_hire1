@@ -9,17 +9,33 @@
                 <div class="col-lg-12">
                     <div class="section-title  text-center">
                                 {% if valid %}
-                                <h2>You are Already Verified</h2>
+                                <h2><small>You are Already Verified<br> <a href="/login"> <small>Click Here</small> </a> to Login</small></h2>
 
                                 {% endif %}
                                 {% if good %}
-                                <h2>Thanks For Verifying</h2>
+                        <h2><small> Thanks For Verifying <br> <a href="/login"> <small>Click Here</small> </a> to Login</small></h2>
                                 {% endif %}
                                 {% if nv %}
                                     <h2>Please Verify Your Account</h2>
                                     <span class="title-line"><i class="fa fa-car"></i></span>
                                     <h2><a href="verify.html">Click Here to Send Verification Link</a></h2>
                                 {% endif %}
+
+
+                        {% if id == "register" %}
+                        <h2><small>User Has Been Registered Successfully.<br> Please Verify your Email address from the Sent link to Sign in.<br><a href="/"> <small>Click Here</small> </a> to Go to Home </small></h2>
+
+                                {% endif %}
+                        {% if id == "changepwd" %}
+                                <h2><small>Password has been Changed Successfully<a href="/login"> <small>Click Here</small> </a> to Login</small> </h2>
+
+                                {% endif %}
+                        {% if id == "forgotpwd" %}
+                        <h2><small>Password has been Changed Successfully<a href="/login"> <small>Click Here</small> </a> to Login</small> </h2>
+
+                                {% endif %}
+
+
                     </div>
                 </div>
                 <!-- Page Title End -->

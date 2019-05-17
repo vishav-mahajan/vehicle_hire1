@@ -172,6 +172,7 @@ def delete_data(request):
 def updatedata(request):
     try:
         auth = au.authorizeuser(request.session['authenticate'], request.session['role_id'], 4)
+
         email = request.session['email']
         siteuserdata = MySiteUser.objects.get(user_email=email)
     except:
@@ -209,7 +210,7 @@ def updatedata(request):
             if request.session['role_id'] == 4:
                 return redirect("businessuserapp:showdata")
             else:
-                return redirect("managerapp:showdata")
+                return redirect("/manager/show_other_vehicles")
         return render(request, "update_cars.html",
                       {'vd': userdata, 'yr': year, 'ccd': companycategorydata, 'cd': companydata})
     else:

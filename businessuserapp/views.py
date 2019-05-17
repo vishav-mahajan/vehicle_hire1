@@ -30,7 +30,7 @@ def business_index(request):
 
 
 
-def vehicle_company(request):
+"""def vehicle_company(request):
     try:
         auth = au.authorizeuser(request.session['authenticate'], request.session['role_id'], 4)
         email = request.session['email']
@@ -56,7 +56,7 @@ def vehicle_company(request):
         if (message == "Not Logged In"):
             return render(request, "login.html", {"pass": True})
         elif (message == "Wrong Level"):
-            return render(request, "404.html", {"pass": True})
+            return render(request, "404.html", {"pass": True})"""
 
 
 def vehicle_details(request):
@@ -102,6 +102,7 @@ def vehicle_details(request):
                 f.seats = request.POST['seats']
                 # f.vehicle_price= int(f.vehicle_price) + int(base_price)
                 f.vehicle_image = user_image
+                f.role_id = int(request.session['role_id'])
                 f.save()
                 return render(request, "vehicledetails.html",
                               {'valid': True, 'cd': companydata, "ccd": companycategorydata, 'yr': year})
@@ -384,6 +385,115 @@ def earnings(request):
         return render(request, "Bank_Balance.html",
                       {"earn": total_earning, "fine": total_fine, "amt": veh_amt, "cancel": cancel})
 
+    else:
+        auth, message = auth
+        if (message == "Not Logged In"):
+            return render(request, "login.html", {"pass": True})
+        elif (message == "Wrong Level"):
+            return render(request, "404.html", {"pass": True})
+
+
+def active(request):
+    try:
+        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],4)
+        email = request.session['email']
+    except:
+        return redirect("/login")
+    if auth==True:
+        book_id=[]
+        bd = booking_details.objects.filter(seller_detail=email, is_active=True)
+
+        curr_date = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        curr_date = dt.datetime.now().strptime(curr_date, "%Y-%m-%d %H:%M:%S")
+        for i in bd:
+            end_date = i.end_date
+            end_date = dt.datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
+            return_date = i.return_date
+            try:
+                return_date = dt.datetime.strptime(return_date, "%Y-%m-%d %H:%M:%S")
+            except:
+                return_date = "2001-01-01 00:00:00"
+                return_date = dt.datetime.strptime(return_date, "%Y-%m-%d %H:%M:%S")
+
+            if curr_date > end_date and i.is_active == True:
+                book_id.extend([i.booking_id])
+            if return_date > end_date:
+                book_id.extend([i.booking_id])
+
+        return render(request, "active_bookings.html", {"bd": bd, "book_id": book_id})
+
+    else:
+        auth, message = auth
+        if (message == "Not Logged In"):
+            return render(request, "login.html", {"pass": True})
+        elif (message == "Wrong Level"):
+            return render(request, "404.html", {"pass": True})
+
+
+def cancelled(request):
+    try:
+        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],4)
+        email = request.session['email']
+    except:
+        return redirect("/login")
+    if auth==True:
+        bd = booking_details.objects.filter(seller_detail=email, is_active=False, return_date = "" )
+        return render(request,'cancelled_bookings.html',{'bd':bd})
+    else:
+        auth, message = auth
+        if (message == "Not Logged In"):
+            return render(request, "login.html", {"pass": True})
+        elif (message == "Wrong Level"):
+            return render(request, "404.html", {"pass": True})
+
+
+def completed(request):
+    try:
+        auth = au.authorizeuser(request.session['authenticate'], request.session['role_id'], 4)
+        email = request.session['email']
+    except:
+        return redirect("/login")
+    if auth == True:
+        bd = booking_details.objects.filter(seller_detail=email, is_active=False, cancellation_time="")
+        return render(request, 'complete_bookings.html', {'bd': bd})
+    else:
+        auth, message = auth
+        if (message == "Not Logged In"):
+            return render(request, "login.html", {"pass": True})
+        elif (message == "Wrong Level"):
+            return render(request, "404.html", {"pass": True})
+
+def pending_refunds(request):
+    try:
+        auth = au.authorizeuser(request.session['authenticate'], request.session['role_id'], 4)
+        email = request.session['email']
+    except:
+        return redirect("/login")
+    if auth == True:
+        bd = booking_details.objects.filter(seller_detail=email, refunded=False, is_active=False)
+        return render(request, 'pending_refunds.html', {'bd': bd})
+    else:
+        auth, message = auth
+        if (message == "Not Logged In"):
+            return render(request, "login.html", {"pass": True})
+        elif (message == "Wrong Level"):
+            return render(request, "404.html", {"pass": True})
+
+
+def refunded(request):
+    try:
+        auth = au.authorizeuser(request.session['authenticate'], request.session['role_id'], 4)
+        email = request.session['email']
+    except:
+        return redirect("/login")
+    if auth == True:
+
+            id = request.GET['id']
+            user=request.GET['user']
+            bd = booking_details.objects.get(seller_detail=email, is_active=False , refunded= False, user_detail=user,invoice=id)
+            update = booking_details(booking_id=bd.booking_id, refunded=True)
+            update.save(update_fields=['refunded'])
+            return redirect("/businessuser/pending_refunds")
     else:
         auth, message = auth
         if (message == "Not Logged In"):

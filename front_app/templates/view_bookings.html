@@ -30,7 +30,7 @@
                             {% endif %}
 
 
-                        <h3><a href="{% url 'front_app:invoice' %}?id={{ bd.booking_id }}" >INVOICE </a> #{{ bd.invoice }} </h3>
+                        <h3><a href="{% url 'front_app:invoice' %}?id={{ bd.invoice }}" >INVOICE </a> #{{ bd.invoice }} </h3>
 
                       <h1><small>{{ bd.user_detail.user_fname }} {{ bd.user_detail.user_lname }}</small></h1>
 
@@ -155,6 +155,8 @@
                         </div>
                         </div>
                     </div>
+
+                    <!-- Cancelled -->
                     {% if bd.is_active == False and bd.is_returned == True and bd.cancellation_time != ""  %}
 
                             <div class="form-group has-warning">
@@ -168,8 +170,9 @@
                         </div>
                     </div>
                     </div>
-                           <div class="form-group has-success">
-                        <label class="col-sm-2 control-label">Refund Amount </label>
+                    {% if bd.refunded == False %}
+                           <div class="form-group has-warning">
+                        <label class="col-sm-2 control-label">Pending Refund</label>
                         <div class="col-sm-5">
                             <div class="input-group input-icon right text-light">
 												<span class="input-group-addon">
@@ -179,6 +182,22 @@
                         </div>
                     </div>
                     </div>
+
+                    {% elif bd.refunded == True %}
+
+                    <div class="form-group has-success">
+                        <label class="col-sm-2 control-label">Refunded</label>
+                        <div class="col-sm-5">
+                            <div class="input-group input-icon right text-light">
+												<span class="input-group-addon">
+													<i class="fa fa-rupee"></i>
+												</span>
+                            <input type="text" class="form-control1"  value="{{ bd.balance_amount }}/-"  readonly>
+                        </div>
+                    </div>
+                    </div>
+                    {% endif %}
+
 
 
 
@@ -228,6 +247,20 @@
                         </div>
                     </div>
                     </div>
+
+                    {% if bd.refunded == False %}
+                    <div class="form-group has-warning">
+                        <label class="col-sm-2 control-label">Pending Refund </label>
+                        <div class="col-sm-5">
+                            <div class="input-group input-icon right text-light">
+												<span class="input-group-addon">
+													<i class="fa fa-rupee"></i>
+												</span>
+                            <input type="text" class="form-control1" name="total" value="{{ bd.balance_amount }}/-"  readonly>
+                        </div>
+                    </div>
+                    </div>
+                    {% elif bd.refunded == True %}
                     <div class="form-group has-success">
                         <label class="col-sm-2 control-label">Refunded </label>
                         <div class="col-sm-5">
@@ -239,6 +272,10 @@
                         </div>
                     </div>
                     </div>
+                    {% endif %}
+
+
+
                     {% elif  bd.return_date != "" and bd.security_amount < bd.total_fine %}
 
                         <div class="form-group has-dark">
@@ -270,7 +307,7 @@
 												<span class="input-group-addon">
 													<i class="fa fa-rupee"></i>
 												</span>
-                            <input type="text" class="form-control1" name="fine" value="{{bd.total_fine}}/-"  readonly>
+                            <input type="text" class="form-control1" name="fine" value="{{ bd.total_fine }}/-"  readonly>
                         </div>
                         </div>
                     </div>

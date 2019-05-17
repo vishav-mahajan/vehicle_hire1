@@ -19,6 +19,12 @@ urlpatterns = [
         url(r'^mybookings/$', views.my_bookings, name="my_bookings"),
         url(r'^chkreturn/', views.chkreturn),
         url(r'^balance/', views.balance),
-url(r'^bankbalance/', views.earnings),
-url(r'^show_other_vehicles/', views.show_other)
+        url(r'^bankbalance/', views.earnings),
+        url(r'^show_other_vehicles/', views.show_other),
+        url(r'^active_bookings/',views.active),
+        url(r'^cancelled_bookings/',views.cancelled)  ,
+        url(r'^complete_bookings/',views.completed),
+url(r'^pending_refunds/',views.pending_refunds),
+url(r'^refunded/',views.refunded)
+
 ]

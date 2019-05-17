@@ -156,16 +156,23 @@
                                     <label class="col-sm-2 control-label">Image</label>
                                     <input class="col-sm-8" type="file" name="vehicle_image" id="vehicle_image" required>
                                 </div>-->
-                    <div class="form-group">
-                        <div class="control-label col-sm-6">
-                        <button  type="submit" class="btn btn-primary">Confirm Booking</button>
-                          <a href="/" ><button  type="button" class="btn btn-warning">Cancel & Go to Home</button></a>
 
-                        </div>
-                    </div>
 
 
                     </form>
+
+                {% if request.session.invoice != "" %}
+                <div class="form-group">
+                        <div class="control-label">
+                        {{form.render}}<br>
+                            <a href="/"  type="button" class="btn btn-default">Cancel & Go to Home</a>
+
+
+                          <!--a  ><button  type="button" class="btn btn-warning">Cancel & Go to Home</button></a-->
+
+                        </div>
+                    </div>{% endif %}
+
             </div>
 
         </div>

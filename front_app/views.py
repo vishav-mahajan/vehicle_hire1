@@ -1,22 +1,24 @@
-from django.shortcuts import render, HttpResponse, redirect
-from front_app.forms import MySiteUserForm,BookingForm, ContactForm, LoginDetailsForm
-from front_app.models import MySiteUser, User_role, contact_us, login_details, booking_details
+from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
+from front_app.forms import MySiteUserForm,BookingForm, ContactForm, LoginDetailsForm,PaymentTokenForm
+from front_app.models import MySiteUser, User_role, contact_us, login_details, booking_details,payment_token
 from managerapp.models import VehiclesDetails, VehicleCategories, VehicleCompany
 from django.core.files.storage import FileSystemStorage
-from emailSend import email_send, otp_send
+from emailSend import email_send, otp_send,email_invoice
 import authorize as au, otp_generation
+from django.conf import settings
 import datetime as dt
-from datetime import timedelta
 import random
 from django.contrib.auth.hashers import make_password, check_password
 from django.db.models import Q
+from paypal.standard.forms import PayPalPaymentsForm
+from django.urls import reverse
 
 
 
 def index(request):
+    clear_sessions(request)
 
-    request.session['date_greater'] = False
-    request.session['duration'] = False
+
     companydata = VehicleCompany.objects.all()
     companycategorydata = VehicleCategories.objects.all()
     vehicle_id = []
@@ -66,6 +68,7 @@ def login(request):
     except:
         auth=False
     if auth==False:
+
         if (request.method == "POST"):
             try:
                 useremail = request.POST['user_email']
@@ -80,7 +83,7 @@ def login(request):
                     if verified == False and authtoken == "":
                         rn = random.randint(100000, 10000000)
                         token = useremail[0:5] + str(rn) + mob[5:10]
-                        verify = "http://127.0.0.1:8000/dskjgheriugiurefhkusdjdowieuqhiurehf?email=" + useremail + "&token=" + token
+                        verify = "http://192.168.0.141/dskjgheriugiurefhkusdjdowieuqhiurehf?email=" + useremail + "&token=" + token
                         email_send(useremail, userpassword, verify)
                         update = MySiteUser(user_email=useremail, user_token=token)
                         update.save(update_fields=["user_token"])
@@ -136,7 +139,14 @@ def logout(request):
 
 
 def signup(request):
-    if request.session['authenticate']==False:
+        try:
+            if request.session['authenticate']==True :
+                return redirect("/")
+        except:
+            pass
+
+
+
         if (request.method == "POST"):
             user_image = None
             if request.FILES:
@@ -145,13 +155,13 @@ def signup(request):
                 filename = fs.save(myfile.name, myfile)
                 fs.url(filename)
                 user_image = myfile.name
-            try:
+            """try:
                 emailid = request.POST['user_email']
                 data = MySiteUser.objects.get(user_email=emailid)
-                return render(request, "register.html", {'invalid': True})
+                return render(request, "register.html", {'exist': True})
 
             except:
-                pass
+                pass"""
 
             form = MySiteUserForm(request.POST)
             if form.is_valid():
@@ -170,7 +180,7 @@ def signup(request):
                 rn = random.randint(100000, 10000000)
                 token = request.POST['user_email'][0:5] + str(rn) + str(request.POST['user_mobile'][5:10])
                 f1.user_token = token
-                verify = "http://127.0.0.1:8000/dskjgheriugiurefhkusdjdowieuqhiurehf?email=" + request.POST[
+                verify = "http://192.168.0.141/dskjgheriugiurefhkusdjdowieuqhiurehf?email=" + request.POST[
                     'user_email'] + "&token=" + token
                 email_send(f1.user_email, request.POST['user_password'], verify)
                 f1.save()
@@ -178,8 +188,7 @@ def signup(request):
             else:
                 return render(request, "register.html", {'invalid': True})
         return render(request, "register.html")
-    else:
-        return redirect("/")
+
 
 
 def page_not_found(request):
@@ -346,6 +355,7 @@ def forgototp(request):
                         update = MySiteUser(user_email=email, otp_time_generation=time, otp=otp)
                         update.save(update_fields=["otp", "otp_time_generation"])
                         otp_send(email, otp, "Forget Password", "Recover Password", "OTP")
+
                 return render(request, "login.html", {'ud': userdata, "otp_gen": True, 'em': email, "sent": True})
             else:
                 return render(request, "login.html", {'ud': userdata, "otp_gen": True, 'em': email, "not_sent": True})
@@ -353,8 +363,6 @@ def forgototp(request):
             return render(request, "login.html", {"fp": True, "not_sent": True})
 
     return render(request, "login.html", {'fp': True})
-
-
 
 
 
@@ -448,7 +456,7 @@ def booking(request):
                         amt = userdata.vehicle_id.vehicle_category_price
                         security = int(10000)
                         total = security + amt
-                        request.session['invoice'] = random.randint(100000, 10000000)
+                        request.session['invoice'] = str(random.randint(100000, 10000000)) + str(amt)[1:3]
                         request.session['vehicle_name'] = request.POST["vehicle_name"]
                         request.session['vehicle_description'] = request.POST["vehicle_description"]
                         request.session['vehicle_id'] = userdata.vehicle_ref_id
@@ -470,7 +478,7 @@ def booking(request):
                         security, amt = price_calc(duration, type, veh_id)
                         total = security + amt
 
-                        request.session['invoice'] = random.randint(100000, 10000000)
+
                         request.session['vehicle_name'] = request.POST["vehicle_name"]
                         request.session['vehicle_description'] = request.POST["vehicle_description"]
                         request.session['vehicle_id'] = userdata.vehicle_ref_id
@@ -482,6 +490,7 @@ def booking(request):
                         request.session['amt'] = amt
                         request.session['total'] = total
                         request.session['booking_date'] = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        request.session['invoice'] = str(random.randint(100000, 10000000)) + str(amt)[1:3]
 
                         return redirect("/confirm_booking")
                         # return render(request, 'bookings.html',
@@ -503,8 +512,6 @@ def booking(request):
             return render(request,"404.html",{"pass":True})
 
 
-
-
 def price_calc(duration,type,veh_id):
     ccd=VehicleCategories.objects.get(vehicle_id = type)
     vd=VehiclesDetails.objects.get(vehicle_ref_id=veh_id)
@@ -515,7 +522,6 @@ def price_calc(duration,type,veh_id):
     interval=int(duration-4)
     exp_amount = basefare + interval*per_hour_fare
     return security,exp_amount
-
 
 
 def queries(request):
@@ -539,21 +545,38 @@ def queries(request):
             return render(request,"404.html",{"pass":True})
 
 
-
-
-
-
-
-
 def confirm_booking(request):
     try:
         auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],request.session['role_id'])
         email = request.session['email']
-        siteuserdata = MySiteUser.objects.get(user_email=email)
     except:
         return redirect("/login")
     if auth==True:
-        if (request.method == "POST"):
+        tk=random.randint(10000,1000000)
+        tk=str(tk)+str(request.session['invoice'])
+
+        form=PaymentTokenForm()
+        #if form.is_valid():
+        f=form.save(commit=False)
+        f.user_email=email
+        f.invoice=request.session['invoice']
+        f.token=tk
+        f.save()
+
+        host = request.get_host()
+        paypal_dict = {
+            'business': settings.PAYPAL_RECEIVER_EMAIL,
+            'amount': request.session['total'],
+            'item_name': request.session['vehicle_name'],
+            'invoice': request.session['invoice'],
+            'currency_code': "INR",
+            'notify_url': 'http://{}{}'.format(host, reverse('paypal-ipn')),
+            'return_url': 'http://{}{}?token={}'.format(host, reverse('payment_done'),tk)
+
+        }
+        form1 = PayPalPaymentsForm(initial=paypal_dict)
+
+        """if (request.method == "POST"):
             form = BookingForm(request.POST)
             if form.is_valid():
                 f1 = form.save(commit=False)
@@ -586,17 +609,17 @@ def confirm_booking(request):
                 request.session['amt'] = ""
                 request.session['total'] = ""
                 request.session['booking_date'] = ""
-
                 return redirect("/invoice")
             else:
-                return redirect("/error")
-        return render(request, "confirm_booking.html")
+                return redirect("/error")"""
+
+        return render(request, "confirm_booking.html",{'form':form1})
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request, "login.html",{"pass":True})
         elif(message=="Wrong Level"):
-            return render(request,"404.html",{"pass":True})
+            return render(request, "404.html",{"pass":True})
 
 
 
@@ -606,11 +629,13 @@ def invoice(request):
         email = request.session['email']
         siteuserdata = MySiteUser.objects.get(user_email=email)
     except:
-        return redirect("/login")
+        id = request.GET['id']
+        bd = booking_details.objects.get(invoice=id)
+        return render(request, "invoice.html", {"bd": bd})
     if auth==True:
         try:
             id = request.GET['id']
-            bd = booking_details.objects.get(booking_id=id)
+            bd = booking_details.objects.get(invoice=id)
             if email == bd.user_detail_id or email==bd.seller_detail:
                 return render(request, "invoice.html", {"bd": bd})
             else:
@@ -618,12 +643,65 @@ def invoice(request):
         except:
             bd_new = booking_details.objects.filter(user_detail=email).latest("booking_id")
             return render(request, "invoice.html", {"bd_new": bd_new})
+
     else:
         auth,message = auth
         if (message=="Not Logged In"):
             return render(request,"login.html",{"pass":True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
+
+
+def payment_done(request):
+    try:
+        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],request.session['role_id'])
+        email = request.session['email']
+        siteuserdata = MySiteUser.objects.get(user_email=email)
+    except:
+        return redirect("/login")
+    if auth==True:
+        try:
+            token = request.GET['token']
+            payment_done=payment_token.objects.get(token=token)
+            dbtoken=payment_done.token
+
+            if token==dbtoken:
+                form = BookingForm(request.POST)
+                if form.is_valid():
+                    f1 = form.save(commit=False)
+                    # return render(request,"abcd.html")
+                    f1.booking_date = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    f1.start_date = request.session['start_date']
+                    f1.end_date = request.session['end_date']
+                    f1.user_detail_id = request.session['email']
+                    f1.vehicle_detail = request.session['vehicle_name']
+                    f1.security_amount = int(10000)
+                    f1.vehicle_info_id = request.session['vehicle_id']
+                    f1.amount_exp = request.session['amt']
+                    f1.invoice = request.session['invoice']
+                    f1.seller_detail = request.session['seller']
+                    f1.total = request.session['total']
+                    f1.cancel_token = str(random.randint(1000000, 100000000)) + str(request.session['email'])
+                    # email_send(f1.user_email, request.POST['user_password'], verify)
+                    f1.save()
+                    link="http://192.168.0.141/?id="+request.session['invoice']
+                    email_invoice(email,request.session['invoice'],request.session['name'],link)
+                    clear_sessions(request)
+
+                    # update = booking_details(booking_id=f1.booking_id, invoice=str(f1.booking_id) +"-"+ str(f1.invoice))
+                    # update.save(update_fields=['invoice'])
+
+                bd_new = booking_details.objects.filter(user_detail=email).latest("booking_id")
+                return render(request, "invoice.html", {"bd_new": bd_new})
+        except:
+            return redirect("/error")
+
+    else:
+        auth, message = auth
+        if (message == "Not Logged In"):
+            return render(request, "login.html", {"pass": True})
+        elif (message == "Wrong Level"):
+            return render(request, "404.html", {"pass": True})
 
 
 
@@ -691,6 +769,7 @@ def cancel_booking(request):
                     """earning=bd.total
                     update = booking_details(booking_id=bd.booking_id, balance_amount=0, earnings=earning, total_fine=bd.total)
                     update.save(update_fields=['balance_amount', "earnings","total_fine"])"""
+
                     return redirect("/show_bookings")
 
                 bd = booking_details.objects.get(cancel_token=id)
@@ -709,6 +788,7 @@ def cancel_booking(request):
                     if (request.method == "POST"):
 
                         request.session['not_cancel'] = False
+
                         update = booking_details(booking_id=bd.booking_id, total_fine=request.session['cancel'],
                                                  balance_amount=balance, earnings=request.session['cancel'], is_active=False,cancel_token="",
                                                  cancellation_time=cancel_date,
@@ -881,3 +961,21 @@ def feepolicy(request):
 
 def eligibilty(request):
     return render(request,"eligibilty.html")
+
+
+
+def clear_sessions(request):
+    request.session['date_greater'] = False
+    request.session['duration'] = False
+    request.session['invoice'] = ""
+    request.session['vehicle_name'] = ""
+    request.session['vehicle_description'] = ""
+    request.session['vehicle_id'] = ""
+    request.session['start_date'] = ""
+    request.session['category'] = ""
+    request.session['user_name'] = ""
+    request.session['seller'] = ""
+    request.session['end_date'] = ""
+    request.session['amt'] = ""
+    request.session['total'] = ""
+    request.session['booking_date'] = ""

@@ -187,9 +187,9 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
     <h4>Bank details</h4>
   </div>
   <div class="panel-body">
-    <p>Your Name</p>
-    <p>Bank Name</p>
-    <p>Account Number : 12345678</p>
+    <p>Your Name : {{request.session.name}}</p>
+    <p>Bank Name : PayPal</p>
+    <p>Account Number : {{bd.invoice}}</p>
 
   </div>
 </div>

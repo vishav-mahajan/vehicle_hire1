@@ -66,3 +66,11 @@ class booking_details(models.Model):
     ext_amount=models.BigIntegerField(default=0)
     total_fine=models.BigIntegerField(default=0)
     earnings=models.BigIntegerField(default=0)
+    refunded=models.BooleanField(default=False)
+
+
+
+class payment_token(models.Model):
+    user_email=models.CharField(max_length=255,default="")
+    token=models.CharField(max_length=255,default="")
+    invoice = models.CharField(max_length=255, unique=True, default="")

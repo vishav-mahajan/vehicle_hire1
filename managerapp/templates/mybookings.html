@@ -5,6 +5,20 @@
         <div class="tables">
             <div class=" bs-example widget-shadow">
                 <h4>User Bookings:</h4>
+                {% if request.session.role_id == 1%}
+
+                <a target="_blank" href="/manager/active_bookings" class="btn btn-primary mx-4">Active</a>
+                <a target="_blank" href="/manager/cancelled_bookings" class="btn btn-danger mx-4">Cancelled</a>
+                <a target="_blank" href="/manager/complete_bookings" class="btn btn-success mx-4">Returned</a>
+                 <a target="_blank" href="/manager/pending_refunds" class="btn btn-warning mx-4">Pending Refunds</a><br>
+                {% elif request.session.role_id == 4%}
+
+                <a target="_blank" href="/businessuser/active_bookings" class="btn btn-primary mx-4">Active</a>
+                <a target="_blank" href="/businessuser/cancelled_bookings" class="btn btn-danger mx-4">Cancelled</a>
+                <a target="_blank" href="/businessuser/complete_bookings" class="btn btn-success mx-4">Returned</a>
+                <a target="_blank" href="/businessuser/pending_refunds" class="btn btn-warning mx-4">Pending Refunds</a><br>
+                {%endif%}
+
 
 
                 <div class="panel panel-default">
@@ -17,7 +31,7 @@
                             <!--th>Booking Status</th-->
                             <th><p style="color:#00e600;display:inline-block">Return Date</p><p style="color:red; display:inline-block">Cancel Date</p></th>
                             <th>Start Date</th>
-                            <th>End DAte</th>
+                            <th>End Date</th>
                             <th>Image</th>
                             <th>Vehicle</th>
                             <th>User</th>
@@ -33,7 +47,7 @@
                         <tr  >
 
 
-                           <td ><a href="{% url 'front_app:invoice' %}?id={{ i.booking_id }}" >{{ i.invoice }}</a></td>
+                           <td ><a href="{% url 'front_app:invoice' %}?id={{ i.invoice }}" >{{ i.invoice }}</a></td>
                             <!--td>
                                 {% if i.is_active == True and i.is_returned == False %}
                             <p style="color:blue">Active</p>

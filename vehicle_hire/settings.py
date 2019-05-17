@@ -47,11 +47,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'paypal.standard.ipn',
     'front_app',
     'adminapp',
     'managerapp',
     'businessuserapp'
 ]
+PAYPAL_RECEIVER_EMAIL = 'vishav@adrenture.com' #pwd=st@160022
+PAYPAL_TEST = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

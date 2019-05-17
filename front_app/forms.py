@@ -1,5 +1,5 @@
 from django import forms
-from front_app.models import MySiteUser,User_role,contact_us,login_details,booking_details
+from front_app.models import MySiteUser,User_role,contact_us,login_details,booking_details,payment_token
 
 
 class ContactForm(forms.ModelForm):
@@ -54,6 +54,15 @@ class LoginDetailsForm(forms.ModelForm):
             "login_time",
             "logout_time"
         ]
+class PaymentTokenForm(forms.ModelForm):
+    class Meta():
+        model=payment_token
+        exclude=[
+            'user_email',
+            'token',
+            'invoice'
+
+        ]
 
 class BookingForm(forms.ModelForm):
     class Meta():
@@ -83,6 +92,9 @@ class BookingForm(forms.ModelForm):
             "extension",
             "ext_amount",
             "total_fine",
-            "earnings"
+            "earnings",
+            'refunded'
         ]
+
+
 

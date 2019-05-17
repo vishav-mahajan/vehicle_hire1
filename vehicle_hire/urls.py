@@ -19,6 +19,7 @@ from django.conf.urls import url, include
 from front_app import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
 
 
 urlpatterns = [
@@ -32,7 +33,12 @@ urlpatterns = [
     url(r'^profileupdate/',views.profile),
     url(r'^feepolicy/',views.feepolicy),
     url(r'^eligibilty/',views.eligibilty),
-    url(r'^dskjgheriugiurefhkusdjdowieuqhiurehf/',views.verify)
+    url(r'^dskjgheriugiurefhkusdjdowieuqhiurehf/',views.verify),
+    url(r'^paypal/',include('paypal.standard.ipn.urls')),
+
+    url(r'^payment_done/',views.payment_done, name='payment_done'),
+    url(r'^payment_cancelled/', TemplateView.as_view(template_name='payment_canceled'), name='payment_canceled')
+
     #url(r'^fpassword/',views.fpassword)
 
 ]\

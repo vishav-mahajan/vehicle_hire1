@@ -37,6 +37,10 @@
                             {% if invalid %}
                                 <script>alert("form invalid")</script>
                             {% endif %}
+                                {% if exist %}
+                                <script>alert("User Already Exists")</script>
+                            {% endif %}
+
 
 
 								<div class="name">
@@ -90,7 +94,7 @@
 
                             <div>
                                 <div class="select2-dropdown form-group">
-                                    <select name="select">
+                                    <select name="select" required>
                                     <option>Select Role</option>
                                     <option value="3">User</option>
                                     <option value="4">Bussiness User</option>

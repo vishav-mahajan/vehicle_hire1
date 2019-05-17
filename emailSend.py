@@ -49,33 +49,30 @@ def otp_send(email,otp, subject, message,type):
         server.quit()
 
 
-def email_invoice(email,invoice):
+def email_invoice(email,invoice_no,name,link):
     msg = MIMEMultipart()
     msg["From"] = 'vishavmahajan96@gmail.com'
     msg['To'] = email
-    msg['Subject'] = 'Booking Invoice #'+invoice
+    msg['Subject'] = "Booking Confirmed #"+invoice_no
+    # filename = "Rahul.txt"
+    # with open(filename,'r') as f:
+    #   message = MIMEText(f.read(),_subtype = 'txt')
+    # msg.add_header('Content-disposition','attatchment', filename = filename)
+    # msg.attach(message)
+    body ="Thanks "+ name +" For booking with AdRENTure.\n" + "Your Booking has been Confirmed \n " +\
+    "Invoice Number : "+invoice_no + "\n" +"Click The link below to Save your Invoice\n"+link
 
 
-
-
-    filename = "AdRENTureDashboard.pdf"
-    with open(filename,'rb') as f:
-        message = MIMEApplication(f.read(), _subtype='pdf')
-        msg.add_header('Content-disposition','inline', filename = filename)
-        msg.attach(message)
-
-
-    body = 'Thanks For Booking \n'+"\n"+"Your Invoice is attached below :- \n"\
-    "\n"
-
-    msg.attach(MIMEText(body,'plain'))
-    server = smtplib.SMTP('smtp.gmail.com',587)
+    msg.attach(MIMEText(body, 'plain'))
+    server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
-    server.login('vishavmahajan96@gmail.com','vishav@123')
+    server.login('vishavmahajan96@gmail.com', 'vishav@123')
     text = msg.as_string()
-    server.sendmail(msg["From"],msg['To'],text)
+    server.sendmail(msg["From"], msg['To'], text)
     server.quit()
-    print('mail sent')
+
+
+
 
 
 #email_invoice("sanyamm02@gmail.com","327638")

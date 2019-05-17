@@ -1,0 +1,114 @@
+{% extends "admin_master.html" %}
+{% block content %}
+<div id="page-wrapper">
+    <div class="main-page">
+        <div class="tables">
+            <div class=" bs-example widget-shadow">
+                <h4>Cancelled Bookings:</h4>
+
+
+                <div class="panel panel-default">
+            <div class="table-responsive">
+                <table id="reverse" class="table table-striped datatables-table table-hover">
+                    <thead>
+                        <tr>
+
+                            <th>Invoice</th>
+                            <!--th>Booking Status</th-->
+                            <th><p style="color:red; display:inline-block">Cancel Date</p></th>
+                            <th>Start Date</th>
+                            <th>End DAte</th>
+                            <th>Image</th>
+                            <th>Vehicle</th>
+                            <th>User</th>
+                            <th>Status</th>
+                            <th>Earning (Rs.)</th>
+                            <th>Operations</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% if bd %}
+                    {% for i in bd %}
+                        <tr  >
+
+
+                           <td ><a href="{% url 'front_app:invoice' %}?id={{ i.invoice }}" >{{ i.invoice }}</a></td>
+                            <!--td>
+                                {% if i.is_active == True and i.is_returned == False %}
+                            <p style="color:blue">Active</p>
+
+                        {% elif i.cancellation_time != ""  %}
+                            <p style="color:red">Cancelled </p>
+
+
+                        {% elif i.is_active == False and i.is_returned == True and i.cancellation_time == ""  %}
+                            <p style="color:#00e600">Completed</p>
+
+                            {% endif %}
+                        </td-->
+
+                            <td style="color:red">{{ i.cancellation_time }}</td>
+
+                            <td>{{ i.start_date }}</td>
+                            <td>{{ i.end_date }}</td>
+                            <td><a href="/car-details/?id={{i.vehicle_info.vehicle_ref_id}}"><img style="height:55px" src="/media/{{ i.vehicle_info.vehicle_image }}"></a></td>
+                            <td> {{ i.vehicle_detail }}</td>
+                            <td>{{ i.user_detail }}</td>
+
+
+
+
+
+                            <td>
+
+                            <p style="color:red">Cancelled </p>
+                                {% if i.refunded == False %}
+                                <a><p style="color:black"><small>Refund Pending</small></p></a>
+                                {% endif %}
+
+
+                            </td>
+
+                            <td>{{i.earnings}}/-</td>
+
+
+
+                            <td><a href="/view_bookings?id={{i.invoice}}">View </a> </td>
+
+                        </tr>
+                    {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+</div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+<script>
+
+tbody = $('#reverse tbody');
+tbody.children().each(function (i, tr) {
+    tbody.prepend(tr);
+});
+
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+        });
+    $('[data-toggle="popover-hover"]').popover({
+        html: true,
+        trigger: 'hover',
+        placement: 'bottom',
+        content: function () { return '<img src="' + $(this).data('img') + '" />'; }
+        });
+
+
+</script>
+
+{% endblock %}

@@ -21,21 +21,20 @@
                             <th>User Name</th>
                             <th>Contact</th>
                             <th>Subject</th>
-                            <th>operation</th>
+
                         </tr>
                     </thead>
                     <tbody>
                     {% if q %}
                     {% for i in q %}
                         <tr>
-                            <th scope="row">1</th>
+                            <th scope="row">*</th>
                             <td >{{ i.user_email }}</td>
                             <td>{{ i.user_name }}</td>
                             <td>{{ i.user_mobile }}</td>
                             <td >
                                 <a class="btn btn-dark-green" data-toggle="popover-hover" title="Message" data-content="{{ i.user_message }}">{{ i.user_subject }}</a>
                             </td>
-                            <td > >Respond</td>
                         </tr>
                     {% endfor %}
                     {% endif %}

@@ -825,7 +825,6 @@ def eligibilty(request):
     return render(request,"eligibilty.html")
 
 
-
 def clear_sessions(request):
     request.session['invoice'] = ""
     request.session['vehicle_name'] = ""
@@ -840,6 +839,7 @@ def clear_sessions(request):
     request.session['total'] = ""
     request.session['booking_date'] = ""
 
+
 def logout_sessions(request):
     request.session['authenticate'] = False
     request.session['role_id'] = ""
@@ -849,7 +849,6 @@ def logout_sessions(request):
     request.session['name'] = ""
     request.session['rolename'] = ""
     request.session["image"] = ""
-
 
 
 def confirmation_messages(request):

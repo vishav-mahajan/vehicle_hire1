@@ -16,11 +16,11 @@ def manager_index(request):
     try:
         auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],1)
         email = request.session['email']
-        siteuserdata = MySiteUser.objects.get(user_email=email)
+        
     except:
         return redirect("/login")
     if auth==True:
-        return render(request,"manager.html",{"su":siteuserdata})
+        return render(request,"manager.html")
     else:
         auth,message = auth
         if (message=="Not Logged In"):
@@ -31,9 +31,9 @@ def manager_index(request):
 
 def vehicle_category(request):
     try:
-        auth = au.authorizeuser(request.session['authenticate'], request.session['role_id'], 4)
+        auth = au.authorizeuser(request.session['authenticate'], request.session['role_id'], 1)
         email = request.session['email']
-        siteuserdata = MySiteUser.objects.get(user_email=email)
+        
     except:
         return redirect("/login")
     if auth == True and request.session['role_id'] == 1:
@@ -55,7 +55,7 @@ def vehicle_category(request):
     else:
         auth, message = auth
         if (message == "Not Logged In"):
-            return render(request, "login.html", {"pass": True})
+            return render(request, "login.html", {"pass": True,'login':True})
         elif (message == "Wrong Level"):
             return render(request, "404.html", {"pass": True})
 
@@ -64,7 +64,7 @@ def vehicle_company(request):
     try:
         auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],1)
         email = request.session['email']
-        siteuserdata = MySiteUser.objects.get(user_email=email)
+        
     except:
         return redirect("/login")
     if auth==True and request.session['role_id'] == 1:
@@ -95,7 +95,7 @@ def vehicle_details(request):
     try:
         auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],1)
         email = request.session['email']
-        siteuserdata = MySiteUser.objects.get(user_email=email)
+        
     except:
         return redirect("/login")
     if auth==True :
@@ -154,7 +154,7 @@ def showdata(request):
     try:
         auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],1)
         email = request.session['email']
-        siteuserdata = MySiteUser.objects.get(user_email=email)
+        
     except:
         return redirect("/login")
     if auth==True:
@@ -174,7 +174,7 @@ def delete_data(request):
     try:
         auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],1)
         email = request.session['email']
-        siteuserdata = MySiteUser.objects.get(user_email=email)
+        
     except:
         return redirect("/login")
     if auth==True :
@@ -208,7 +208,7 @@ def updatedata(request):
     try:
         auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],1)
         email = request.session['email']
-        siteuserdata = MySiteUser.objects.get(user_email=email)
+        
     except:
         return redirect("/login")
     if auth==True:
@@ -262,24 +262,16 @@ def updatedata(request):
 
 def my_bookings(request):
     try:
-        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],request.session['role_id'])
+        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],1)
         email = request.session['email']
-        siteuserdata = MySiteUser.objects.get(user_email=email)
+        
     except:
         return redirect("/login")
     if auth==True:
-        request.session['id'] = ""
-        if request.session['role_id'] == 1 :
             book_id=[]
-            try:
-                if request.method == "POST":
-                    sr = booking_details.objects.filter(invoice__icontains=request.POST['search'])
-                    return render(request, "mybookings.html", {"bd": sr, "book_id": book_id})
-            except:
-                pass
 
             bd = booking_details.objects.filter(seller_detail=email)
-
+            
             curr_date=dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             curr_date = dt.datetime.now().strptime(curr_date,"%Y-%m-%d %H:%M:%S")
             for i in bd:
@@ -296,10 +288,13 @@ def my_bookings(request):
                     book_id.extend([i.booking_id])
                 if return_date > end_date:
                     book_id.extend([i.booking_id])
-
+            if request.method == "POST":
+                try:
+                    sr = booking_details.objects.filter(invoice__icontains = request.POST['invoice'],seller_detail=email)
+                    return render(request, "mybookings.html", {"bd": sr, "book_id": book_id})
+                except:
+                    pass
             return render(request, "mybookings.html", {"bd": bd,"book_id":book_id})
-        else:
-            return redirect("/error")
     else:
         auth,message = auth
         if (message=="Not Logged In"):
@@ -310,9 +305,9 @@ def my_bookings(request):
 
 def chkreturn(request):
     try:
-        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],request.session['role_id'])
+        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],1)
         email = request.session['email']
-        siteuserdata = MySiteUser.objects.get(user_email=email)
+        
 
     except:
         return redirect("/login")
@@ -376,9 +371,9 @@ def chkreturn(request):
 def balance(request):
 
     try:
-        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],request.session['role_id'])
+        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],1)
         email = request.session['email']
-        siteuserdata = MySiteUser.objects.get(user_email=email)
+        
 
     except:
         return redirect("/login")
@@ -428,7 +423,7 @@ def balance(request):
 
 def earnings(request):
     try:
-        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],request.session['role_id'])
+        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],1)
         email = request.session['email']
     except:
         return redirect("/login")
@@ -442,7 +437,7 @@ def earnings(request):
     else:
         auth, message = auth
         if (message == "Not Logged In"):
-            return render(request, "login.html", {"pass": True})
+            return render(request, "login.html", {"pass": True,'login':True})
         elif (message == "Wrong Level"):
             return render(request, "404.html", {"pass": True})
 
@@ -461,7 +456,7 @@ def show_other(request):
     else:
         auth, message = auth
         if (message == "Not Logged In"):
-            return render(request, "login.html", {"pass": True})
+            return render(request, "login.html", {"pass": True,'login':True})
         elif (message == "Wrong Level"):
             return render(request, "404.html", {"pass": True})
 
@@ -492,13 +487,19 @@ def active(request):
                 book_id.extend([i.booking_id])
             if return_date > end_date:
                 book_id.extend([i.booking_id])
+        if request.method == "POST":
+            try:
+                sr = booking_details.objects.filter(invoice__icontains=request.POST['invoice'], seller_detail=email, is_active=True)
+                return render(request, "active_bookings.html", {"bd": sr, "book_id": book_id})
+            except:
+                pass
 
         return render(request, "active_bookings.html", {"bd": bd, "book_id": book_id})
 
     else:
         auth, message = auth
         if (message == "Not Logged In"):
-            return render(request, "login.html", {"pass": True})
+            return render(request, "login.html", {"pass": True,'login':True})
         elif (message == "Wrong Level"):
             return render(request, "404.html", {"pass": True})
 
@@ -510,12 +511,18 @@ def cancelled(request):
     except:
         return redirect("/login")
     if auth==True:
+        if request.method == "POST":
+            try:
+                sr = booking_details.objects.filter(invoice__icontains=request.POST['invoice'], seller_detail=email, is_active=False, return_date = "")
+                return render(request, "cancelled_bookings.html", {"bd": sr})
+            except:
+                pass
         bd = booking_details.objects.filter(seller_detail=email, is_active=False, return_date = "" )
         return render(request,'cancelled_bookings.html',{'bd':bd})
     else:
         auth, message = auth
         if (message == "Not Logged In"):
-            return render(request, "login.html", {"pass": True})
+            return render(request, "login.html", {"pass": True,'login':True})
         elif (message == "Wrong Level"):
             return render(request, "404.html", {"pass": True})
 
@@ -527,12 +534,18 @@ def completed(request):
     except:
         return redirect("/login")
     if auth == True:
+        if request.method == "POST":
+            try:
+                sr = booking_details.objects.filter(invoice__icontains=request.POST['invoice'], seller_detail=email, is_active=False, cancellation_time="")
+                return render(request, "complete_bookings.html", {"bd": sr})
+            except:
+                pass
         bd = booking_details.objects.filter(seller_detail=email, is_active=False, cancellation_time="")
         return render(request, 'complete_bookings.html', {'bd': bd})
     else:
         auth, message = auth
         if (message == "Not Logged In"):
-            return render(request, "login.html", {"pass": True})
+            return render(request, "login.html", {"pass": True,'login':True})
         elif (message == "Wrong Level"):
             return render(request, "404.html", {"pass": True})
 
@@ -543,12 +556,18 @@ def pending_refunds(request):
     except:
         return redirect("/login")
     if auth == True:
+        if request.method == "POST":
+            try:
+                sr = booking_details.objects.filter(invoice__icontains=request.POST['invoice'], seller_detail=email, is_active=False , refunded= False)
+                return render(request, "pending_refunds.html", {"bd": sr})
+            except:
+                pass
         bd = booking_details.objects.filter(seller_detail=email, is_active=False , refunded= False)
         return render(request, 'pending_refunds.html', {'bd': bd})
     else:
         auth, message = auth
         if (message == "Not Logged In"):
-            return render(request, "login.html", {"pass": True})
+            return render(request, "login.html", {"pass": True,'login':True})
         elif (message == "Wrong Level"):
             return render(request, "404.html", {"pass": True})
 
@@ -569,6 +588,6 @@ def refunded(request):
     else:
         auth, message = auth
         if (message == "Not Logged In"):
-            return render(request, "login.html", {"pass": True})
+            return render(request, "login.html", {"pass": True,'login':True})
         elif (message == "Wrong Level"):
             return render(request, "404.html", {"pass": True})

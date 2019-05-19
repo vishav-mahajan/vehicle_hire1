@@ -6,20 +6,28 @@
             <div class=" bs-example widget-shadow">
                 <h4>User Bookings:</h4>
                 {% if request.session.role_id == 1%}
-
-                <a target="_blank" href="/manager/active_bookings" class="btn btn-primary mx-4">Active</a>
-                <a target="_blank" href="/manager/cancelled_bookings" class="btn btn-danger mx-4">Cancelled</a>
-                <a target="_blank" href="/manager/complete_bookings" class="btn btn-success mx-4">Returned</a>
-                 <a target="_blank" href="/manager/pending_refunds" class="btn btn-warning mx-4">Pending Refunds</a><br>
-                {% elif request.session.role_id == 4%}
-
-                <a target="_blank" href="/businessuser/active_bookings" class="btn btn-primary mx-4">Active</a>
-                <a target="_blank" href="/businessuser/cancelled_bookings" class="btn btn-danger mx-4">Cancelled</a>
-                <a target="_blank" href="/businessuser/complete_bookings" class="btn btn-success mx-4">Returned</a>
-                <a target="_blank" href="/businessuser/pending_refunds" class="btn btn-warning mx-4">Pending Refunds</a><br>
+                <a  style="background-color: pink; width: 120px;" href="/manager/mybookings/" class="btn btn-info mx-4">All</a>
+                <a  style="width: 150px;" href="/manager/active_bookings" class="btn btn-primary mx-4">Active</a>
+                <a style="width: 150px;" href="/manager/cancelled_bookings" class="btn btn-danger mx-4">Cancelled</a>
+                <a style="width: 150px;" href="/manager/complete_bookings" class="btn btn-success mx-4">Returned</a>
+                 <a  style="width: 150px;" href="/manager/pending_refunds" class="btn btn-warning mx-4">Pending Refunds</a><br><br>
+                 {% elif request.session.role_id == 4%}
+                <a style="width: 150px;" href="/show_bookings" class="btn btn-default mx-4">All</a>
+                <a  style="width: 150px;" href="/businessuser/active_bookings" class="btn btn-primary mx-4">Active</a>
+                <a style="width: 150px;" href="/businessuser/cancelled_bookings" class="btn btn-danger mx-4">Cancelled</a>
+                <a  style="width: 150px;" href="/businessuser/complete_bookings" class="btn btn-success mx-4">Returned</a>
+                <a style="width: 150px;" href="/businessuser/pending_refunds" class="btn btn-warning mx-4">Pending Refunds</a><br><br>
                 {%endif%}
 
-
+                <form method="post">
+                    {% csrf_token %}
+<div class="input-group has-warning" style="width: 350px;">
+  <input type="text" autofocus autocomplete="off" class="form-control" placeholder="Search Invoice" name="invoice">
+  <div class="input-group-addon">
+    <span class="input-group-text"><input type="submit" value="Search"></span>
+  </div>
+</div>
+</form><br>
 
                 <div class="panel panel-default">
             <div class="table-responsive">

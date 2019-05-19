@@ -24,7 +24,7 @@ def manager_index(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login':True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -84,7 +84,7 @@ def vehicle_company(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login':True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -145,7 +145,7 @@ def vehicle_details(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login':True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -165,7 +165,7 @@ def showdata(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login':True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -199,7 +199,7 @@ def delete_data(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login':True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -255,7 +255,7 @@ def updatedata(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login':True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -303,7 +303,7 @@ def my_bookings(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login':True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -368,7 +368,7 @@ def chkreturn(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login':True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -421,7 +421,7 @@ def balance(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login':True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -449,7 +449,7 @@ def earnings(request):
 
 def show_other(request):
     try:
-        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],request.session['role_id'])
+        auth = au.authorizeuser(request.session['authenticate'],request.session['role_id'],1)
         email = request.session['email']
     except:
         return redirect("/login")

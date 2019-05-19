@@ -6,7 +6,7 @@ from email.mime.application import MIMEApplication
 
 def email_send(email,password,verify):
     msg = MIMEMultipart()
-    msg["From"] = 'vishavmahajan96@gmail.com'
+    msg["From"] = 'adrenture.car@gmail.com'
     msg['To'] = email
     msg['Subject'] = 'Registration on AdRENTure'
     #filename = "Rahul.txt"
@@ -21,7 +21,7 @@ def email_send(email,password,verify):
     msg.attach(MIMEText(body,'plain'))
     server = smtplib.SMTP('smtp.gmail.com',587)
     server.starttls()
-    server.login('vishavmahajan96@gmail.com','vishav@123')
+    server.login('adrenture.car@gmail.com','Vishav@123')
     text = msg.as_string()
     server.sendmail(msg["From"],msg['To'],text)
     server.quit()
@@ -29,7 +29,7 @@ def email_send(email,password,verify):
 
 def otp_send(email,otp, subject, message,type):
         msg = MIMEMultipart()
-        msg["From"] = 'vishavmahajan96@gmail.com'
+        msg["From"] = 'adrenture.car@gmail.com'
         msg['To'] = email
         msg['Subject'] = subject
         #filename = "Rahul.txt"
@@ -43,7 +43,7 @@ def otp_send(email,otp, subject, message,type):
         msg.attach(MIMEText(body,'plain'))
         server = smtplib.SMTP('smtp.gmail.com',587)
         server.starttls()
-        server.login('vishavmahajan96@gmail.com','vishav@123')
+        server.login('adrenture.car@gmail.com','Vishav@123')
         text = msg.as_string()
         server.sendmail(msg["From"],msg['To'],text)
         server.quit()
@@ -51,7 +51,7 @@ def otp_send(email,otp, subject, message,type):
 
 def email_invoice(email,invoice_no,name,link):
     msg = MIMEMultipart()
-    msg["From"] = 'vishavmahajan96@gmail.com'
+    msg["From"] = 'adrenture.car@gmail.com'
     msg['To'] = email
     msg['Subject'] = "Booking Confirmed #"+invoice_no
     # filename = "Rahul.txt"
@@ -66,12 +66,10 @@ def email_invoice(email,invoice_no,name,link):
     msg.attach(MIMEText(body, 'plain'))
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
-    server.login('vishavmahajan96@gmail.com', 'vishav@123')
+    server.login('adrenture.car@gmail.com', 'Vishav@123')
     text = msg.as_string()
     server.sendmail(msg["From"], msg['To'], text)
     server.quit()
-
-
 
 
 

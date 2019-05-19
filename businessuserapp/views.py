@@ -247,7 +247,7 @@ def my_bookings(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login':True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -312,7 +312,7 @@ def chkreturn(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login':True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -364,7 +364,7 @@ def balance(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login':True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 

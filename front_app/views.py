@@ -14,7 +14,6 @@ from paypal.standard.forms import PayPalPaymentsForm
 from django.urls import reverse
 
 
-
 def index(request):
     clear_sessions(request)
     companydata = VehicleCompany.objects.all()
@@ -22,7 +21,6 @@ def index(request):
     vehicle_id = []
     userdata = VehiclesDetails.objects.filter(~Q(vehicle_ref_id__in=(vehicle_id)))
     try:
-        email = request.session['email']
         userdata = VehiclesDetails.objects.filter(~Q(u_email=(request.session['email'])))
         try:
             if request.method == "POST":
@@ -57,17 +55,13 @@ def index(request):
                          {"ud": userdata, "cd": companydata, "ccd": companycategorydata,
                            'exp': 'ex inner'})
     except:
-        request.session['email']=''
+        
         return render(request, 'index.html',
                       {"ud": userdata, "cd": companydata, "ccd": companycategorydata, 'exp': 'exp outer'})
 
 
 def login(request):
-    try:
-        auth=request.session['authenticate']
-    except:
-        auth=False
-    if auth==False:
+    if request.session['authenticate']==False :
         if (request.method == "POST"):
             try:
                 useremail = request.POST['user_email']
@@ -241,6 +235,7 @@ def car_detail(request):
 
 
 def updatepassword(request):
+
     if request.session['authenticate'] == True:
         email = request.session['email']
         userdata = MySiteUser.objects.get(user_email=email)
@@ -297,7 +292,7 @@ def updatepassword(request):
 
 def forgototp(request):
     try:
-        if request.session['authenticate']== False or request.session['authenticate']=="":
+        if request.session['authenticate']== False:
             pass
         else:
             return redirect("/error")
@@ -499,7 +494,7 @@ def booking(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login': True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -532,7 +527,7 @@ def queries(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login': True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -579,7 +574,7 @@ def confirm_booking(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request, "login.html",{"pass":True})
+            return render(request, "login.html",{"pass":True,'login': True})
         elif(message=="Wrong Level"):
             return render(request, "404.html",{"pass":True})
 
@@ -590,9 +585,12 @@ def invoice(request):
         email = request.session['email']
         siteuserdata = MySiteUser.objects.get(user_email=email)
     except:
-        id = request.GET['id']
-        bd = booking_details.objects.get(invoice=id)
-        return render(request, "invoice.html", {"bd": bd})
+        try:
+            id = request.GET['id']
+            bd = booking_details.objects.get(invoice=id)
+            return render(request, "invoice.html", {"bd": bd})
+        except:
+            return redirect("/error")
     if auth==True:
         try:
             id = request.GET['id']
@@ -608,7 +606,7 @@ def invoice(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login': True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -691,10 +689,9 @@ def show_bookings(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login': True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
-
 
 
 def cancel_booking(request):
@@ -770,7 +767,7 @@ def cancel_booking(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login': True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -787,7 +784,7 @@ def user_index(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login': True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -812,7 +809,7 @@ def view_current_book(request):
     else:
         auth,message = auth
         if (message=="Not Logged In"):
-            return render(request,"login.html",{"pass":True})
+            return render(request,"login.html",{"pass":True,'login': True})
         elif(message=="Wrong Level"):
             return render(request,"404.html",{"pass":True})
 
@@ -826,6 +823,18 @@ def eligibilty(request):
 
 
 def clear_sessions(request):
+    try:
+        auth= request.session['authenticate']
+    except:
+        request.session['authenticate']=False
+        request.session['role_id'] = ""
+        request.session['email'] = ""
+        request.session['duration'] = False
+        request.session['date_greater'] = False
+        request.session['name'] = ""
+        request.session['rolename'] = ""
+        request.session["image"] = ""
+
     request.session['invoice'] = ""
     request.session['vehicle_name'] = ""
     request.session['vehicle_description'] = ""
@@ -858,4 +867,4 @@ def confirmation_messages(request):
             logout_sessions(request)
         return render (request,"verify.html",{"id":id})
     except:
-        return redirect("/")
+        return redirect("/error")

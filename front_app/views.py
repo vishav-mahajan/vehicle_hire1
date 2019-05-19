@@ -25,6 +25,7 @@ def index(request):
     userdata = VehiclesDetails.objects.filter(~Q(vehicle_ref_id__in=(vehicle_id)))
     try:
         email = request.session['email']
+        userdata = VehiclesDetails.objects.filter(~Q(u_email=(request.session['email'])))
         try:
             if request.method == "POST":
                 start_date = request.POST['start_date']
@@ -45,7 +46,7 @@ def index(request):
                             vehicle_id.extend([i.vehicle_info_id])
                     else:
                         pass
-                userdata = VehiclesDetails.objects.filter(~Q(vehicle_ref_id__in=(vehicle_id)))
+                userdata = VehiclesDetails.objects.filter(~Q(vehicle_ref_id__in=(vehicle_id)) , ~Q(u_email=(request.session['email'])))
                 return render(request, 'index.html',
                               {"ud": userdata, "cd": companydata, "ccd": companycategorydata,
                                "book": True,

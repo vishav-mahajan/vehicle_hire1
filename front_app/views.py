@@ -17,8 +17,6 @@ from django.urls import reverse
 
 def index(request):
     clear_sessions(request)
-
-
     companydata = VehicleCompany.objects.all()
     companycategorydata = VehicleCategories.objects.all()
     vehicle_id = []
@@ -59,6 +57,7 @@ def index(request):
                          {"ud": userdata, "cd": companydata, "ccd": companycategorydata,
                            'exp': 'ex inner'})
     except:
+        request.session['email']=''
         return render(request, 'index.html',
                       {"ud": userdata, "cd": companydata, "ccd": companycategorydata, 'exp': 'exp outer'})
 

@@ -9,13 +9,14 @@
                 <form method="POST" enctype="multipart/form-data" class="form-horizontal bg-light">
 
 
-                <div class="col-xs-6">
-  <h1>
-    <a href="/">
-      <img  src="/assets/img/logo.png">
-    </a>
-  </h1>
-</div>
+                    <div class="col-xs-6">
+                  <h1>
+                    <a href="/">
+                      <img  src="/assets/img/logo.png">
+                    </a>
+                  </h1>
+                </div>
+
                     <div class="col-xs-6 text-right">
                         {% if bd.is_active == True and bd.is_returned == False %}
                             <h2 style="color:green">Active</h2>
@@ -38,7 +39,7 @@
                     </div>
                     <hr><br><br><br>
 
-                                <div class="form-group has-dark">
+                    <div class="form-group has-dark">
 										<label class="col-md-2 control-label">Booking Date</label>
 										<div class="col-md-5">
 											<div class="input-group input-icon right">
@@ -61,36 +62,17 @@
                                         </div></div>
 
                     <div class="form-group has-dark">
-										<label class="col-md-2 control-label">Return Date-Time</label>
-										<div class="col-md-5">
-											<div class="input-group input-icon right">
-												<span class="input-group-addon">
-													<i class="fa fa-calendar"></i>
-												</span>
-												<input readonly name="end_date" class="form-control1" value="{{ bd.end_date }}" type="text" >
-											</div>
-                                        </div></div>
-
-
-                    <!--div class="form-group">
-                        <label class="col-sm-2 control-label">Select Time</label>
-                        <div class="col-sm-5">
-                            <div class="input-group input-icon right " id="start_time">
-												<span class="input-group-addon ml-1">
-													<i class="fa fa-clock-o"></i>
-												</span>
-
-                            <input type="text" name="start_time"     placeholder="HH:MM:SS">
+                        <label class="col-md-2 control-label">Return Date-Time</label>
+                        <div class="col-md-5">
+                            <div class="input-group input-icon right">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <input readonly name="end_date" class="form-control1" value="{{ bd.end_date }}" type="text" >
                             </div>
                         </div>
-                        <div class="col-sm-5" >
-                            <div class="input-group input-icon right" id="end_time">
-												<span class="input-group-addon">
-													<i class="fa fa-clock-o"></i>
-												</span>
-                            <input type="text"  placeholder="HH:MM:SS" name="end_time">
-                            </div></div>
-                    </div-->
+                    </div>
+
 
                     <div class="form-group has-dark">
                         <label class="col-sm-2 control-label">Vehicle Name</label>
@@ -115,8 +97,6 @@
                         </div>
                         </div>
                     </div>
-
-
 
 
                     <div class="form-group has-dark">
@@ -144,6 +124,7 @@
                         </div>
                         </div>
                     </div>
+
                     <div class="form-group has-dark">
                         <label class="col-sm-2 control-label">Vehicle Charges</label>
                         <div class="col-sm-5">
@@ -157,6 +138,7 @@
                     </div>
 
                     <!-- Cancelled -->
+
                     {% if bd.is_active == False and bd.is_returned == True and bd.cancellation_time != ""  %}
 
                             <div class="form-group has-warning">
@@ -201,7 +183,6 @@
 
 
 
-
                     {% elif bd.is_active == False and bd.is_returned == True and bd.return_time != "" and bd.security_amount >= bd.total_fine %}
                     <div class="form-group has-dark">
                         <label class="col-sm-2 control-label">Document Fine</label>
@@ -225,7 +206,35 @@
                         </div>
                         </div>
                     </div>
+
+                    {% if bd.extension != 0 %}
+                    <div class="form-group has-error">
+                        <label class="col-sm-2 control-label">Extended Hours </label>
+                        <div class="col-sm-5">
+                            <div class="input-group input-icon right text-light">
+												<span class="input-group-addon">
+													<i class="fa fa-rupee"></i>
+												</span>
+                            <input type="text" class="form-control1" name="total" value="{{ bd.extension }} Hours"  readonly>
+                        </div>
+                    </div>
+                    </div>
                     <div class="form-group has-dark">
+                        <label class="col-sm-2 control-label">Extension Charges</label>
+                        <div class="col-sm-5">
+                            <div class="input-group input-icon right">
+												<span class="input-group-addon">
+													<i class="fa fa-rupee"></i>
+												</span>
+                            <input type="text" class="form-control1" name="damage_charges" value="{{ bd.ext_amount }}/-"  readonly>
+                        </div>
+                        </div>
+                    </div>
+
+
+                    {% endif %}
+
+                    <div class="form-group has-error">
                         <label class="col-sm-2 control-label">Total Fine</label>
                         <div class="col-sm-5">
                             <div class="input-group input-icon right">
@@ -300,7 +309,33 @@
                         </div>
                         </div>
                     </div>
-                    <div class="form-group has-dark">
+                    {% if bd.extension != 0 %}
+                    <div class="form-group has-warning">
+                        <label class="col-sm-2 control-label">Extended Hours </label>
+                        <div class="col-sm-5">
+                            <div class="input-group input-icon right text-light">
+												<span class="input-group-addon">
+													<i class="fa fa-rupee"></i>
+												</span>
+                            <input type="text" class="form-control1" name="total" value="{{ bd.extension }} Hours"  readonly>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="form-group has-warning">
+                        <label class="col-sm-2 control-label">Extension Charges</label>
+                        <div class="col-sm-5">
+                            <div class="input-group input-icon right">
+												<span class="input-group-addon">
+													<i class="fa fa-rupee"></i>
+												</span>
+                            <input type="text" class="form-control1" name="damage_charges" value="{{ bd.ext_amount }}/-"  readonly>
+                        </div>
+                        </div>
+                    </div>
+
+
+                    {% endif %}
+                    <div class="form-group has-error">
                         <label class="col-sm-2 control-label">Total Fine</label>
                         <div class="col-sm-5">
                             <div class="input-group input-icon right">
@@ -322,19 +357,7 @@
                         </div>
                     </div>
                     </div>
-                    {% if bd.extension != 0 %}
-                    <div class="form-group has-error">
-                        <label class="col-sm-2 control-label">Extended Hours </label>
-                        <div class="col-sm-5">
-                            <div class="input-group input-icon right text-light">
-												<span class="input-group-addon">
-													<i class="fa fa-rupee"></i>
-												</span>
-                            <input type="text" class="form-control1" name="total" value="{{ bd.extension }} Hours"  readonly>
-                        </div>
-                    </div>
-                    </div>
-                    {% endif %}
+
                     <div class="form-group has-warning">
                         <label class="col-sm-2 control-label">Excess Amount </label>
                         <div class="col-sm-5">

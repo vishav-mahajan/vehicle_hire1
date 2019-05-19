@@ -25,7 +25,7 @@
     <section id="lgoin-page-wrap" class="section-padding">
         <div class="container">
             <div class="row">
-                <div class="col-lg-5 col-md-8 m-auto">
+                <div class="col-lg-8 col-md-8 m-auto">
                 	<div class="login-page-content">
                 		<div class="login-form">
                 			<h3>Sign Up</h3>
@@ -55,11 +55,11 @@
 
 									</div>
 								</div>
-								<div class="username" aria-label="Username" aria-describedby="basic-addon1">
-									<input type="email"  placeholder="Email" name="user_email" id="amf-input-user_email" value="" maxlength="255" onkeyup="if(this.length>255) this.value=this.value.substr(0,255)"required >
+								<div class="username " aria-label="Username" aria-describedby="basic-addon1">
+									<input type="email"  placeholder="Email" name="user_email" id="amf-input-user_email" value="" maxlength="255" onkeyup="if(this.length>255) this.value=this.value.substr(0,255)" required >
 								</div>
 
-								<div class="username">
+								<div class="username ">
 									<input type="text" placeholder="Mobile" name="user_mobile" pattern="[789][0-9]{9}" required>
 								</div>
                             <div class="date">
@@ -78,8 +78,8 @@
 
 
                                     <label class="mr-3"><strong>Gender</strong></label>
-                                        <input type="radio" class="mx-2" name="user_gender" value="Male"><label>Male</label>
-                                        <input type="radio" class="mx-2" name="user_gender" value="Female"><label>Female</label>
+                                        <input type="radio" required class="mx-2" name="user_gender" value="Male"><label>Male</label>
+                                        <input type="radio" required class="mx-2" name="user_gender" value="Female"><label>Female</label>
 
 
                                 </div>
@@ -95,8 +95,8 @@
                             <div>
                                 <div class="select2-dropdown form-group">
                                     <select name="select" required>
-                                    <option>Select Role</option>
-                                    <option value="3">User</option>
+                                    <option hidden value="">Select Role</option>
+                                    <option   value="3">User</option>
                                     <option value="4">Bussiness User</option>
                                 </select>
 
@@ -104,8 +104,10 @@
 
                             </div>
                                 <div class="form-group text-left" >
-
-                                        <input type="radio" class="mx-2" required  value="1"><label >Agree To the Company Fee Policy <a href="/feepolicy" target="_blank">Click Here</a> to view</label>
+                                    <input required type="checkbox" class="col-sm-1" value="">
+                                    <label class="checkbox-inline">
+                                        Agree To the Company Policy <a href="/feepolicy" target="_blank">Click Here</a> to view.
+                                    </label>
 
                                 </div>
 								<div class="log-btn">
@@ -160,7 +162,6 @@ $(".toggle-password").click(function() {
     input.attr("type", "password");
   }
 });
-
 
 
     </script>
